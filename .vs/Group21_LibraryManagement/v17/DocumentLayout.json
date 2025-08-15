@@ -1,0 +1,327 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "E:\\C#-storage\\Group21_LibraryManagement\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{F0456616-EBC1-41EE-9BF7-7DEE88C29B4F}|WebApi\\WebApi.csproj|e:\\c#-storage\\group21_librarymanagement\\webapi\\models\\librarydbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F0456616-EBC1-41EE-9BF7-7DEE88C29B4F}|WebApi\\WebApi.csproj|solutionrelative:webapi\\models\\librarydbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F0456616-EBC1-41EE-9BF7-7DEE88C29B4F}|WebApi\\WebApi.csproj|e:\\c#-storage\\group21_librarymanagement\\webapi\\models\\applicationuser.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F0456616-EBC1-41EE-9BF7-7DEE88C29B4F}|WebApi\\WebApi.csproj|solutionrelative:webapi\\models\\applicationuser.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F0456616-EBC1-41EE-9BF7-7DEE88C29B4F}|WebApi\\WebApi.csproj|e:\\c#-storage\\group21_librarymanagement\\webapi\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F0456616-EBC1-41EE-9BF7-7DEE88C29B4F}|WebApi\\WebApi.csproj|solutionrelative:webapi\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F0456616-EBC1-41EE-9BF7-7DEE88C29B4F}|WebApi\\WebApi.csproj|e:\\c#-storage\\group21_librarymanagement\\webapi\\dto\\applicationuser\\loginmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F0456616-EBC1-41EE-9BF7-7DEE88C29B4F}|WebApi\\WebApi.csproj|solutionrelative:webapi\\dto\\applicationuser\\loginmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F0456616-EBC1-41EE-9BF7-7DEE88C29B4F}|WebApi\\WebApi.csproj|e:\\c#-storage\\group21_librarymanagement\\webapi\\dto\\applicationuser\\registermodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F0456616-EBC1-41EE-9BF7-7DEE88C29B4F}|WebApi\\WebApi.csproj|solutionrelative:webapi\\dto\\applicationuser\\registermodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|E:\\C#-storage\\Group21_LibraryManagement\\WebApi\\Migrations\\20250814101420_hehe.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:WebApi\\Migrations\\20250814101420_hehe.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F0456616-EBC1-41EE-9BF7-7DEE88C29B4F}|WebApi\\WebApi.csproj|e:\\c#-storage\\group21_librarymanagement\\webapi\\models\\bookcategory.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F0456616-EBC1-41EE-9BF7-7DEE88C29B4F}|WebApi\\WebApi.csproj|solutionrelative:webapi\\models\\bookcategory.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F0456616-EBC1-41EE-9BF7-7DEE88C29B4F}|WebApi\\WebApi.csproj|e:\\c#-storage\\group21_librarymanagement\\webapi\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F0456616-EBC1-41EE-9BF7-7DEE88C29B4F}|WebApi\\WebApi.csproj|solutionrelative:webapi\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F0456616-EBC1-41EE-9BF7-7DEE88C29B4F}|WebApi\\WebApi.csproj|e:\\c#-storage\\group21_librarymanagement\\webapi\\models\\bookauthor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F0456616-EBC1-41EE-9BF7-7DEE88C29B4F}|WebApi\\WebApi.csproj|solutionrelative:webapi\\models\\bookauthor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F0456616-EBC1-41EE-9BF7-7DEE88C29B4F}|WebApi\\WebApi.csproj|e:\\c#-storage\\group21_librarymanagement\\webapi\\models\\reservation.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F0456616-EBC1-41EE-9BF7-7DEE88C29B4F}|WebApi\\WebApi.csproj|solutionrelative:webapi\\models\\reservation.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F0456616-EBC1-41EE-9BF7-7DEE88C29B4F}|WebApi\\WebApi.csproj|e:\\c#-storage\\group21_librarymanagement\\webapi\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{F0456616-EBC1-41EE-9BF7-7DEE88C29B4F}|WebApi\\WebApi.csproj|solutionrelative:webapi\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F0456616-EBC1-41EE-9BF7-7DEE88C29B4F}|WebApi\\WebApi.csproj|e:\\c#-storage\\group21_librarymanagement\\webapi\\models\\loan.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F0456616-EBC1-41EE-9BF7-7DEE88C29B4F}|WebApi\\WebApi.csproj|solutionrelative:webapi\\models\\loan.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F0456616-EBC1-41EE-9BF7-7DEE88C29B4F}|WebApi\\WebApi.csproj|e:\\c#-storage\\group21_librarymanagement\\webapi\\models\\category.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F0456616-EBC1-41EE-9BF7-7DEE88C29B4F}|WebApi\\WebApi.csproj|solutionrelative:webapi\\models\\category.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F0456616-EBC1-41EE-9BF7-7DEE88C29B4F}|WebApi\\WebApi.csproj|e:\\c#-storage\\group21_librarymanagement\\webapi\\models\\publisher.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F0456616-EBC1-41EE-9BF7-7DEE88C29B4F}|WebApi\\WebApi.csproj|solutionrelative:webapi\\models\\publisher.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F0456616-EBC1-41EE-9BF7-7DEE88C29B4F}|WebApi\\WebApi.csproj|e:\\c#-storage\\group21_librarymanagement\\webapi\\models\\fine.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F0456616-EBC1-41EE-9BF7-7DEE88C29B4F}|WebApi\\WebApi.csproj|solutionrelative:webapi\\models\\fine.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F0456616-EBC1-41EE-9BF7-7DEE88C29B4F}|WebApi\\WebApi.csproj|e:\\c#-storage\\group21_librarymanagement\\webapi\\models\\bookitem.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F0456616-EBC1-41EE-9BF7-7DEE88C29B4F}|WebApi\\WebApi.csproj|solutionrelative:webapi\\models\\bookitem.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F0456616-EBC1-41EE-9BF7-7DEE88C29B4F}|WebApi\\WebApi.csproj|e:\\c#-storage\\group21_librarymanagement\\webapi\\models\\book.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F0456616-EBC1-41EE-9BF7-7DEE88C29B4F}|WebApi\\WebApi.csproj|solutionrelative:webapi\\models\\book.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F0456616-EBC1-41EE-9BF7-7DEE88C29B4F}|WebApi\\WebApi.csproj|e:\\c#-storage\\group21_librarymanagement\\webapi\\models\\author.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F0456616-EBC1-41EE-9BF7-7DEE88C29B4F}|WebApi\\WebApi.csproj|solutionrelative:webapi\\models\\author.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F0456616-EBC1-41EE-9BF7-7DEE88C29B4F}|WebApi\\WebApi.csproj|e:\\c#-storage\\group21_librarymanagement\\webapi\\migrations\\20250814102357_hehe.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F0456616-EBC1-41EE-9BF7-7DEE88C29B4F}|WebApi\\WebApi.csproj|solutionrelative:webapi\\migrations\\20250814102357_hehe.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 6,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "RegisterModel.cs",
+              "DocumentMoniker": "E:\\C#-storage\\Group21_LibraryManagement\\WebApi\\Dto\\ApplicationUser\\RegisterModel.cs",
+              "RelativeDocumentMoniker": "WebApi\\Dto\\ApplicationUser\\RegisterModel.cs",
+              "ToolTip": "E:\\C#-storage\\Group21_LibraryManagement\\WebApi\\Dto\\ApplicationUser\\RegisterModel.cs",
+              "RelativeToolTip": "WebApi\\Dto\\ApplicationUser\\RegisterModel.cs",
+              "ViewState": "AQIAAAMAAAAAAAAAAAAAAA4AAAA3AAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-14T10:25:09.981Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "Fine.cs",
+              "DocumentMoniker": "E:\\C#-storage\\Group21_LibraryManagement\\WebApi\\Models\\Fine.cs",
+              "RelativeDocumentMoniker": "WebApi\\Models\\Fine.cs",
+              "ToolTip": "E:\\C#-storage\\Group21_LibraryManagement\\WebApi\\Models\\Fine.cs",
+              "RelativeToolTip": "WebApi\\Models\\Fine.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAuwBcAAAABAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-14T08:53:36.952Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "Program.cs",
+              "DocumentMoniker": "E:\\C#-storage\\Group21_LibraryManagement\\WebApi\\Program.cs",
+              "RelativeDocumentMoniker": "WebApi\\Program.cs",
+              "ToolTip": "E:\\C#-storage\\Group21_LibraryManagement\\WebApi\\Program.cs",
+              "RelativeToolTip": "WebApi\\Program.cs",
+              "ViewState": "AQIAACUAAAAAAAAAAAAAADEAAAAIAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-14T09:26:54.049Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "ApplicationUser.cs",
+              "DocumentMoniker": "E:\\C#-storage\\Group21_LibraryManagement\\WebApi\\Models\\ApplicationUser.cs",
+              "RelativeDocumentMoniker": "WebApi\\Models\\ApplicationUser.cs",
+              "ToolTip": "E:\\C#-storage\\Group21_LibraryManagement\\WebApi\\Models\\ApplicationUser.cs",
+              "RelativeToolTip": "WebApi\\Models\\ApplicationUser.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAYAAABEAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-14T08:50:38.269Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "LoginModel.cs",
+              "DocumentMoniker": "E:\\C#-storage\\Group21_LibraryManagement\\WebApi\\Dto\\ApplicationUser\\LoginModel.cs",
+              "RelativeDocumentMoniker": "WebApi\\Dto\\ApplicationUser\\LoginModel.cs",
+              "ToolTip": "E:\\C#-storage\\Group21_LibraryManagement\\WebApi\\Dto\\ApplicationUser\\LoginModel.cs",
+              "RelativeToolTip": "WebApi\\Dto\\ApplicationUser\\LoginModel.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAEAAAABAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-14T09:59:54.036Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "AuthController.cs",
+              "DocumentMoniker": "E:\\C#-storage\\Group21_LibraryManagement\\WebApi\\Controllers\\AuthController.cs",
+              "RelativeDocumentMoniker": "WebApi\\Controllers\\AuthController.cs",
+              "ToolTip": "E:\\C#-storage\\Group21_LibraryManagement\\WebApi\\Controllers\\AuthController.cs",
+              "RelativeToolTip": "WebApi\\Controllers\\AuthController.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAEoAAAANAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-14T10:01:38.481Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "LibraryDbContext.cs",
+              "DocumentMoniker": "E:\\C#-storage\\Group21_LibraryManagement\\WebApi\\Models\\LibraryDbContext.cs",
+              "RelativeDocumentMoniker": "WebApi\\Models\\LibraryDbContext.cs",
+              "ToolTip": "E:\\C#-storage\\Group21_LibraryManagement\\WebApi\\Models\\LibraryDbContext.cs",
+              "RelativeToolTip": "WebApi\\Models\\LibraryDbContext.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAkAAAAzAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-14T09:02:20.584Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "20250814101420_hehe.cs",
+              "DocumentMoniker": "E:\\C#-storage\\Group21_LibraryManagement\\WebApi\\Migrations\\20250814101420_hehe.cs",
+              "RelativeDocumentMoniker": "WebApi\\Migrations\\20250814101420_hehe.cs",
+              "ToolTip": "E:\\C#-storage\\Group21_LibraryManagement\\WebApi\\Migrations\\20250814101420_hehe.cs",
+              "RelativeToolTip": "WebApi\\Migrations\\20250814101420_hehe.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-14T10:14:21.109Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 18,
+              "Title": "20250814102357_hehe.cs",
+              "DocumentMoniker": "E:\\C#-storage\\Group21_LibraryManagement\\WebApi\\Migrations\\20250814102357_hehe.cs",
+              "RelativeDocumentMoniker": "WebApi\\Migrations\\20250814102357_hehe.cs",
+              "ToolTip": "E:\\C#-storage\\Group21_LibraryManagement\\WebApi\\Migrations\\20250814102357_hehe.cs",
+              "RelativeToolTip": "WebApi\\Migrations\\20250814102357_hehe.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-14T10:23:57.69Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "Category.cs",
+              "DocumentMoniker": "E:\\C#-storage\\Group21_LibraryManagement\\WebApi\\Models\\Category.cs",
+              "RelativeDocumentMoniker": "WebApi\\Models\\Category.cs",
+              "ToolTip": "E:\\C#-storage\\Group21_LibraryManagement\\WebApi\\Models\\Category.cs",
+              "RelativeToolTip": "WebApi\\Models\\Category.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAEAAAAhAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-14T08:51:40.966Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "BookAuthor.cs",
+              "DocumentMoniker": "E:\\C#-storage\\Group21_LibraryManagement\\WebApi\\Models\\BookAuthor.cs",
+              "RelativeDocumentMoniker": "WebApi\\Models\\BookAuthor.cs",
+              "ToolTip": "E:\\C#-storage\\Group21_LibraryManagement\\WebApi\\Models\\BookAuthor.cs",
+              "RelativeToolTip": "WebApi\\Models\\BookAuthor.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAkAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-14T08:52:18.951Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "BookCategory.cs",
+              "DocumentMoniker": "E:\\C#-storage\\Group21_LibraryManagement\\WebApi\\Models\\BookCategory.cs",
+              "RelativeDocumentMoniker": "WebApi\\Models\\BookCategory.cs",
+              "ToolTip": "E:\\C#-storage\\Group21_LibraryManagement\\WebApi\\Models\\BookCategory.cs",
+              "RelativeToolTip": "WebApi\\Models\\BookCategory.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAoAAAAXAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-14T08:52:31.493Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "Reservation.cs",
+              "DocumentMoniker": "E:\\C#-storage\\Group21_LibraryManagement\\WebApi\\Models\\Reservation.cs",
+              "RelativeDocumentMoniker": "WebApi\\Models\\Reservation.cs",
+              "ToolTip": "E:\\C#-storage\\Group21_LibraryManagement\\WebApi\\Models\\Reservation.cs",
+              "RelativeToolTip": "WebApi\\Models\\Reservation.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAwAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-14T08:53:22.17Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
+              "Title": "BookItem.cs",
+              "DocumentMoniker": "E:\\C#-storage\\Group21_LibraryManagement\\WebApi\\Models\\BookItem.cs",
+              "RelativeDocumentMoniker": "WebApi\\Models\\BookItem.cs",
+              "ToolTip": "E:\\C#-storage\\Group21_LibraryManagement\\WebApi\\Models\\BookItem.cs",
+              "RelativeToolTip": "WebApi\\Models\\BookItem.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAIAAAAhAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-14T08:52:45.846Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "E:\\C#-storage\\Group21_LibraryManagement\\WebApi\\appsettings.json",
+              "RelativeDocumentMoniker": "WebApi\\appsettings.json",
+              "ToolTip": "E:\\C#-storage\\Group21_LibraryManagement\\WebApi\\appsettings.json",
+              "RelativeToolTip": "WebApi\\appsettings.json",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAA0AAAApAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2025-08-14T09:25:48.529Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "Loan.cs",
+              "DocumentMoniker": "E:\\C#-storage\\Group21_LibraryManagement\\WebApi\\Models\\Loan.cs",
+              "RelativeDocumentMoniker": "WebApi\\Models\\Loan.cs",
+              "ToolTip": "E:\\C#-storage\\Group21_LibraryManagement\\WebApi\\Models\\Loan.cs",
+              "RelativeToolTip": "WebApi\\Models\\Loan.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAMAAAAhAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-14T08:53:04.538Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "Publisher.cs",
+              "DocumentMoniker": "E:\\C#-storage\\Group21_LibraryManagement\\WebApi\\Models\\Publisher.cs",
+              "RelativeDocumentMoniker": "WebApi\\Models\\Publisher.cs",
+              "ToolTip": "E:\\C#-storage\\Group21_LibraryManagement\\WebApi\\Models\\Publisher.cs",
+              "RelativeToolTip": "WebApi\\Models\\Publisher.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAEAAAAhAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-14T08:51:20.731Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 16,
+              "Title": "Book.cs",
+              "DocumentMoniker": "E:\\C#-storage\\Group21_LibraryManagement\\WebApi\\Models\\Book.cs",
+              "RelativeDocumentMoniker": "WebApi\\Models\\Book.cs",
+              "ToolTip": "E:\\C#-storage\\Group21_LibraryManagement\\WebApi\\Models\\Book.cs",
+              "RelativeToolTip": "WebApi\\Models\\Book.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAIAAAAhAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-14T08:51:58.822Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 17,
+              "Title": "Author.cs",
+              "DocumentMoniker": "E:\\C#-storage\\Group21_LibraryManagement\\WebApi\\Models\\Author.cs",
+              "RelativeDocumentMoniker": "WebApi\\Models\\Author.cs",
+              "ToolTip": "E:\\C#-storage\\Group21_LibraryManagement\\WebApi\\Models\\Author.cs",
+              "RelativeToolTip": "WebApi\\Models\\Author.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAIAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-14T08:51:02.188Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
