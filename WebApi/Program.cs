@@ -94,6 +94,8 @@ builder.Services.AddSwaggerGen(c =>
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
     .AddEntityFrameworkStores<LibraryDbContext>()
     .AddDefaultTokenProviders();
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

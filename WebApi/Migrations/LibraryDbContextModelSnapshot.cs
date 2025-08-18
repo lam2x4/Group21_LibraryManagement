@@ -88,51 +88,51 @@ namespace WebApi.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "85247806-c18e-4c38-b3fe-420be72dd196",
+                            Id = "admin-1",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "f6fdc232-cfea-410c-9b28-7100291064ea",
-                            Email = "user1@example.com",
+                            ConcurrencyStamp = "4a035ace-3339-4799-99e2-f10830869c05",
+                            Email = "admin@example.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
-                            NormalizedEmail = "USER1@EXAMPLE.COM",
-                            NormalizedUserName = "USER1",
-                            PasswordHash = "AQAAAAIAAYagAAAAEIo4+YM3YRC05Y2lvDO6bLrN3HlignejxgRmg1AHnSrwSUnwJZTO2BJrXz9LD59hbw==",
+                            NormalizedEmail = "ADMIN@EXAMPLE.COM",
+                            NormalizedUserName = "ADMIN",
+                            PasswordHash = "AQAAAAIAAYagAAAAEKT05gZeLcmNvNRb2PhGqgMtF4xkKbkqxOG2IpS21gy0wHalnG29NIQ5CrQEa4sIJQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "2017eccc-c9c0-4330-a203-418bb4e19b45",
+                            SecurityStamp = "74a66501-2a82-47f9-96ba-f563786bad81",
                             TwoFactorEnabled = false,
-                            UserName = "user1"
+                            UserName = "admin"
                         },
                         new
                         {
-                            Id = "2df01559-6738-4449-9854-75052a71631d",
+                            Id = "librarian-1",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "db2155b0-a6ab-4e65-81bb-bb78902b8068",
-                            Email = "user2@example.com",
-                            EmailConfirmed = true,
-                            LockoutEnabled = false,
-                            NormalizedEmail = "USER2@EXAMPLE.COM",
-                            NormalizedUserName = "USER2",
-                            PasswordHash = "AQAAAAIAAYagAAAAELnu0ZzqlgCJANKKjnwXYGl+P1bA1UYlV3PFd81sH0vdQqQK/FuG0t8Yszk8k16yWg==",
-                            PhoneNumberConfirmed = false,
-                            SecurityStamp = "216f32b2-6a95-4cc8-9535-de40c7c89df1",
-                            TwoFactorEnabled = false,
-                            UserName = "user2"
-                        },
-                        new
-                        {
-                            Id = "b9d68a06-4c82-4334-95ae-b97cf434cf4a",
-                            AccessFailedCount = 0,
-                            ConcurrencyStamp = "fa250e29-83ed-4560-b395-2111f0fd0fd7",
+                            ConcurrencyStamp = "8ae03ad3-8075-493a-af29-ba15844d9a1a",
                             Email = "librarian@example.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "LIBRARIAN@EXAMPLE.COM",
                             NormalizedUserName = "LIBRARIAN",
-                            PasswordHash = "AQAAAAIAAYagAAAAEJydw/GnaSK1wxktSSR0XIz2qrV4k/SVSgUqiU8qMhcZcX8/B7X4PwELGm9zyyMCGA==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEInG+xCmnD9M4/8lECkN6aB6erJPAk3v6zi9Mq6trzCsp0jUzJy5Poeg4gkYU/zUxw==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "362c564a-6b42-4213-b956-896556a66b21",
+                            SecurityStamp = "8b49d2a8-17d9-4a67-9cb6-fcfe2ac0bee7",
                             TwoFactorEnabled = false,
                             UserName = "librarian"
+                        },
+                        new
+                        {
+                            Id = "user-1",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "e1fabfb4-98d4-488d-bc4f-848e91965706",
+                            Email = "user@example.com",
+                            EmailConfirmed = true,
+                            LockoutEnabled = false,
+                            NormalizedEmail = "USER@EXAMPLE.COM",
+                            NormalizedUserName = "USER",
+                            PasswordHash = "AQAAAAIAAYagAAAAEJ/bE3+vZjZxflnIFTnMVPExdM9k20XXh32Db6sG90sHvFDjQwarwHDRhJcvprwhgw==",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "1f76954a-5f96-43a3-b830-796f5f4e2f95",
+                            TwoFactorEnabled = false,
+                            UserName = "user"
                         });
                 });
 
@@ -161,6 +161,29 @@ namespace WebApi.Migrations
                     b.HasKey("AuthorId");
 
                     b.ToTable("Authors");
+
+                    b.HasData(
+                        new
+                        {
+                            AuthorId = 1,
+                            Bio = "Tác giả nổi tiếng với các tác phẩm văn học thiếu nhi.",
+                            FirstName = "Nguyễn Nhật",
+                            LastName = "Ánh"
+                        },
+                        new
+                        {
+                            AuthorId = 2,
+                            Bio = "Nhà văn, diễn giả người Mỹ.",
+                            FirstName = "Dale",
+                            LastName = "Carnegie"
+                        },
+                        new
+                        {
+                            AuthorId = 3,
+                            Bio = "Chuyên gia đào tạo, diễn giả người Singapore.",
+                            FirstName = "Adam",
+                            LastName = "Khoo"
+                        });
                 });
 
             modelBuilder.Entity("Book", b =>
@@ -203,6 +226,38 @@ namespace WebApi.Migrations
                     b.HasIndex("PublisherId");
 
                     b.ToTable("Books");
+
+                    b.HasData(
+                        new
+                        {
+                            BookId = 1,
+                            Description = "Câu chuyện về tuổi thơ hồn nhiên, trong trẻo ở vùng quê.",
+                            ISBN13 = "9786042048564",
+                            ImageUrl = "https://example.com/hoa-vang.jpg",
+                            PublicationYear = 2010,
+                            PublisherId = 1,
+                            Title = "Tôi thấy hoa vàng trên cỏ xanh"
+                        },
+                        new
+                        {
+                            BookId = 2,
+                            Description = "Tuyệt tác về nghệ thuật đối nhân xử thế.",
+                            ISBN13 = "9786046473130",
+                            ImageUrl = "https://example.com/dac-nhan-tam.jpg",
+                            PublicationYear = 2012,
+                            PublisherId = 2,
+                            Title = "Đắc nhân tâm"
+                        },
+                        new
+                        {
+                            BookId = 3,
+                            Description = "Hướng dẫn phương pháp học tập hiệu quả.",
+                            ISBN13 = "9786046473147",
+                            ImageUrl = "https://example.com/toi-tai-gioi.jpg",
+                            PublicationYear = 2015,
+                            PublisherId = 2,
+                            Title = "Tôi tài giỏi, bạn cũng thế"
+                        });
                 });
 
             modelBuilder.Entity("BookAuthor", b =>
@@ -220,6 +275,23 @@ namespace WebApi.Migrations
                     b.HasIndex("AuthorId");
 
                     b.ToTable("BookAuthors");
+
+                    b.HasData(
+                        new
+                        {
+                            BookId = 1,
+                            AuthorId = 1
+                        },
+                        new
+                        {
+                            BookId = 2,
+                            AuthorId = 2
+                        },
+                        new
+                        {
+                            BookId = 3,
+                            AuthorId = 3
+                        });
                 });
 
             modelBuilder.Entity("BookCategory", b =>
@@ -237,6 +309,28 @@ namespace WebApi.Migrations
                     b.HasIndex("CategoryId");
 
                     b.ToTable("BookCategories");
+
+                    b.HasData(
+                        new
+                        {
+                            BookId = 1,
+                            CategoryId = 1
+                        },
+                        new
+                        {
+                            BookId = 2,
+                            CategoryId = 2
+                        },
+                        new
+                        {
+                            BookId = 2,
+                            CategoryId = 3
+                        },
+                        new
+                        {
+                            BookId = 3,
+                            CategoryId = 2
+                        });
                 });
 
             modelBuilder.Entity("BookItem", b =>
@@ -269,6 +363,80 @@ namespace WebApi.Migrations
                     b.HasIndex("BookId");
 
                     b.ToTable("BookItems");
+
+                    b.HasData(
+                        new
+                        {
+                            ItemId = 1,
+                            Barcode = "BK-0001-A",
+                            BookId = 1,
+                            ShelfLocation = "A1-01",
+                            Status = "Available"
+                        },
+                        new
+                        {
+                            ItemId = 2,
+                            Barcode = "BK-0001-B",
+                            BookId = 1,
+                            ShelfLocation = "A1-01",
+                            Status = "Available"
+                        },
+                        new
+                        {
+                            ItemId = 3,
+                            Barcode = "BK-0001-C",
+                            BookId = 1,
+                            ShelfLocation = "A1-01",
+                            Status = "Available"
+                        },
+                        new
+                        {
+                            ItemId = 4,
+                            Barcode = "BK-0002-A",
+                            BookId = 2,
+                            ShelfLocation = "B2-02",
+                            Status = "Available"
+                        },
+                        new
+                        {
+                            ItemId = 5,
+                            Barcode = "BK-0002-B",
+                            BookId = 2,
+                            ShelfLocation = "B2-02",
+                            Status = "Available"
+                        },
+                        new
+                        {
+                            ItemId = 6,
+                            Barcode = "BK-0002-C",
+                            BookId = 2,
+                            ShelfLocation = "B2-02",
+                            Status = "Available"
+                        },
+                        new
+                        {
+                            ItemId = 7,
+                            Barcode = "BK-0003-A",
+                            BookId = 3,
+                            ShelfLocation = "C3-03",
+                            Status = "Available"
+                        },
+                        new
+                        {
+                            ItemId = 8,
+                            Barcode = "BK-0003-B",
+                            BookId = 3,
+                            ShelfLocation = "C3-03",
+                            Status = "Available"
+                        },
+                        new
+                        {
+                            ItemId = 9,
+                            Barcode = "BK-0003-C",
+                            BookId = 3,
+                            ShelfLocation = "C3-03",
+                            Status = "Available"
+                        });
                 });
 
             modelBuilder.Entity("Category", b =>
@@ -287,6 +455,23 @@ namespace WebApi.Migrations
                     b.HasKey("CategoryId");
 
                     b.ToTable("Categories");
+
+                    b.HasData(
+                        new
+                        {
+                            CategoryId = 1,
+                            Name = "Thiếu nhi"
+                        },
+                        new
+                        {
+                            CategoryId = 2,
+                            Name = "Kỹ năng sống"
+                        },
+                        new
+                        {
+                            CategoryId = 3,
+                            Name = "Tâm lý học"
+                        });
                 });
 
             modelBuilder.Entity("Fine", b =>
@@ -389,6 +574,26 @@ namespace WebApi.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "admin-role",
+                            Name = "Admin",
+                            NormalizedName = "ADMIN"
+                        },
+                        new
+                        {
+                            Id = "librarian-role",
+                            Name = "Librarian",
+                            NormalizedName = "LIBRARIAN"
+                        },
+                        new
+                        {
+                            Id = "user-role",
+                            Name = "User",
+                            NormalizedName = "USER"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -476,6 +681,23 @@ namespace WebApi.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("AspNetUserRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            UserId = "admin-1",
+                            RoleId = "admin-role"
+                        },
+                        new
+                        {
+                            UserId = "librarian-1",
+                            RoleId = "librarian-role"
+                        },
+                        new
+                        {
+                            UserId = "user-1",
+                            RoleId = "user-role"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
@@ -517,6 +739,20 @@ namespace WebApi.Migrations
                     b.HasKey("PublisherId");
 
                     b.ToTable("Publishers");
+
+                    b.HasData(
+                        new
+                        {
+                            PublisherId = 1,
+                            Address = "Hà Nội",
+                            Name = "Nhà xuất bản Kim Đồng"
+                        },
+                        new
+                        {
+                            PublisherId = 2,
+                            Address = "TP. Hồ Chí Minh",
+                            Name = "Nhà xuất bản Trẻ"
+                        });
                 });
 
             modelBuilder.Entity("Reservation", b =>

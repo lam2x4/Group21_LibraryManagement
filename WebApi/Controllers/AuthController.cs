@@ -39,7 +39,7 @@ public class AuthController : ControllerBase
                 authClaims.Add(new Claim(ClaimTypes.Role, userRole));
             }
 
-            var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Secret"]));
+            var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:SecretKey"]));
             var token = new JwtSecurityToken(
                 issuer: _configuration["JWT:ValidIssuer"],
                 audience: _configuration["JWT:ValidAudience"],
@@ -64,10 +64,10 @@ public class AuthController : ControllerBase
     [Route("register")]
     public async Task<IActionResult> Register([FromBody] RegisterModel model)
     {
-        var userExists = await _userManager.FindByNameAsync(model.UserName);
-        if (userExists != null)
+        var emailExists = await _userManager.FindByEmailAsync(model.Email);
+        if (emailExists != null)
         {
-            return StatusCode(StatusCodes.Status500InternalServerError, "Tên người dùng đã tồn tại.");
+            return StatusCode(StatusCodes.Status500InternalServerError, "Email đã tồn tại.");
         }
 
         ApplicationUser user = new ApplicationUser()
@@ -83,7 +83,7 @@ public class AuthController : ControllerBase
             return StatusCode(StatusCodes.Status500InternalServerError, $"Đăng ký thất bại: {string.Join(", ", result.Errors.Select(e => e.Description))}");
         }
 
-        await _userManager.AddToRoleAsync(user, "Member");
+        await _userManager.AddToRoleAsync(user, "User");
 
         return Ok("Đăng ký thành công.");
     }

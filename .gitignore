@@ -105,3 +105,4 @@ StyleCopReport.xml
 *.pfx
 *.publishsettings
 node_modules/
+/WebApi/Migrations
