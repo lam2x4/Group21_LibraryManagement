@@ -335,17 +335,11 @@ namespace WebApi.Migrations
                     DueDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ReturnDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     IsReturned = table.Column<bool>(type: "bit", nullable: false),
-                    LibrarianId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    ApplicationUserId = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                    LibrarianId = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Loans", x => x.LoanId);
-                    table.ForeignKey(
-                        name: "FK_Loans_AspNetUsers_ApplicationUserId",
-                        column: x => x.ApplicationUserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Loans_AspNetUsers_LibrarianId",
                         column: x => x.LibrarianId,
@@ -388,79 +382,13 @@ namespace WebApi.Migrations
                 });
 
             migrationBuilder.InsertData(
-                table: "Authors",
-                columns: new[] { "AuthorId", "Bio", "FirstName", "LastName" },
+                table: "AspNetUsers",
+                columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
                 values: new object[,]
                 {
-                    { 1, "Tác giả nổi tiếng với các tác phẩm văn học thiếu nhi.", "Nguyễn Nhật", "Ánh" },
-                    { 2, "Nhà văn, diễn giả người Mỹ.", "Dale", "Carnegie" },
-                    { 3, "Chuyên gia đào tạo, diễn giả người Singapore.", "Adam", "Khoo" }
-                });
-
-            migrationBuilder.InsertData(
-                table: "Categories",
-                columns: new[] { "CategoryId", "Name" },
-                values: new object[,]
-                {
-                    { 1, "Thiếu nhi" },
-                    { 2, "Kỹ năng sống" },
-                    { 3, "Tâm lý học" }
-                });
-
-            migrationBuilder.InsertData(
-                table: "Publishers",
-                columns: new[] { "PublisherId", "Address", "Name" },
-                values: new object[,]
-                {
-                    { 1, "Hà Nội", "Nhà xuất bản Kim Đồng" },
-                    { 2, "TP. Hồ Chí Minh", "Nhà xuất bản Trẻ" }
-                });
-
-            migrationBuilder.InsertData(
-                table: "Books",
-                columns: new[] { "BookId", "Description", "ISBN13", "ImageUrl", "PublicationYear", "PublisherId", "Title" },
-                values: new object[,]
-                {
-                    { 1, "Câu chuyện về tuổi thơ hồn nhiên, trong trẻo ở vùng quê.", "9786042048564", "https://example.com/hoa-vang.jpg", 2010, 1, "Tôi thấy hoa vàng trên cỏ xanh" },
-                    { 2, "Tuyệt tác về nghệ thuật đối nhân xử thế.", "9786046473130", "https://example.com/dac-nhan-tam.jpg", 2012, 2, "Đắc nhân tâm" },
-                    { 3, "Hướng dẫn phương pháp học tập hiệu quả.", "9786046473147", "https://example.com/toi-tai-gioi.jpg", 2015, 2, "Tôi tài giỏi, bạn cũng thế" }
-                });
-
-            migrationBuilder.InsertData(
-                table: "BookAuthors",
-                columns: new[] { "AuthorId", "BookId" },
-                values: new object[,]
-                {
-                    { 1, 1 },
-                    { 2, 2 },
-                    { 3, 3 }
-                });
-
-            migrationBuilder.InsertData(
-                table: "BookCategories",
-                columns: new[] { "BookId", "CategoryId" },
-                values: new object[,]
-                {
-                    { 1, 1 },
-                    { 2, 2 },
-                    { 2, 3 },
-                    { 3, 2 }
-                });
-
-            migrationBuilder.InsertData(
-                table: "BookItems",
-                columns: new[] { "ItemId", "Barcode", "BookId", "ShelfLocation", "Status" },
-                values: new object[,]
-                {
-                    { 1, "BK-0001-A", 1, "A1-01", "Available" },
-                    { 2, "BK-0001-B", 1, "A1-01", "Available" },
-                    { 3, "BK-0001-C", 1, "A1-01", "Available" },
-                    { 4, "BK-0002-A", 2, "B2-02", "Available" },
-                    { 5, "BK-0002-B", 2, "B2-02", "Available" },
-                    { 6, "BK-0002-C", 2, "B2-02", "Available" },
-                    { 7, "BK-0003-A", 3, "C3-03", "Available" },
-                    { 8, "BK-0003-B", 3, "C3-03", "Available" },
-                    { 9, "BK-0003-C", 3, "C3-03", "Available" }
+                    { "2df01559-6738-4449-9854-75052a71631d", 0, "db2155b0-a6ab-4e65-81bb-bb78902b8068", "user2@example.com", true, false, null, "USER2@EXAMPLE.COM", "USER2", "AQAAAAIAAYagAAAAELnu0ZzqlgCJANKKjnwXYGl+P1bA1UYlV3PFd81sH0vdQqQK/FuG0t8Yszk8k16yWg==", null, false, "216f32b2-6a95-4cc8-9535-de40c7c89df1", false, "user2" },
+                    { "85247806-c18e-4c38-b3fe-420be72dd196", 0, "f6fdc232-cfea-410c-9b28-7100291064ea", "user1@example.com", true, false, null, "USER1@EXAMPLE.COM", "USER1", "AQAAAAIAAYagAAAAEIo4+YM3YRC05Y2lvDO6bLrN3HlignejxgRmg1AHnSrwSUnwJZTO2BJrXz9LD59hbw==", null, false, "2017eccc-c9c0-4330-a203-418bb4e19b45", false, "user1" },
+                    { "b9d68a06-4c82-4334-95ae-b97cf434cf4a", 0, "fa250e29-83ed-4560-b395-2111f0fd0fd7", "librarian@example.com", true, false, null, "LIBRARIAN@EXAMPLE.COM", "LIBRARIAN", "AQAAAAIAAYagAAAAEJydw/GnaSK1wxktSSR0XIz2qrV4k/SVSgUqiU8qMhcZcX8/B7X4PwELGm9zyyMCGA==", null, false, "362c564a-6b42-4213-b956-896556a66b21", false, "librarian" }
                 });
 
             migrationBuilder.CreateIndex(
@@ -533,11 +461,6 @@ namespace WebApi.Migrations
                 table: "Fines",
                 column: "LoanId",
                 unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Loans_ApplicationUserId",
-                table: "Loans",
-                column: "ApplicationUserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Loans_ItemId",
