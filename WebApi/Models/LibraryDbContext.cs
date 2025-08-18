@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using WebApi.Models;
 
 public class LibraryDbContext : IdentityDbContext<ApplicationUser>
 {
@@ -11,10 +12,13 @@ public class LibraryDbContext : IdentityDbContext<ApplicationUser>
     public DbSet<Book> Books { get; set; }
     public DbSet<BookItem> BookItems { get; set; }
     public DbSet<Loan> Loans { get; set; }
-    public DbSet<Reservation> Reservations { get; set; }
     public DbSet<Fine> Fines { get; set; }
     public DbSet<BookAuthor> BookAuthors { get; set; }
     public DbSet<BookCategory> BookCategories { get; set; }
+    public DbSet<Rating> Ratings { get; set; }
+
+    public DbSet<Comment> Comments { get; set; }
+
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -81,15 +85,7 @@ public class LibraryDbContext : IdentityDbContext<ApplicationUser>
                   .HasForeignKey(l => l.LibrarianId)
                   .OnDelete(DeleteBehavior.NoAction);
         });
-
-
-        // Bảng Reservation
-        modelBuilder.Entity<Reservation>(entity =>
-        {
-            entity.Property(e => e.ReservationDate).IsRequired();
-            entity.Property(e => e.ExpirationDate).IsRequired();
-            entity.Property(e => e.Status).IsRequired().HasMaxLength(20);
-        });
+  
 
         // Bảng Fine
         modelBuilder.Entity<Fine>(entity =>
@@ -102,6 +98,35 @@ public class LibraryDbContext : IdentityDbContext<ApplicationUser>
                   .WithOne(l => l.Fine)
                   .HasForeignKey<Fine>(f => f.LoanId);
         });
+
+        // Bảng Rating
+        modelBuilder.Entity<Rating>()
+            .HasOne(r => r.Book)
+            .WithMany(b => b.Ratings)
+            .HasForeignKey(r => r.BookId);
+
+        modelBuilder.Entity<Rating>()
+            .HasOne(r => r.User)
+            .WithMany(u => u.Ratings)
+            .HasForeignKey(r => r.UserId);
+
+        // Bảng Comment
+        modelBuilder.Entity<Comment>()
+            .HasOne(c => c.Book)
+            .WithMany(b => b.Comments)
+            .HasForeignKey(c => c.BookId);
+
+        modelBuilder.Entity<Comment>()
+            .HasOne(c => c.User)
+            .WithMany(u => u.Comments)
+            .HasForeignKey(c => c.UserId);
+
+        // Cấu hình mối quan hệ tự tham chiếu (self-referencing) cho ParentComment
+        modelBuilder.Entity<Comment>()
+            .HasOne(c => c.ParentComment)
+            .WithMany(c => c.Replies)
+            .HasForeignKey(c => c.ParentCommentId)
+            .OnDelete(DeleteBehavior.Restrict); // Dùng Restrict để tránh xóa bình luận con khi xóa bình luận cha
 
         // Bảng liên kết nhiều-nhiều
         modelBuilder.Entity<BookAuthor>().HasKey(ba => new { ba.BookId, ba.AuthorId });

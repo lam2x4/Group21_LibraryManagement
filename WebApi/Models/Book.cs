@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Collections.Generic;
+using WebApi.Models;
 public class Book
 {
     [Key]
@@ -28,5 +29,6 @@ public class Book
     public ICollection<BookAuthor> BookAuthors { get; set; } = new List<BookAuthor>();
     public ICollection<BookCategory> BookCategories { get; set; } = new List<BookCategory>();
     public ICollection<BookItem> BookItems { get; set; } = new List<BookItem>();
-    public ICollection<Reservation> Reservations { get; set; } = new List<Reservation>();
+    public ICollection<Rating> Ratings { get; set; } = new List<Rating>();
+    public ICollection<Comment> Comments { get; set; } = new List<Comment>();
 }

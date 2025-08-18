@@ -6,6 +6,7 @@ using System.Text;
 using Microsoft.AspNetCore.OData;
 using Microsoft.OData.ModelBuilder;
 using Microsoft.AspNetCore.Identity;
+using WebApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -38,8 +39,9 @@ modelBuilder.EntitySet<Category>("Categories");
 modelBuilder.EntitySet<Book>("Books");
 modelBuilder.EntitySet<BookItem>("BookItems");
 modelBuilder.EntitySet<Loan>("Loans");
-modelBuilder.EntitySet<Reservation>("Reservations");
 modelBuilder.EntitySet<Fine>("Fines");
+modelBuilder.EntitySet<Rating>("Ratings");
+modelBuilder.EntitySet<Comment>("Comments");
 
 // Các EntitySet cho các bảng liên kết
 modelBuilder.EntitySet<BookAuthor>("BookAuthors");

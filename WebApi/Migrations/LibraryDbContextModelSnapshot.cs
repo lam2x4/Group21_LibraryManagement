@@ -90,15 +90,15 @@ namespace WebApi.Migrations
                         {
                             Id = "admin-1",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "4a035ace-3339-4799-99e2-f10830869c05",
+                            ConcurrencyStamp = "7e19f56e-c555-4c48-9344-601a8c506a2c",
                             Email = "admin@example.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@EXAMPLE.COM",
                             NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAIAAYagAAAAEKT05gZeLcmNvNRb2PhGqgMtF4xkKbkqxOG2IpS21gy0wHalnG29NIQ5CrQEa4sIJQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEAcFF0f/BuIRfxvcwnO09qs9Uby1GI1ljy+MGXf52ny4v1zmO0bEBfOUpla7333Uaw==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "74a66501-2a82-47f9-96ba-f563786bad81",
+                            SecurityStamp = "6f4d350b-3b19-4f92-859c-13fd4cf720ec",
                             TwoFactorEnabled = false,
                             UserName = "admin"
                         },
@@ -106,15 +106,15 @@ namespace WebApi.Migrations
                         {
                             Id = "librarian-1",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "8ae03ad3-8075-493a-af29-ba15844d9a1a",
+                            ConcurrencyStamp = "f0485945-9dce-493a-8521-906fc1a691bf",
                             Email = "librarian@example.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "LIBRARIAN@EXAMPLE.COM",
                             NormalizedUserName = "LIBRARIAN",
-                            PasswordHash = "AQAAAAIAAYagAAAAEInG+xCmnD9M4/8lECkN6aB6erJPAk3v6zi9Mq6trzCsp0jUzJy5Poeg4gkYU/zUxw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEGGqCljL8h2csND1S8jTVljqP/Q/rJv98IwGFrugO7uJ+CYPAE7eROnb17noiwzZQQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "8b49d2a8-17d9-4a67-9cb6-fcfe2ac0bee7",
+                            SecurityStamp = "a57c043b-c72e-45be-835b-3852d81f95c3",
                             TwoFactorEnabled = false,
                             UserName = "librarian"
                         },
@@ -122,15 +122,15 @@ namespace WebApi.Migrations
                         {
                             Id = "user-1",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "e1fabfb4-98d4-488d-bc4f-848e91965706",
+                            ConcurrencyStamp = "9b9c8363-89b0-4bfe-a7cb-890c5dc080eb",
                             Email = "user@example.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "USER@EXAMPLE.COM",
                             NormalizedUserName = "USER",
-                            PasswordHash = "AQAAAAIAAYagAAAAEJ/bE3+vZjZxflnIFTnMVPExdM9k20XXh32Db6sG90sHvFDjQwarwHDRhJcvprwhgw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEJl9xIWziVFxtpG4Qfr1Qug2TanK1K8mc2UmHpR1K5BU6KTkCdqOmZCfdFJU+L/HyQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "1f76954a-5f96-43a3-b830-796f5f4e2f95",
+                            SecurityStamp = "4d9d6078-a0d0-4dc0-a83e-80ce476c9afb",
                             TwoFactorEnabled = false,
                             UserName = "user"
                         });
@@ -755,39 +755,71 @@ namespace WebApi.Migrations
                         });
                 });
 
-            modelBuilder.Entity("Reservation", b =>
+            modelBuilder.Entity("WebApi.Models.Comment", b =>
                 {
-                    b.Property<int>("ReservationId")
+                    b.Property<int>("CommentId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ReservationId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CommentId"));
 
                     b.Property<int>("BookId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("ExpirationDate")
+                    b.Property<DateTime>("CommentDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("ReservationDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Status")
+                    b.Property<string>("Content")
                         .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
+
+                    b.Property<int?>("ParentCommentId")
+                        .HasColumnType("int");
 
                     b.Property<string>("UserId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.HasKey("ReservationId");
+                    b.HasKey("CommentId");
+
+                    b.HasIndex("BookId");
+
+                    b.HasIndex("ParentCommentId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Comments");
+                });
+
+            modelBuilder.Entity("WebApi.Models.Rating", b =>
+                {
+                    b.Property<int>("RatingId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("RatingId"));
+
+                    b.Property<int>("BookId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("RatingDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Score")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("RatingId");
 
                     b.HasIndex("BookId");
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Reservations");
+                    b.ToTable("Ratings");
                 });
 
             modelBuilder.Entity("Book", b =>
@@ -939,16 +971,42 @@ namespace WebApi.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Reservation", b =>
+            modelBuilder.Entity("WebApi.Models.Comment", b =>
                 {
                     b.HasOne("Book", "Book")
-                        .WithMany("Reservations")
+                        .WithMany("Comments")
+                        .HasForeignKey("BookId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("WebApi.Models.Comment", "ParentComment")
+                        .WithMany("Replies")
+                        .HasForeignKey("ParentCommentId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("ApplicationUser", "User")
+                        .WithMany("Comments")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Book");
+
+                    b.Navigation("ParentComment");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("WebApi.Models.Rating", b =>
+                {
+                    b.HasOne("Book", "Book")
+                        .WithMany("Ratings")
                         .HasForeignKey("BookId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("ApplicationUser", "User")
-                        .WithMany("Reservations")
+                        .WithMany("Ratings")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -960,11 +1018,13 @@ namespace WebApi.Migrations
 
             modelBuilder.Entity("ApplicationUser", b =>
                 {
+                    b.Navigation("Comments");
+
                     b.Navigation("LoansAsLibrarian");
 
                     b.Navigation("LoansAsUser");
 
-                    b.Navigation("Reservations");
+                    b.Navigation("Ratings");
                 });
 
             modelBuilder.Entity("Author", b =>
@@ -980,7 +1040,9 @@ namespace WebApi.Migrations
 
                     b.Navigation("BookItems");
 
-                    b.Navigation("Reservations");
+                    b.Navigation("Comments");
+
+                    b.Navigation("Ratings");
                 });
 
             modelBuilder.Entity("BookItem", b =>
@@ -1001,6 +1063,11 @@ namespace WebApi.Migrations
             modelBuilder.Entity("Publisher", b =>
                 {
                     b.Navigation("Books");
+                });
+
+            modelBuilder.Entity("WebApi.Models.Comment", b =>
+                {
+                    b.Navigation("Replies");
                 });
 #pragma warning restore 612, 618
         }
