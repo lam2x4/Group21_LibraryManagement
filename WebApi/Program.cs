@@ -14,6 +14,7 @@ builder.Services.AddODataServices();
 builder.Services.AddIdentityServices();
 builder.Services.AddAuthorization();
 builder.Services.AddSwaggerGenWithAuth();
+builder.Services.AddCustomJsonOptions();
 
 var app = builder.Build();
 

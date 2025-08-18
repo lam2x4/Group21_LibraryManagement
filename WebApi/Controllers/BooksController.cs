@@ -1,78 +1,100 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.OData.Formatter;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OData.Query;
 using Microsoft.AspNetCore.OData.Routing.Controllers;
+using WebApi.Models;
 
-namespace WebApi.Controllers
+[ApiController]
+[Route("api/[controller]")]
+public class BooksController : ODataController
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class BooksController : ODataController
+    private readonly LibraryDbContext _context;
+
+    public BooksController(LibraryDbContext context)
     {
-        private readonly LibraryDbContext _context;
+        _context = context;
+    }
 
-        public BooksController(LibraryDbContext context)
+    // ===================== ODATA GET =====================
+    // GET /odata/Books
+    [EnableQuery]
+    [HttpGet] 
+    [Route("/odata/Books")]
+    public IActionResult GetOData()
+    {
+        return Ok(_context.Books);
+    }
+
+    // ===================== API CRUD =====================
+    // POST /api/Books
+    // Trong BooksController.cs
+
+    [HttpPost]
+    public async Task<IActionResult> AddBook([FromBody] AddBookModel bookDto)
+    {
+        if (!ModelState.IsValid)
         {
-            _context = context;
+            return BadRequest(ModelState);
         }
 
-        // GET /odata/Books
-        // Cho phép truy vấn OData trên tập hợp Book
-        [EnableQuery]
-        [HttpGet("/odata/Books")]
-        public IActionResult Get()
+        // Tạo một đối tượng Book từ DTO
+        var book = new Book
         {
-            return Ok(_context.Books);
+            Title = bookDto.Title,
+            ISBN13 = bookDto.ISBN13,
+            PublicationYear = bookDto.PublicationYear,
+            Description = bookDto.Description,
+            ImageUrl = bookDto.ImageUrl,
+            PublisherId = bookDto.PublisherId
+        };
+
+        // Thêm sách vào context
+        _context.Books.Add(book);
+        await _context.SaveChangesAsync();
+
+        // Thêm các mối quan hệ nhiều-nhiều (Authors và Categories)
+        foreach (var authorId in bookDto.AuthorIds)
+        {
+            var bookAuthor = new BookAuthor { BookId = book.BookId, AuthorId = authorId };
+            _context.BookAuthors.Add(bookAuthor);
         }
 
-        // POST /odata/Books
-        // Thêm một cuốn sách mới
-        [HttpPost("/api/Books")]
-        public async Task<IActionResult> Post([FromBody] Book book)
+        foreach (var categoryId in bookDto.CategoryIds)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-            _context.Books.Add(book);
-            await _context.SaveChangesAsync();
-            return Created(book);
+            var bookCategory = new BookCategory { BookId = book.BookId, CategoryId = categoryId };
+            _context.BookCategories.Add(bookCategory);
         }
 
-        // PUT /odata/Books(1)
-        // Cập nhật thông tin của một cuốn sách
-        [HttpPut("{key}")]
-        public async Task<IActionResult> Put([FromODataUri] int key, [FromBody] Book updatedBook)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-            var book = await _context.Books.FindAsync(key);
-            if (book == null)
-            {
-                return NotFound();
-            }
+        await _context.SaveChangesAsync();
 
-            _context.Entry(book).CurrentValues.SetValues(updatedBook);
-            await _context.SaveChangesAsync();
-            return Updated(book);
-        }
+        return CreatedAtAction(nameof(AddBook), new { id = book.BookId }, book);
+    }
 
-        // DELETE /odata/Books(1)
-        // Xóa một cuốn sách
-        [HttpDelete("{key}")]
-        public async Task<IActionResult> Delete([FromODataUri] int key)
-        {
-            var book = await _context.Books.FindAsync(key);
-            if (book == null)
-            {
-                return NotFound();
-            }
-            _context.Books.Remove(book);
-            await _context.SaveChangesAsync();
-            return NoContent();
-        }
+    // PUT /api/Books/5
+    [HttpPut("{id}")]
+    public async Task<IActionResult> Put(int id, [FromBody] Book updatedBook)
+    {
+        if (id != updatedBook.BookId)
+            return BadRequest("Id không khớp với BookId");
+
+        var book = await _context.Books.FindAsync(id);
+        if (book == null)
+            return NotFound();
+
+        _context.Entry(book).CurrentValues.SetValues(updatedBook);
+        await _context.SaveChangesAsync();
+        return Ok(book);
+    }
+
+    // DELETE /api/Books/5
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> Delete(int id)
+    {
+        var book = await _context.Books.FindAsync(id);
+        if (book == null)
+            return NotFound();
+
+        _context.Books.Remove(book);
+        await _context.SaveChangesAsync();
+        return NoContent();
     }
 }
