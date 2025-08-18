@@ -107,3 +107,7 @@ StyleCopReport.xml
 node_modules/
 /WebApi/Migrations
 WebApi/Migrations/LibraryDbContextModelSnapshot.cs
+WebApi/Migrations/LibraryDbContextModelSnapshot.cs
+WebApi/Migrations/LibraryDbContextModelSnapshot.cs
+WebApi/Migrations/LibraryDbContextModelSnapshot.cs
+WebApi/Migrations/LibraryDbContextModelSnapshot.cs
