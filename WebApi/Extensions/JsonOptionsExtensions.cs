@@ -11,7 +11,6 @@ namespace WebApi.Extensions
             services.AddControllers()
                 .AddJsonOptions(options =>
                 {
-                    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
                     options.JsonSerializerOptions.MaxDepth = 64; // Tùy chỉnh nếu cần
                 });
 

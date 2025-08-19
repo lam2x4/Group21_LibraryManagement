@@ -1,8 +1,15 @@
+﻿using WebClient;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 builder.Services.AddRazorPages();
 
+builder.Services.AddHttpClient("Api", client =>
+{
+    // Cấu hình địa chỉ cơ sở của WebAPI
+    // Sử dụng địa chỉ localhost và port của project WebAPI của bạn
+    client.BaseAddress = new Uri("https://localhost:7069/");
+});
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -17,6 +24,7 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+app.UseAuthentication();  
 
 app.UseAuthorization();
 
