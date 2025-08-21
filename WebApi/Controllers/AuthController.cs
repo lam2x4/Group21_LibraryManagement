@@ -18,8 +18,7 @@ public class AuthController : ControllerBase
         _userManager = userManager;
         _configuration = configuration;
     }
-    [HttpPost]
-    [Route("login")]
+    [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] LoginModel model)
     {
         var user = await _userManager.FindByNameAsync(model.Email)
@@ -41,12 +40,12 @@ public class AuthController : ControllerBase
             }
 
             var authSigningKey = new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes(_configuration["JWT:SecretKey"])
+                Encoding.UTF8.GetBytes(_configuration["Jwt:SecretKey"])
             );
 
             var token = new JwtSecurityToken(
-                issuer: _configuration["JWT:ValidIssuer"],
-                audience: _configuration["JWT:ValidAudience"],
+                issuer: _configuration["Jwt:Issuer"],
+                audience: _configuration["Jwt:Audience"],
                 expires: DateTime.Now.AddHours(3),
                 claims: authClaims,
                 signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
@@ -57,7 +56,7 @@ public class AuthController : ControllerBase
                 token = new JwtSecurityTokenHandler().WriteToken(token),
                 expiration = token.ValidTo,
                 username = user.UserName,
-                roles = userRoles.ToList()  // ✅ ép thành List để JSON trả về ["Admin"]
+                roles = userRoles.ToList() 
             });
         }
 
@@ -65,8 +64,7 @@ public class AuthController : ControllerBase
     }
 
 
-    [HttpPost]
-    [Route("register")]
+    [HttpPost("register")]
     public async Task<IActionResult> Register([FromBody] RegisterModel model)
     {
         var emailExists = await _userManager.FindByEmailAsync(model.Email);
