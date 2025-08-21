@@ -9,10 +9,9 @@ builder.Services.AddDbContext<LibraryDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DB")));
 
 // Sử dụng các phương thức mở rộng đã tạo
+builder.Services.AddIdentityServices();
 builder.Services.AddJwtAuthentication(builder.Configuration);
 builder.Services.AddODataServices();
-builder.Services.AddIdentityServices();
-builder.Services.AddAuthorization();
 builder.Services.AddSwaggerGenWithAuth();
 builder.Services.AddCustomJsonOptions();
 
@@ -24,13 +23,11 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-app.UseCors("AllowAllOrigins");
 
 app.UseHttpsRedirection();
-
+app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
-
 app.MapControllers();
 
 app.Run();
