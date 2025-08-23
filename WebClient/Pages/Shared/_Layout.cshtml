@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@inject IHttpContextAccessor _httpContextAccessor
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -7,46 +9,92 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/WebClient.styles.css" asp-append-version="true" />
+    <!-- css from template-->
+    <link rel="stylesheet" href="~/plugins/bootstrap/css/bootstrap.min.css">
+    <!-- Themify -->
+    <link rel="stylesheet" href="~/plugins/themify/css/themify-icons.css">
+    <link rel="stylesheet" href="~/plugins/slick-carousel/slick-theme.css">
+    <link rel="stylesheet" href="~/plugins/slick-carousel/slick.css">
+    <!-- Slick Carousel -->
+    <link rel="stylesheet" href="~/plugins/owl-carousel/owl.carousel.min.css">
+    <link rel="stylesheet" href="~/plugins/owl-carousel/owl.theme.default.min.css">
+    <link rel="stylesheet" href="~/plugins/magnific-popup/magnific-popup.css">
+    <!-- manin stylesheet -->
+    <link rel="stylesheet" href="~/css/style.css">
+
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container">
-                <a class="navbar-brand" asp-area="" asp-page="/Index">WebClient</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                        data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Privacy">Privacy</a>
-                        </li>
-                    </ul>
-                    <ul class="navbar-nav flex-grow-1">
-                        @if (string.IsNullOrEmpty(Context.Request.Cookies["JWToken"]))
-                        {
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-page="/Auth/Login">Đăng nhập</a>
-                            </li>
-                        }
-                        else
-                        {
-                            <li class="nav-item">
-                                <form asp-page="/Auth/Login" asp-page-handler="Logout" method="post" class="form-inline">
-                                    <button type="submit" class="nav-link btn btn-link text-dark">Đăng xuất</button>
-                                </form>
-                            </li>
-                        }
-                    </ul>
+    <header class="header-top bg-grey justify-content-center">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-2 col-md-4 text-center d-none d-lg-block">
+                    <a class="navbar-brand " href="/Homepage/Index">
+                        <img src="~/images/logo.png" alt="" class="img-fluid">
+                    </a>
+                </div>
+
+                <div class="col-lg-8 col-md-12">
+                    <nav class="navbar navbar-expand-lg navigation-2 navigation">
+                        <a class="navbar-brand text-uppercase d-lg-none" href="#">
+                            <img src="~/images/logo.png" alt="" class="img-fluid">
+                        </a>
+                        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-collapse"
+                                aria-controls="navbar-collapse" aria-expanded="false" aria-label="Toggle navigation">
+                            <span class="ti-menu"></span>
+                        </button>
+
+                        <div class="collapse navbar-collapse" id="navbar-collapse">
+                            <!-- Menu bên trái -->
+                            <ul id="menu" class="menu navbar-nav mx-auto">
+                                <li class="nav-item"><a href="/Homepage/Index" class="nav-link">Home</a></li>
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown2" role="button" data-toggle="dropdown"
+                                       aria-haspopup="true" aria-expanded="false">Blog Posts</a>
+                                    <div class="dropdown-menu" aria-labelledby="navbarDropdown2">
+                                        <a class="dropdown-item" href="standard-fullwidth.html">Standard Fullwidth</a>
+                                        <a class="dropdown-item" href="standard-left-sidebar.html">Standard Left Sidebar</a>
+                                        <a class="dropdown-item" href="standard-right-sidebar.html">Standard Right Sidebar</a>
+                                    </div>
+                                </li>
+                                <li class="nav-item"><a href="about.html" class="nav-link">About</a></li>
+                                <li class="nav-item"><a href="fashion.html" class="nav-link">Category</a></li>
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown3" role="button" data-toggle="dropdown"
+                                       aria-haspopup="true" aria-expanded="false">Post Format</a>
+                                    <div class="dropdown-menu" aria-labelledby="navbarDropdown3">
+                                        <a class="dropdown-item" href="post-video.html">Video Formats</a>
+                                        <a class="dropdown-item" href="post-audio.html">Audio Format</a>
+                                        <a class="dropdown-item" href="post-link.html">Quote Format</a>
+                                        <a class="dropdown-item" href="post-gallery.html">Gallery Format</a>
+                                        <a class="dropdown-item" href="post-image.html">Image Format</a>
+                                    </div>
+                                </li>
+                                <li class="nav-item"><a href="contact.html" class="nav-link">Contact</a></li>
+                            </ul>
+
+                            <!-- Đăng nhập / Đăng ký / Logout bên phải -->
+                            <ul class="navbar-nav ml-auto">
+                                @if (_httpContextAccessor.HttpContext.Request.Cookies["JWToken"] != null)
+                                {
+                                    <li class="nav-item">
+                                        <form method="post" asp-page="/Auth/Login" asp-page-handler="Logout">
+                                            <button type="submit" class="btn-outline-danger btn-sm">Logout</button>
+                                        </form>
+                                    </li>
+                                }
+                                else
+                                {
+                                    <li class="nav-item"><a href="/Auth/Login" class="nav-link">Login</a></li>
+                                    <li class="nav-item"><a href="/Auth/Register" class="nav-link">Register</a></li>
+                                }
+                            </ul>
+                        </div>
+                    </nav>
                 </div>
             </div>
-        </nav>
+        </div>
     </header>
+
 
     <div class="container">
         <main role="main" class="pb-3">
@@ -54,15 +102,71 @@
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
+    <section class="footer-2 section-padding gray-bg pb-5">
         <div class="container">
-            &copy; 2025 - WebClient - <a asp-area="" asp-page="/Privacy">Privacy</a>
+            <div class="row justify-content-center">
+                <div class="col-lg-6">
+                    <div class="subscribe-footer text-center">
+                        <div class="form-group mb-0">
+                            <h2 class="mb-3">Subscribe Newsletter</h2>
+                            <p class="mb-4">Subscribe my Newsletter for new blog posts , tips and info.
+                            <p>
+                                <div class="form-group form-row align-items-center mb-0">
+                                    <div class="col-sm-9">
+                                        <input type="email" class="form-control" placeholder="Email Address">
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <a href="#" class="btn btn-dark ">Subscribe</a>
+                                    </div>
+                                </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer-btm mt-5 pt-4 border-top">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <ul class="list-inline footer-socials-2 text-center">
+                            <li class="list-inline-item"><a href="#">Privacy policy</a></li>
+                            <li class="list-inline-item"><a href="#">Support</a></li>
+                            <li class="list-inline-item"><a href="#">About</a></li>
+                            <li class="list-inline-item"><a href="#">Contact</a></li>
+                            <li class="list-inline-item"><a href="#">Terms</a></li>
+                            <li class="list-inline-item"><a href="#">Category</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="row justify-content-center">
+                    <div class="col-lg-6">
+                        <div class="copyright text-center ">
+                            @@ copyright all reserved to <a href="https://themefisher.com/">themefisher.com</a>-2019 Distribution <a href="https://themewagon.com">ThemeWagon.</a></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-    </footer>
+    </section>
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/plugins/jquery/jquery.js"></script>
+    <!-- Bootstrap jQuery -->
+    <script src="~/plugins/bootstrap/js/bootstrap.min.js"></script>
+    <script src="~/plugins/bootstrap/js/popper.min.js"></script>
+    <!-- Owl caeousel -->
+    <script src="~/plugins/owl-carousel/owl.carousel.min.js"></script>
+    <script src="~/plugins/slick-carousel/slick.min.js"></script>
+    <script src="~/plugins/magnific-popup/magnific-popup.js"></script>
+    <!-- Instagram Feed Js -->
+    <script src="~/plugins/instafeed-js/instafeed.min.js"></script>
+    <!-- Google Map -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCC72vZw-6tGqFyRhhg5CkF2fqfILn2Tsw"></script>
+    <script src="~/plugins/google-map/gmap.js"></script>
+    <!-- main js -->
+    <script src="~/js/custom.js"></script>
+
 
     @await RenderSectionAsync("Scripts", required: false)
 </body>

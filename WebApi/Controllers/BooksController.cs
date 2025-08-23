@@ -1,10 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OData.Query;
 using Microsoft.AspNetCore.OData.Routing.Controllers;
 using WebApi.Models;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize]
 public class BooksController : ODataController
 {
     private readonly LibraryDbContext _context;

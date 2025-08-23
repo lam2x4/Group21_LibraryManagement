@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace WebClient.Pages.Dto.Auth
+namespace WebClient.Dto.ApplicationUser
 {
     public class InputModel
     {
