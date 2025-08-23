@@ -4,10 +4,11 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddRazorPages();
 
+builder.Services.AddHttpContextAccessor();
+
 builder.Services.AddHttpClient("Api", client =>
 {
-    // Cấu hình địa chỉ cơ sở của WebAPI
-    // Sử dụng địa chỉ localhost và port của project WebAPI của bạn
+   
     client.BaseAddress = new Uri("https://localhost:7069/");
 });
 var app = builder.Build();
@@ -27,7 +28,12 @@ app.UseRouting();
 app.UseAuthentication();  
 
 app.UseAuthorization();
-
+// Đặt Homepage/Index làm trang mặc định
+app.MapGet("/", context =>
+{
+	context.Response.Redirect("/homepage/index");
+	return Task.CompletedTask;
+});
 app.MapRazorPages();
 
 app.Run();
