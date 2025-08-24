@@ -18,6 +18,8 @@ public class LibraryDbContext : IdentityDbContext<ApplicationUser>
     public DbSet<Rating> Ratings { get; set; }
 
     public DbSet<Comment> Comments { get; set; }
+    public DbSet<Room> Rooms { get; set; }
+    public DbSet<BookingRoom> BookingRooms { get; set; }
 
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -127,6 +129,25 @@ public class LibraryDbContext : IdentityDbContext<ApplicationUser>
             .WithMany(c => c.Replies)
             .HasForeignKey(c => c.ParentCommentId)
             .OnDelete(DeleteBehavior.Restrict); // Dùng Restrict để tránh xóa bình luận con khi xóa bình luận cha
+
+
+        // Bảng Room
+        modelBuilder.Entity<Room>(entity =>
+        {
+            entity.Property(e => e.RoomName).IsRequired().HasMaxLength(50);
+            entity.Property(e => e.RoomDescription).IsRequired().HasMaxLength(100);
+            entity.Property(e => e.PricePerNight).IsRequired().HasColumnType("decimal(18, 2)");
+            entity.Property(e => e.IsAvailable).IsRequired();
+        });
+        // Bảng BookingRoom
+
+        modelBuilder.Entity<BookingRoom>(entity =>
+        {       
+            entity.HasOne(br => br.User)
+                  .WithMany(u => u.BookingRooms) // Thêm navigation property BookingRooms vào ApplicationUser
+                  .HasForeignKey(br => br.UserId)
+                  .OnDelete(DeleteBehavior.Restrict); // Tránh xóa User khi có Booking
+        });
 
         // Bảng liên kết nhiều-nhiều
         modelBuilder.Entity<BookAuthor>().HasKey(ba => new { ba.BookId, ba.AuthorId });

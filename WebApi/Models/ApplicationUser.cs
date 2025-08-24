@@ -9,4 +9,5 @@ public class ApplicationUser : IdentityUser
     public ICollection<Loan> LoansAsLibrarian { get; set; }  
     public ICollection<Rating> Ratings { get; set; } = new List<Rating>();
     public ICollection<Comment> Comments { get; set; } = new List<Comment>();
+    public ICollection<BookingRoom> BookingRooms { get; set; } = new List<BookingRoom>();
 }
