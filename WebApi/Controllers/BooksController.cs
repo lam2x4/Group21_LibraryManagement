@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OData.Query;
 using Microsoft.AspNetCore.OData.Routing.Controllers;
+using Microsoft.EntityFrameworkCore;
 using WebApi.Models;
 
 [ApiController]
@@ -21,7 +22,7 @@ public class BooksController : ODataController
     [Route("/odata/Books")]
     public IActionResult GetOData()
     {
-        return Ok(_context.Books);
+        return Ok(_context.Books.Include(x => x.Publisher));
     }
 
     // ===================== API CRUD =====================

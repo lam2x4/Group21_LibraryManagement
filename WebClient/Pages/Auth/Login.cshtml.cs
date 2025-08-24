@@ -56,14 +56,29 @@ namespace WebClient.Pages.Auth
 
                 if (!string.IsNullOrEmpty(result?.Token))
                 {
+                    Console.WriteLine($"Login successful - Token: {result.Token?.Substring(0, 20)}..., UserId: {result.UserId}");
+                    
                     // Lưu token vào Cookie
                     HttpContext.Response.Cookies.Append("JWToken", result.Token, new CookieOptions
                     {
                         HttpOnly = true,
-                        Secure = true,
-                        SameSite = SameSiteMode.Strict,
+                        Secure = false, // Set to false for development
+                        SameSite = SameSiteMode.Lax, // More permissive for development
                         Expires = DateTimeOffset.UtcNow.AddHours(1)
                     });
+
+                    // Save UserId to cookie
+                    if (!string.IsNullOrEmpty(result.UserId))
+                    {
+                        Console.WriteLine($"Saving UserId cookie: {result.UserId}");
+                        HttpContext.Response.Cookies.Append("UserId", result.UserId, new CookieOptions
+                        {
+                            HttpOnly = false,
+                            Secure = false, // Set to false for development
+                            SameSite = SameSiteMode.Lax, // More permissive for development
+                            Expires = DateTimeOffset.UtcNow.AddHours(1)
+                        });
+                    }
 
                     if (result.Roles != null && result.Roles.Any())
                     {
@@ -72,8 +87,8 @@ namespace WebClient.Pages.Auth
                             new CookieOptions
                             {
                                 HttpOnly = false,
-                                Secure = true,
-                                SameSite = SameSiteMode.Strict,
+                                Secure = false, // Set to false for development
+                                SameSite = SameSiteMode.Lax, // More permissive for development
                                 Expires = DateTimeOffset.UtcNow.AddHours(1)
                             });
                     }
@@ -91,11 +106,14 @@ namespace WebClient.Pages.Auth
         // Phương thức mới để xử lý đăng xuất
         public IActionResult OnPostLogout()
         {
-            // Xóa cookie JWToken
-            HttpContext.Response.Cookies.Delete("JWToken");
+                    // Xóa cookie JWToken
+        HttpContext.Response.Cookies.Delete("JWToken");
 
-            // Xóa cookie UserRoles (nếu có)
-            HttpContext.Response.Cookies.Delete("UserRoles");
+        // Xóa cookie UserId
+        HttpContext.Response.Cookies.Delete("UserId");
+
+        // Xóa cookie UserRoles (nếu có)
+        HttpContext.Response.Cookies.Delete("UserRoles");
 
             // Chuyển hướng người dùng về trang đăng nhập
             return RedirectToPage("/Auth/Login");

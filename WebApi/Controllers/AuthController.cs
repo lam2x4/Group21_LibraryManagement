@@ -31,6 +31,8 @@ public class AuthController : ControllerBase
             var authClaims = new List<Claim>
         {
             new Claim(ClaimTypes.Name, user.UserName),
+            new Claim(ClaimTypes.NameIdentifier, user.Id), // Add UserId
+            new Claim(JwtRegisteredClaimNames.Sub, user.Id), // Add UserId as "sub" claim
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
         };
 
@@ -56,6 +58,7 @@ public class AuthController : ControllerBase
                 token = new JwtSecurityTokenHandler().WriteToken(token),
                 expiration = token.ValidTo,
                 username = user.UserName,
+                userId = user.Id, // Add UserId to response
                 roles = userRoles.ToList() 
             });
         }

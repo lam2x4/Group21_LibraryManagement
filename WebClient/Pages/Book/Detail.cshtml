@@ -1,0 +1,944 @@
+﻿@page "{id:int}"
+@model WebClient.Pages.Book.DetailModel
+@{
+    Layout = "TemplateLayout";
+    ViewData["Title"] = Model.Book?.Title ?? "Chi tiết sách";
+}
+
+
+<!-- #region name BookContent -> Click mượn sách -> Book Order -->
+
+<!-- Breadcrumb -->
+<div class="breadcrumb-section bg-light py-3">
+    <div class="container">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item"><a href="/">Trang chủ</a></li>
+                <li class="breadcrumb-item"><a href="/Book/List">Danh sách sách</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Chi tiết sách</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+
+<!-- Alert Messages -->
+@if (!string.IsNullOrEmpty(Model.ErrorMessage))
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="ti-alert mr-2"></i>@Model.ErrorMessage
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+                        </div>
+}
+
+@if (!string.IsNullOrEmpty(Model.SuccessMessage))
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="ti-check mr-2"></i>@Model.SuccessMessage
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+                        </div>
+}
+
+<section class="book-detail-section section-padding">
+            <div class="container">
+        @if (Model.Book != null)
+        {
+            <!-- Book Detail -->
+            <div class="row mb-5">
+                <div class="col-lg-4 col-md-6">
+                    <div class="book-image-container">
+                        @if (!string.IsNullOrEmpty(Model.Book.ImageUrl))
+                        {
+                            <img src="@Model.Book.ImageUrl" alt="@Model.Book.Title" class="img-fluid book-cover">
+                        }
+                        else
+                        {
+                            <div class="book-placeholder">
+                                <i class="ti-book"></i>
+                                <p>Không có hình ảnh</p>
+                    </div>
+                        }
+                    </div>
+                </div>
+                
+                <div class="col-lg-8 col-md-6">
+                    <div class="book-info">
+                        <div class="book-meta mb-3">
+                            <span class="publisher-badge">@Model.Book.Publisher.Name</span>
+                        </div>
+                        
+                        <h1 class="book-title">@Model.Book.Title</h1>
+                        
+                        <div class="book-details mt-4">
+                            <div class="detail-item">
+                                <strong>Nhà xuất bản:</strong>
+                                <span>@Model.Book.Publisher.Name</span>
+                        </div>
+                            <div class="detail-item">
+                                <strong>Năm xuất bản:</strong>
+                                <span>@Model.Book.PublicationYear</span>
+                        </div>
+                            <div class="detail-item">
+                                <strong>ISBN:</strong>
+                                <span>@Model.Book.ISBN13</span>
+                    </div>
+                            @if (!string.IsNullOrEmpty(Model.Book.Description))
+                            {
+                                <div class="detail-item">
+                                    <strong>Mô tả:</strong>
+                                    <p class="book-description">@Model.Book.Description</p>
+                                </div>
+                            }
+                        </div>
+                        
+                        <!-- Rating Summary -->
+                        <div class="rating-summary mt-4 p-3 bg-light rounded">
+                            <div class="d-flex align-items-center">
+                                <div class="average-rating mr-3">
+                                    <div class="rating-stars">
+                                        @for (int i = 1; i <= 5; i++)
+                                        {
+                                            if (i <= Model.AverageRating)
+                                            {
+                                                <i class="ti-star text-warning"></i>
+                                            }
+                                            else
+                                            {
+                                                <i class="ti-star text-muted"></i>
+                                            }
+                                        }
+                                    </div>
+                                    <span class="rating-number">@Model.AverageRating.ToString("F1")/5</span>
+                                </div>
+                                <span class="rating-count">(@Model.TotalRatings đánh giá)</span>
+                            </div>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="book-actions mt-4">
+                            @{
+                                var availableItem = Model.BookItems?.FirstOrDefault(item => item.Status == "Available");
+                            }
+                            @if (Model.IsLoggedIn)
+                            {
+                                @if (availableItem != null)
+                                {
+                                    <a href="/Book/Order/@availableItem.ItemId" class="btn btn-primary btn-lg mr-3">
+                                        <i class="ti-shopping-cart mr-2"></i>Mượn sách
+                                    </a>
+                                }
+                                else
+                                {
+                                    <button class="btn btn-secondary btn-lg mr-3" disabled>
+                                        <i class="ti-close mr-2"></i>Hết sách
+                                    </button>
+                                }
+                            }
+                            else
+                            {
+                                <a href="/Auth/Login" class="btn btn-warning btn-lg mr-3">
+                                    <i class="ti-user mr-2"></i>Đăng nhập để mượn sách
+                                </a>
+                            }
+                            <a href="/Book/List" class="btn btn-secondary">
+                                <i class="ti-arrow-left mr-2"></i>Quay lại danh sách
+                            </a>
+                        </div>
+                        
+                        <!-- Book Items Status -->
+                        @if (Model.BookItems?.Any() == true)
+                        {
+                            <div class="book-items-status mt-3">
+                                <h6>Trạng thái sách:</h6>
+                                <div class="d-flex flex-wrap">
+                                    @foreach (var item in Model.BookItems)
+                                    {
+                                        var statusClass = item.Status == "Available" ? "badge-success" : 
+                                                        item.Status == "Loaned" ? "badge-warning" : "badge-secondary";
+                                        <span class="badge @statusClass mr-2 mb-1">
+                                            @item.Barcode - @item.Status
+                                        </span>
+                                    }
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+                    </div>
+
+            <!-- Tabs for Comments and Rating -->
+            <div class="row">
+                <div class="col-lg-12">
+                    <ul class="nav nav-tabs mb-4" id="bookTabs" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" id="comments-tab" data-toggle="tab" href="#comments" role="tab">
+                                <i class="ti-comments mr-2"></i>Bình luận (@Model.Comments.Count)
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="ratings-tab" data-toggle="tab" href="#ratings" role="tab">
+                                <i class="ti-star mr-2"></i>Đánh giá (@Model.Ratings.Count)
+                            </a>
+                        </li>
+                    </ul>
+                    
+                    <div class="tab-content" id="bookTabsContent">
+                        <!-- Comments Tab -->
+                        <div class="tab-pane fade show active" id="comments" role="tabpanel">
+                            <!-- Add Comment Form -->
+                            @if (Model.IsLoggedIn && Model.HasUserLoanedBook)
+                            {
+                                <div class="comment-form-container mb-5">
+                                    <h4 class="mb-3">Thêm bình luận</h4>
+                                    <form method="post" asp-page-handler="Comment" class="comment-form">
+                                        @Html.AntiForgeryToken()
+                                        <input type="hidden" asp-for="NewComment.BookId" />
+                                        <div class="form-group">
+                                            <textarea asp-for="NewComment.Content" class="form-control" rows="4" 
+                                                    placeholder="Viết bình luận của bạn..." required></textarea>
+                                            <span asp-validation-for="NewComment.Content" class="text-danger"></span>
+                    </div>
+                                        <button type="submit" class="btn btn-primary">
+                                            <i class="ti-comment mr-2"></i>Gửi bình luận
+                                        </button>
+                                    </form>
+                                </div>
+                            }
+                            else if (!Model.IsLoggedIn)
+                            {
+                                <div class="alert alert-info mb-4">
+                                    <i class="ti-info mr-2"></i>
+                                    <a href="/Auth/Login">Đăng nhập</a> để thêm bình luận
+                                </div>
+                            }
+                            else if (!Model.HasUserLoanedBook)
+                            {
+                                <div class="alert alert-warning mb-4">
+                                    <i class="ti-alert mr-2"></i>
+                                    Bạn cần <strong>mượn sách này</strong> trước khi có thể bình luận
+                                </div>
+                            }
+                            
+                            <!-- Comments List -->
+                            <div class="comments-list">
+                                @if (Model.Comments.Any())
+                                {
+                                    @foreach (var comment in Model.Comments)
+                                    {
+                                        var canEdit = Model.IsLoggedIn && comment.UserId == Model.CurrentUserId && 
+                                                     (DateTime.Now - comment.CommentDate).TotalMinutes <= 15;
+                                        
+                                        <div class="comment-item mb-4 p-3 border rounded" id="comment-@comment.CommentId">
+                                            <div class="comment-header d-flex justify-content-between align-items-start mb-2">
+                                                <div class="user-info">
+                                                    <strong class="username">@(comment.UserName ?? "Người dùng ẩn danh")</strong>
+                                                    <small class="comment-date text-muted ml-2">
+                                                        <i class="ti-time mr-1"></i>
+                                                        @comment.CommentDate.ToString("dd/MM/yyyy HH:mm")
+                                                    </small>
+                                                </div>
+                                                @if (canEdit)
+                                                {
+                                                    <div class="comment-actions">
+                                                        <button type="button" class="btn btn-sm btn-outline-primary edit-comment-btn" 
+                                                                data-comment-id="@comment.CommentId" data-content="@comment.Content">
+                                                            <i class="ti-pencil"></i> Sửa
+                                                        </button>
+                                                        <button type="button" class="btn btn-sm btn-outline-danger delete-comment-btn" 
+                                                                data-comment-id="@comment.CommentId">
+                                                            <i class="ti-trash"></i> Xóa
+                                                        </button>
+                                                    </div>
+                                                }
+                                            </div>
+                                            <div class="comment-content">
+                                                <p class="mb-0 comment-text">@comment.Content</p>
+                                                @if (canEdit)
+                                                {
+                                                                                                         <div class="edit-comment-form" style="display: none;">
+                                                         <form method="post" asp-page-handler="UpdateComment" class="mt-3">
+                                                             @Html.AntiForgeryToken()
+                                                             <input type="hidden" asp-for="UpdateComment.CommentId" value="@comment.CommentId" />
+                                                             <input type="hidden" asp-for="UpdateComment.BookId" value="@Model.Book.BookId" />
+                                                             <div class="form-group">
+                                                                 <textarea asp-for="UpdateComment.Content" class="form-control" rows="3" 
+                                                                         placeholder="Chỉnh sửa bình luận..." required>@comment.Content</textarea>
+                                                                 <span asp-validation-for="UpdateComment.Content" class="text-danger"></span>
+                                                             </div>
+                                                             <div class="mt-2">
+                                                                 <button type="submit" class="btn btn-primary btn-sm">
+                                                                     <i class="ti-check"></i> Lưu
+                                                                 </button>
+                                                                 <button type="button" class="btn btn-secondary btn-sm cancel-edit-btn">
+                                                                     <i class="ti-close"></i> Hủy
+                                                                 </button>
+                                                             </div>
+                                                         </form>
+                                                     </div>
+                                                }
+                                            </div>
+                                        </div>
+                                    }
+                                }
+                                else
+                                {
+                                    <div class="text-center py-5">
+                                        <i class="ti-comment" style="font-size: 3rem; color: #ccc;"></i>
+                                        <p class="text-muted mt-3">Chưa có bình luận nào</p>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                        
+                        <!-- Ratings Tab -->
+                        <div class="tab-pane fade" id="ratings" role="tabpanel">
+                            <!-- Add Rating Form -->
+                            @if (Model.IsLoggedIn && Model.HasUserLoanedBook)
+                            {
+                                <div class="rating-form-container mb-5">
+                                    <h4 class="mb-3">Đánh giá sách</h4>
+                                    <form method="post" asp-page-handler="Rating" class="rating-form">
+                                        @Html.AntiForgeryToken()
+                                        <input type="hidden" asp-for="NewRating.BookId" />
+                                        <div class="form-group">
+                                            <label class="form-label">Điểm đánh giá:</label>
+                                            <div class="rating-input">
+                                                @for (int i = 1; i <= 5; i++)
+                                                {
+                                                    <label class="star-label">
+                                                        <input type="radio" asp-for="NewRating.Score" value="@i" class="star-input">
+                                                        <i class="ti-star"></i>
+                                                    </label>
+                                                }
+                                            </div>
+                                            <span asp-validation-for="NewRating.Score" class="text-danger"></span>
+                                        </div>
+                                        <button type="submit" class="btn btn-warning">
+                                            <i class="ti-star mr-2"></i>Gửi đánh giá
+                                        </button>
+                                    </form>
+                                </div>
+                            }
+                            else if (!Model.IsLoggedIn)
+                            {
+                                <div class="alert alert-info mb-4">
+                                    <i class="ti-info mr-2"></i>
+                                    <a href="/Auth/Login">Đăng nhập</a> để thêm đánh giá
+                                </div>
+                            }
+                            else if (!Model.HasUserLoanedBook)
+                            {
+                                <div class="alert alert-warning mb-4">
+                                    <i class="ti-alert mr-2"></i>
+                                    Bạn cần <strong>mượn sách này</strong> trước khi có thể đánh giá
+                                </div>
+                            }
+                            
+                            <!-- Ratings List -->
+                            <div class="ratings-list">
+                                @if (Model.Ratings.Any())
+                                {
+                                    @foreach (var rating in Model.Ratings)
+                                    {
+                                        var canEdit = Model.IsLoggedIn && rating.UserId == Model.CurrentUserId && 
+                                                     (DateTime.Now - rating.RatingDate).TotalMinutes <= 15;
+                                        
+                                        <div class="rating-item mb-3 p-3 border rounded" id="rating-@rating.RatingId">
+                                            <div class="rating-header d-flex justify-content-between align-items-center">
+                                                <div class="user-info d-flex align-items-center">
+                                                    <strong class="username">@(rating.UserName ?? "Người dùng ẩn danh")</strong>
+                                                    <div class="rating-stars ml-3">
+                                                        @for (int i = 1; i <= 5; i++)
+                                                        {
+                                                            if (i <= rating.Score)
+                                                            {
+                                                                <i class="ti-star text-warning"></i>
+                                                            }
+                                                            else
+                                                            {
+                                                                <i class="ti-star text-muted"></i>
+                                                            }
+                                                        }
+                                                        <span class="rating-score ml-2">(@rating.Score/5)</span>
+                                                    </div>
+                                                </div>
+                                                <div class="d-flex align-items-center">
+                                                    <small class="rating-date text-muted mr-3">
+                                                        <i class="ti-time mr-1"></i>
+                                                        @rating.RatingDate.ToString("dd/MM/yyyy HH:mm")
+                                                    </small>
+                                                    @if (canEdit)
+                                                    {
+                                                        <div class="rating-actions">
+                                                            <button type="button" class="btn btn-sm btn-outline-primary edit-rating-btn" 
+                                                                    data-rating-id="@rating.RatingId" data-score="@rating.Score">
+                                                                <i class="ti-pencil"></i> Sửa
+                                                            </button>
+                                                            <button type="button" class="btn btn-sm btn-outline-danger delete-rating-btn" 
+                                                                    data-rating-id="@rating.RatingId">
+                                                                <i class="ti-trash"></i> Xóa
+                                                            </button>
+                                                        </div>
+                                                    }
+                                                </div>
+                                            </div>
+                                            @if (canEdit)
+                                            {
+                                                                                                 <div class="edit-rating-form" style="display: none;">
+                                                     <form method="post" asp-page-handler="UpdateRating" class="mt-3">
+                                                         @Html.AntiForgeryToken()
+                                                         <input type="hidden" asp-for="UpdateRating.RatingId" value="@rating.RatingId" />
+                                                         <input type="hidden" asp-for="UpdateRating.BookId" value="@Model.Book.BookId" />
+                                                         <div class="form-group">
+                                                             <label class="form-label">Điểm đánh giá mới:</label>
+                                                             <div class="rating-input">
+                                                                 @for (int i = 1; i <= 5; i++)
+                                                                 {
+                                                                     <label class="star-label">
+                                                                         <input type="radio" asp-for="UpdateRating.Score" value="@i" class="star-input">
+                                                                         <i class="ti-star"></i>
+                                                                     </label>
+                                                                 }
+                                                             </div>
+                                                             <span asp-validation-for="UpdateRating.Score" class="text-danger"></span>
+                                                         </div>
+                                                         <div class="mt-2">
+                                                             <button type="submit" class="btn btn-warning btn-sm">
+                                                                 <i class="ti-check"></i> Lưu
+                                                             </button>
+                                                             <button type="button" class="btn btn-secondary btn-sm cancel-edit-rating-btn">
+                                                                 <i class="ti-close"></i> Hủy
+                                                             </button>
+                                                         </div>
+                                                     </form>
+                                                 </div>
+                                            }
+                                        </div>
+                                    }
+                                }
+                                else
+                                {
+                                    <div class="text-center py-5">
+                                        <i class="ti-star" style="font-size: 3rem; color: #ccc;"></i>
+                                        <p class="text-muted mt-3">Chưa có đánh giá nào</p>
+                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                        </div>
+        }
+        else
+        {
+            <div class="text-center py-5">
+                <i class="ti-alert" style="font-size: 4rem; color: #dc3545;"></i>
+                <h3 class="mt-3">Không tìm thấy sách</h3>
+                <p class="text-muted">Sách bạn tìm kiếm không tồn tại hoặc đã bị xóa.</p>
+                <a href="/Book/List" class="btn btn-primary">
+                    <i class="ti-arrow-left mr-2"></i>Quay lại danh sách
+                </a>
+                            </div>
+        }
+                        </div>
+</section>
+
+<!-- #endregion -->
+               
+<style>
+    /* Book Detail Styling */
+    .book-detail-section {
+        background: #f8f9fa;
+        min-height: 80vh;
+    }
+    
+    .book-image-container {
+        position: relative;
+        text-align: center;
+    }
+    
+    .book-cover {
+        max-height: 400px;
+        border-radius: 10px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        transition: transform 0.3s ease;
+    }
+    
+    .book-cover:hover {
+        transform: scale(1.05);
+    }
+    
+    .book-placeholder {
+        height: 400px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, #e9ecef 0%, #dee2e6 100%);
+        border-radius: 10px;
+        color: #6c757d;
+    }
+    
+    .book-placeholder i {
+        font-size: 4rem;
+        margin-bottom: 15px;
+    }
+    
+    .publisher-badge {
+        background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+        color: white;
+        padding: 6px 15px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    
+    .book-title {
+        font-size: 2.5rem;
+        font-weight: 800;
+        color: #2c3e50;
+        line-height: 1.2;
+        margin-bottom: 20px;
+    }
+    
+    .book-details .detail-item {
+        margin-bottom: 12px;
+        padding: 8px 0;
+        border-bottom: 1px solid #e9ecef;
+    }
+    
+    .book-details .detail-item:last-child {
+        border-bottom: none;
+    }
+    
+    .book-details strong {
+        color: #495057;
+        font-weight: 600;
+        min-width: 120px;
+        display: inline-block;
+    }
+    
+    .book-description {
+        margin-top: 8px;
+        color: #6c757d;
+        line-height: 1.6;
+    }
+    
+    .rating-summary {
+        border: 2px solid #ffc107;
+        background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+    }
+    
+    .rating-stars i {
+        font-size: 1.2rem;
+        margin-right: 2px;
+    }
+    
+    .rating-number {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #f39c12;
+        margin-left: 10px;
+    }
+    
+    .rating-count {
+        color: #6c757d;
+        font-size: 14px;
+    }
+    
+    .book-actions .btn {
+        padding: 12px 30px;
+        font-weight: 600;
+        border-radius: 25px;
+        transition: all 0.3s ease;
+    }
+    
+    .book-actions .btn-primary {
+        background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+        border: none;
+        box-shadow: 0 5px 15px rgba(40, 167, 69, 0.3);
+    }
+    
+    .book-actions .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(40, 167, 69, 0.4);
+    }
+    
+    /* Tabs Styling */
+    .nav-tabs {
+        border-bottom: 3px solid #007bff;
+    }
+    
+    .nav-tabs .nav-link {
+        border: none;
+        font-weight: 600;
+        color: #6c757d;
+        padding: 15px 25px;
+        border-radius: 10px 10px 0 0;
+        margin-right: 5px;
+        transition: all 0.3s ease;
+    }
+    
+    .nav-tabs .nav-link.active {
+        background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+        color: white;
+        border: none;
+    }
+    
+    .nav-tabs .nav-link:hover {
+        border: none;
+        background: rgba(0, 123, 255, 0.1);
+        color: #007bff;
+    }
+    
+    /* Comment Styling */
+    .comment-form-container {
+        background: white;
+        padding: 25px;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+    }
+    
+    .comment-form textarea {
+        border: 2px solid #e9ecef;
+        border-radius: 8px;
+        padding: 15px;
+        transition: border-color 0.3s ease;
+        resize: vertical;
+        min-height: 120px;
+    }
+    
+    .comment-form textarea:focus {
+        border-color: #007bff;
+        box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+    }
+    
+    .comment-item {
+        background: white;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    
+    .comment-item:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+    
+    .username {
+        color: #007bff;
+        font-size: 16px;
+    }
+    
+    .comment-date {
+        font-size: 12px;
+    }
+    
+    .comment-content {
+        color: #495057;
+        line-height: 1.6;
+    }
+    
+    /* Rating Form Styling */
+    .rating-form-container {
+        background: white;
+        padding: 25px;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+    }
+    
+    .rating-input {
+        display: flex;
+        gap: 10px;
+        margin: 10px 0;
+    }
+    
+    .star-label {
+        cursor: pointer;
+        position: relative;
+    }
+    
+    .star-input {
+        position: absolute;
+        opacity: 0;
+        cursor: pointer;
+    }
+    
+    .star-label i {
+        font-size: 2rem;
+        color: #dee2e6;
+        transition: color 0.2s ease;
+    }
+    
+    .star-input:checked ~ i,
+    .star-input:checked ~ * i,
+    .star-label:hover i,
+    .star-label:hover ~ .star-label i {
+        color: #ffc107;
+    }
+    
+    .rating-item {
+        background: white;
+        border-left: 4px solid #ffc107;
+    }
+    
+    .rating-stars .ti-star {
+        font-size: 16px;
+    }
+    
+    .rating-score {
+        font-weight: 600;
+        color: #f39c12;
+    }
+    
+    /* Alert Styling */
+    .alert {
+        border-radius: 10px;
+        border: none;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        margin-bottom: 0;
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 1050;
+        max-width: 400px;
+        animation: slideInRight 0.5s ease;
+    }
+
+    
+    /* Breadcrumb Styling */
+    .breadcrumb {
+        background: none;
+        padding: 0;
+    }
+    
+    .breadcrumb-item a {
+        color: #007bff;
+        text-decoration: none;
+    }
+    
+    .breadcrumb-item a:hover {
+        text-decoration: underline;
+    }
+    
+    .breadcrumb-item.active {
+        color: #6c757d;
+    }
+
+    /* Edit/Delete buttons styling */
+    .comment-actions, .rating-actions {
+        display: flex;
+        gap: 5px;
+    }
+
+    .edit-comment-btn, .edit-rating-btn {
+        background: linear-gradient(135deg, #007bff, #0056b3);
+        border: none;
+        color: white;
+        transition: all 0.3s ease;
+    }
+
+    .edit-comment-btn:hover, .edit-rating-btn:hover {
+        background: linear-gradient(135deg, #0056b3, #004085);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 123, 255, 0.3);
+    }
+
+    .delete-comment-btn, .delete-rating-btn {
+        background: linear-gradient(135deg, #dc3545, #c82333);
+        border: none;
+        color: white;
+        transition: all 0.3s ease;
+    }
+
+    .delete-comment-btn:hover, .delete-rating-btn:hover {
+        background: linear-gradient(135deg, #c82333, #a71e2a);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(220, 53, 69, 0.3);
+    }
+
+    .edit-comment-form, .edit-rating-form {
+        background: #f8f9fa;
+        border-radius: 8px;
+        padding: 15px;
+        margin-top: 10px;
+        border: 1px solid #dee2e6;
+    }
+
+    .cancel-edit-btn, .cancel-edit-rating-btn {
+        background: linear-gradient(135deg, #6c757d, #545b62);
+        border: none;
+        color: white;
+        transition: all 0.3s ease;
+    }
+
+    .cancel-edit-btn:hover, .cancel-edit-rating-btn:hover {
+        background: linear-gradient(135deg, #545b62, #3d4449);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(108, 117, 125, 0.3);
+    }
+</style>
+
+<script>
+    // Auto-hide alerts after 5 seconds
+    document.addEventListener('DOMContentLoaded', function() {
+        setTimeout(function() {
+            var alerts = document.querySelectorAll('.alert');
+            alerts.forEach(function(alert) {
+                var bsAlert = new bootstrap.Alert(alert);
+                bsAlert.close();
+            });
+        }, 5000);
+    });
+    
+    // Star rating interaction
+    document.addEventListener('DOMContentLoaded', function() {
+        const starLabels = document.querySelectorAll('.star-label');
+        
+        starLabels.forEach((label, index) => {
+            label.addEventListener('mouseenter', function() {
+                // Highlight stars up to this one
+                for (let i = 0; i <= index; i++) {
+                    starLabels[i].querySelector('i').style.color = '#ffc107';
+                }
+                // Unhighlight stars after this one
+                for (let i = index + 1; i < starLabels.length; i++) {
+                    starLabels[i].querySelector('i').style.color = '#dee2e6';
+                }
+            });
+        });
+        
+        // Reset on mouse leave
+        const ratingInput = document.querySelector('.rating-input');
+        if (ratingInput) {
+            ratingInput.addEventListener('mouseleave', function() {
+                const checkedInput = document.querySelector('.star-input:checked');
+                const checkedIndex = checkedInput ? Array.from(starLabels).findIndex(label => label.querySelector('.star-input') === checkedInput) : -1;
+                
+                starLabels.forEach((label, index) => {
+                    if (index <= checkedIndex) {
+                        label.querySelector('i').style.color = '#ffc107';
+                    } else {
+                        label.querySelector('i').style.color = '#dee2e6';
+                    }
+                });
+            });
+        }
+    });
+
+    // Comment edit functionality
+    document.addEventListener('DOMContentLoaded', function() {
+        // Edit comment buttons
+        document.querySelectorAll('.edit-comment-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const commentId = this.getAttribute('data-comment-id');
+                const commentItem = document.getElementById(`comment-${commentId}`);
+                const commentText = commentItem.querySelector('.comment-text');
+                const editForm = commentItem.querySelector('.edit-comment-form');
+                const commentActions = commentItem.querySelector('.comment-actions');
+
+                commentText.style.display = 'none';
+                editForm.style.display = 'block';
+                commentActions.style.display = 'none';
+            });
+        });
+
+        // Cancel edit comment buttons
+        document.querySelectorAll('.cancel-edit-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const commentItem = this.closest('.comment-item');
+                const commentText = commentItem.querySelector('.comment-text');
+                const editForm = commentItem.querySelector('.edit-comment-form');
+                const commentActions = commentItem.querySelector('.comment-actions');
+
+                commentText.style.display = 'block';
+                editForm.style.display = 'none';
+                commentActions.style.display = 'block';
+            });
+        });
+
+                 // Delete comment buttons
+         document.querySelectorAll('.delete-comment-btn').forEach(btn => {
+             btn.addEventListener('click', function() {
+                 if (confirm('Bạn có chắc chắn muốn xóa bình luận này?')) {
+                     const commentId = this.getAttribute('data-comment-id');
+                     const bookId = @Model.Book.BookId;
+                     const form = document.createElement('form');
+                     form.method = 'POST';
+                     form.action = `?handler=DeleteComment&commentId=${commentId}&bookId=${bookId}`;
+                     
+                     // Add antiforgery token
+                     const token = document.querySelector('input[name="__RequestVerificationToken"]');
+                     if (token) {
+                         const tokenInput = document.createElement('input');
+                         tokenInput.type = 'hidden';
+                         tokenInput.name = '__RequestVerificationToken';
+                         tokenInput.value = token.value;
+                         form.appendChild(tokenInput);
+                     }
+                     
+                     document.body.appendChild(form);
+                     form.submit();
+                 }
+             });
+         });
+
+        // Edit rating buttons
+        document.querySelectorAll('.edit-rating-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const ratingId = this.getAttribute('data-rating-id');
+                const ratingItem = document.getElementById(`rating-${ratingId}`);
+                const ratingHeader = ratingItem.querySelector('.rating-header');
+                const editForm = ratingItem.querySelector('.edit-rating-form');
+                const ratingActions = ratingItem.querySelector('.rating-actions');
+
+                ratingHeader.style.display = 'none';
+                editForm.style.display = 'block';
+                ratingActions.style.display = 'none';
+            });
+        });
+
+        // Cancel edit rating buttons
+        document.querySelectorAll('.cancel-edit-rating-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const ratingItem = this.closest('.rating-item');
+                const ratingHeader = ratingItem.querySelector('.rating-header');
+                const editForm = ratingItem.querySelector('.edit-rating-form');
+                const ratingActions = ratingItem.querySelector('.rating-actions');
+
+                ratingHeader.style.display = 'flex';
+                editForm.style.display = 'none';
+                ratingActions.style.display = 'block';
+            });
+        });
+
+                 // Delete rating buttons
+         document.querySelectorAll('.delete-rating-btn').forEach(btn => {
+             btn.addEventListener('click', function() {
+                 if (confirm('Bạn có chắc chắn muốn xóa đánh giá này?')) {
+                     const ratingId = this.getAttribute('data-rating-id');
+                     const bookId = @Model.Book.BookId;
+                     const form = document.createElement('form');
+                     form.method = 'POST';
+                     form.action = `?handler=DeleteRating&ratingId=${ratingId}&bookId=${bookId}`;
+                     
+                     // Add antiforgery token
+                     const token = document.querySelector('input[name="__RequestVerificationToken"]');
+                     if (token) {
+                         const tokenInput = document.createElement('input');
+                         tokenInput.type = 'hidden';
+                         tokenInput.name = '__RequestVerificationToken';
+                         tokenInput.value = token.value;
+                         form.appendChild(tokenInput);
+                     }
+                     
+                     document.body.appendChild(form);
+                     form.submit();
+                 }
+             });
+         });
+    });
+</script>

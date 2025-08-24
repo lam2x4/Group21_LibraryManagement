@@ -1,0 +1,348 @@
+﻿@page
+@model WebClient.Pages.Book.ListModel
+@{
+	Layout = "TemplateLayout";
+	ViewData["Title"] = "Danh sách sách";
+}
+
+<!-- Search Section -->
+<section class="section-padding bg-light">
+	<div class="container">
+		<div class="row justify-content-center">
+			<div class="col-lg-8">
+				<div class="search-box bg-white p-4 rounded shadow-sm">
+					<h4 class="mb-4 text-center">Tìm kiếm sách</h4>
+					<form method="get">
+						<div class="row">
+							<div class="col-md-4 mb-3">
+								<input type="text" class="form-control" placeholder="Tên sách..." name="SearchTitle" value="@Model.SearchTitle" />
+							</div>
+							<div class="col-md-4 mb-3">
+								<input type="text" class="form-control" placeholder="Nhà xuất bản..." name="SearchPublisher" value="@Model.SearchPublisher" />
+							</div>
+							<div class="col-md-4 mb-3">
+								<input type="number" class="form-control" placeholder="Năm xuất bản..." name="SearchYear" value="@Model.SearchYear" />
+							</div>
+						</div>
+						<div class="text-center">
+							<button type="submit" class="btn btn-primary mr-2">
+								<i class="ti-search"></i> Tìm kiếm
+							</button>
+							<a href="/Book/List" class="btn btn-secondary">
+								<i class="ti-reload"></i> Làm mới
+							</a>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+
+<section class="section-padding">
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="text-center mb-5">
+					<h2 class="text-uppercase">Danh sách sách</h2>
+					<p class="text-muted">Tìm thấy @Model.Books.Count sách</p>
+				</div>
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+				@if (Model.Books.Any())
+				{
+					<div class="row">
+						@foreach (var book in Model.Books)
+						{
+							<div class="col-lg-4 col-md-6">
+								<article class="post-grid mb-5 book-item">
+									<a class="post-thumb mb-4 d-block" href="/Book/Detail/@book.BookId">
+										@if (!string.IsNullOrEmpty(book.ImageUrl))
+										{
+											<img src="@book.ImageUrl" alt="@book.Title" class="img-fluid w-100" style="height: 300px; object-fit: cover;">
+										}
+										else
+										{
+											<div class="img-placeholder d-flex align-items-center justify-content-center bg-light" style="height: 300px;">
+												<i class="ti-book text-muted" style="font-size: 3rem;"></i>
+											</div>
+										}
+									</a>
+									<span class="cat-name text-color font-extra text-sm text-uppercase letter-spacing-1">@book.Publisher.Name</span>
+									<h3 class="post-title mt-1"><a href="/Book/Detail/@book.BookId">@book.Title</a></h3>
+
+									<span class="text-muted letter-spacing text-uppercase font-sm">Năm xuất bản: @book.PublicationYear</span>
+									<span class="text-muted letter-spacing text-uppercase font-sm">ISBN: @book.ISBN13</span>
+
+									<!-- Spacer để đẩy buttons xuống cuối -->
+									<div style="flex-grow: 1;"></div>
+
+									<!-- Buttons -->
+									<div class="book-actions">
+										<a href="/Book/Detail/@book.BookId" class="btn btn-primary btn-sm">
+											<i class="ti-eye"></i> Xem chi tiết
+										</a>
+										@if (Model.IsLoggedIn)
+										{
+											<a href="/Book/Order/@book.BookId" class="btn btn-success btn-sm">
+												<i class="ti-shopping-cart"></i> Mượn sách
+											</a>
+										}
+										else
+										{
+											<a href="/Auth/Login" class="btn btn-warning btn-sm">
+												<i class="ti-user"></i> Đăng nhập
+											</a>
+										}
+									</div>
+								</article>
+							</div>
+						}
+					</div>
+				}
+				else
+				{
+					<div class="row">
+						<div class="col-12">
+							<div class="text-center py-5">
+								<i class="ti-search" style="font-size: 4rem; color: #ccc;"></i>
+								<h4 class="mt-3 text-muted">Không tìm thấy sách nào</h4>
+								<p class="text-muted">Vui lòng thử lại với từ khóa khác hoặc <a href="/Book/List">xem tất cả sách</a></p>
+							</div>
+						</div>
+					</div>
+				}
+			</div>
+		</div>
+	</div>
+</section>
+
+<style>
+	.book-item {
+		transition: transform 0.3s ease, box-shadow 0.3s ease;
+		border: 1px solid #e0e6ed;
+		border-radius: 12px;
+		padding: 20px;
+		background: white;
+		height: 550px;
+		display: flex;
+		flex-direction: column;
+		position: relative;
+		overflow: hidden;
+	}
+
+		.book-item:hover {
+			transform: translateY(-8px);
+			box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+			border-color: #007bff;
+		}
+
+	.post-thumb {
+		flex-shrink: 0;
+		margin-bottom: 15px;
+	}
+
+		.post-thumb img, .img-placeholder {
+			border-radius: 10px;
+			height: 250px !important;
+			width: 100% !important;
+			object-fit: cover;
+		}
+
+	.img-placeholder {
+		background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+	
+	/* Publisher styling */
+	.cat-name {
+		color: #007bff !important;
+		font-weight: 600;
+		font-size: 12px;
+		margin-bottom: 8px;
+		display: inline-block;
+		background: rgba(0, 123, 255, 0.1);
+		padding: 4px 12px;
+		border-radius: 15px;
+		text-transform: uppercase;
+		letter-spacing: 0.5px;
+	}
+	
+	/* Year and ISBN styling */
+	.text-muted {
+		font-size: 12px;
+		margin-bottom: 8px;
+		display: block;
+		color: #6c757d !important;
+		font-weight: 500;
+	}
+
+	/* Publisher Styling */
+	.book-publisher {
+		margin-bottom: 8px;
+		font-size: 13px;
+	}
+
+	.publisher-label {
+		color: #6c757d;
+		font-weight: 500;
+	}
+
+	.publisher-name {
+		color: #007bff;
+		font-weight: 600;
+		margin-left: 5px;
+	}
+
+	/* Year Styling */
+	.book-year {
+		margin-bottom: 8px;
+		font-size: 13px;
+	}
+
+	.year-label {
+		color: #6c757d;
+		font-weight: 500;
+	}
+
+	.year-value {
+		color: #495057;
+		font-weight: 600;
+		margin-left: 5px;
+	}
+
+	/* ISBN Styling */
+	.book-isbn {
+		margin-bottom: 15px;
+		font-size: 12px;
+	}
+
+	.isbn-label {
+		color: #6c757d;
+		font-weight: 500;
+	}
+
+	.isbn-value {
+		color: #495057;
+		font-weight: 500;
+		margin-left: 5px;
+		font-family: 'Courier New', monospace;
+	}
+
+	.book-actions {
+		margin-top: auto;
+		flex-shrink: 0;
+		padding-top: 15px;
+		display: flex;
+		gap: 10px;
+		width: 100%;
+	}
+
+		.book-actions .btn {
+			font-size: 12px;
+			padding: 8px 12px;
+			border-radius: 20px;
+			font-weight: 600;
+			flex: 1;
+			text-align: center;
+			transition: all 0.3s ease;
+			border: none;
+			text-transform: uppercase;
+			letter-spacing: 0.5px;
+		}
+
+		.book-actions .btn-primary {
+			background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+			color: white;
+		}
+
+			.book-actions .btn-primary:hover {
+				background: linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%);
+				transform: translateY(-2px);
+				box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+			}
+
+		.book-actions .btn-success {
+			background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+			color: white;
+		}
+
+					.book-actions .btn-success:hover {
+			background: linear-gradient(135deg, #0f8782 0%, #32d46e 100%);
+			transform: translateY(-2px);
+			box-shadow: 0 5px 15px rgba(17, 153, 142, 0.4);
+		}
+
+		.book-actions .btn-warning {
+			background: linear-gradient(135deg, #ffc107 0%, #e0a800 100%);
+			color: white;
+		}
+
+		.book-actions .btn-warning:hover {
+			background: linear-gradient(135deg, #e0a800 0%, #d39e00 100%);
+			transform: translateY(-2px);
+			box-shadow: 0 5px 15px rgba(255, 193, 7, 0.4);
+		}
+
+	.search-box {
+		margin-bottom: 3rem;
+		border-radius: 15px;
+		border: 1px solid #e0e6ed;
+		background: white;
+	}
+
+		.search-box h4 {
+			color: #2c3e50;
+			font-weight: 700;
+		}
+
+		.search-box .form-control {
+			border-radius: 25px;
+			border: 2px solid #e9ecef;
+			padding: 12px 20px;
+			font-size: 14px;
+			transition: all 0.3s ease;
+		}
+
+			.search-box .form-control:focus {
+				border-color: #007bff;
+				box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+			}
+
+		.search-box .btn {
+			border-radius: 25px;
+			padding: 10px 25px;
+			font-weight: 600;
+			text-transform: uppercase;
+			letter-spacing: 0.5px;
+			border: none;
+		}
+
+		.search-box .btn-primary {
+			background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+		}
+
+			.search-box .btn-primary:hover {
+				background: linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%);
+				transform: translateY(-2px);
+				box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+			}
+
+		.search-box .btn-secondary {
+			background: linear-gradient(135deg, #bdc3c7 0%, #95a5a6 100%);
+			color: white;
+		}
+
+			.search-box .btn-secondary:hover {
+				background: linear-gradient(135deg, #a8b3b8 0%, #7f8c8d 100%);
+				transform: translateY(-2px);
+			}
+</style>
+
+
+<!-- #endregion -->
