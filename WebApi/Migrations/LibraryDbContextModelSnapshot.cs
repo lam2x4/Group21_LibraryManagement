@@ -90,15 +90,15 @@ namespace WebApi.Migrations
                         {
                             Id = "admin-1",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "7e19f56e-c555-4c48-9344-601a8c506a2c",
+                            ConcurrencyStamp = "15608d76-5a62-4bfb-907b-32c3f4c429b0",
                             Email = "admin@example.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@EXAMPLE.COM",
                             NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAIAAYagAAAAEAcFF0f/BuIRfxvcwnO09qs9Uby1GI1ljy+MGXf52ny4v1zmO0bEBfOUpla7333Uaw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAECST1LM9CAHa1D6rpo7NB8CbDP/fhfDNgXjkF36zlPZZKHHj8Wbk1sBJ/hqlE/xqlw==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "6f4d350b-3b19-4f92-859c-13fd4cf720ec",
+                            SecurityStamp = "b1f06eb2-12dc-47cf-947b-88e417116a81",
                             TwoFactorEnabled = false,
                             UserName = "admin"
                         },
@@ -106,15 +106,15 @@ namespace WebApi.Migrations
                         {
                             Id = "librarian-1",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "f0485945-9dce-493a-8521-906fc1a691bf",
+                            ConcurrencyStamp = "3b566339-3ac5-4f07-9932-8be942b08cef",
                             Email = "librarian@example.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "LIBRARIAN@EXAMPLE.COM",
                             NormalizedUserName = "LIBRARIAN",
-                            PasswordHash = "AQAAAAIAAYagAAAAEGGqCljL8h2csND1S8jTVljqP/Q/rJv98IwGFrugO7uJ+CYPAE7eROnb17noiwzZQQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEBxj2LdftYarHK4VqKNMciLm5gq9PzLpzMCxMNkKqac4kJ/qCQo/mtZ2lJhVhYZGhw==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "a57c043b-c72e-45be-835b-3852d81f95c3",
+                            SecurityStamp = "c6bc4144-516e-4094-bcc1-72a8ea48ca06",
                             TwoFactorEnabled = false,
                             UserName = "librarian"
                         },
@@ -122,15 +122,15 @@ namespace WebApi.Migrations
                         {
                             Id = "user-1",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "9b9c8363-89b0-4bfe-a7cb-890c5dc080eb",
+                            ConcurrencyStamp = "6a6d33c2-4ff2-48b0-acd2-e827ca805e3f",
                             Email = "user@example.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "USER@EXAMPLE.COM",
                             NormalizedUserName = "USER",
-                            PasswordHash = "AQAAAAIAAYagAAAAEJl9xIWziVFxtpG4Qfr1Qug2TanK1K8mc2UmHpR1K5BU6KTkCdqOmZCfdFJU+L/HyQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAENyJsOOAiUbHIyve1Cx7Mcvfc/U5CxiCI9il2BNU58cqEN6JE8hycQ9Drz7FOWrCyg==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "4d9d6078-a0d0-4dc0-a83e-80ce476c9afb",
+                            SecurityStamp = "85a86f34-c039-4586-8ad6-11cd5dc0397a",
                             TwoFactorEnabled = false,
                             UserName = "user"
                         });
@@ -183,6 +183,27 @@ namespace WebApi.Migrations
                             Bio = "Chuyên gia đào tạo, diễn giả người Singapore.",
                             FirstName = "Adam",
                             LastName = "Khoo"
+                        },
+                        new
+                        {
+                            AuthorId = 4,
+                            Bio = "Nhà văn Nhật Bản nổi tiếng với phong cách siêu thực.",
+                            FirstName = "Haruki",
+                            LastName = "Murakami"
+                        },
+                        new
+                        {
+                            AuthorId = 5,
+                            Bio = "Tác giả bộ truyện Harry Potter.",
+                            FirstName = "J.K.",
+                            LastName = "Rowling"
+                        },
+                        new
+                        {
+                            AuthorId = 6,
+                            Bio = "Ông hoàng truyện kinh dị.",
+                            FirstName = "Stephen",
+                            LastName = "King"
                         });
                 });
 
@@ -257,6 +278,176 @@ namespace WebApi.Migrations
                             PublicationYear = 2015,
                             PublisherId = 2,
                             Title = "Tôi tài giỏi, bạn cũng thế"
+                        },
+                        new
+                        {
+                            BookId = 4,
+                            Description = "Tác phẩm tiêu biểu của Haruki Murakami.",
+                            ISBN13 = "9786049581907",
+                            ImageUrl = "https://example.com/rung-na-uy.jpg",
+                            PublicationYear = 2014,
+                            PublisherId = 3,
+                            Title = "Rừng Na Uy"
+                        },
+                        new
+                        {
+                            BookId = 5,
+                            Description = "Cuốn sách đầu tiên trong series Harry Potter.",
+                            ISBN13 = "9780747532743",
+                            ImageUrl = "https://example.com/harry-potter-1.jpg",
+                            PublicationYear = 1997,
+                            PublisherId = 4,
+                            Title = "Harry Potter và Hòn đá Phù thủy"
+                        },
+                        new
+                        {
+                            BookId = 6,
+                            Description = "Câu chuyện kinh dị về một thực thể bí ẩn.",
+                            ISBN13 = "9780451419708",
+                            ImageUrl = "https://example.com/it.jpg",
+                            PublicationYear = 1986,
+                            PublisherId = 4,
+                            Title = "IT"
+                        },
+                        new
+                        {
+                            BookId = 7,
+                            Description = "Cuộc hành trình của cậu bé chăn cừu đi tìm kho báu.",
+                            ISBN13 = "9786049581914",
+                            ImageUrl = "https://example.com/nha-gia-kim.jpg",
+                            PublicationYear = 2010,
+                            PublisherId = 3,
+                            Title = "Nhà giả kim"
+                        },
+                        new
+                        {
+                            BookId = 8,
+                            Description = "Bộ truyện tranh kinh điển của Nhật Bản.",
+                            ISBN13 = "9786042079087",
+                            ImageUrl = "https://example.com/bay-vien-ngoc-rong.jpg",
+                            PublicationYear = 2011,
+                            PublisherId = 1,
+                            Title = "Bảy viên ngọc rồng"
+                        },
+                        new
+                        {
+                            BookId = 9,
+                            Description = "Từ vượn người tới người tinh khôn.",
+                            ISBN13 = "9786049581921",
+                            ImageUrl = "https://example.com/luoc-su-loai-nguoi.jpg",
+                            PublicationYear = 2013,
+                            PublisherId = 3,
+                            Title = "Lược sử loài người"
+                        },
+                        new
+                        {
+                            BookId = 10,
+                            Description = "Câu chuyện cảm động về một chú chó.",
+                            ISBN13 = "9786042079094",
+                            ImageUrl = "https://example.com/toi-la-beto.jpg",
+                            PublicationYear = 2015,
+                            PublisherId = 1,
+                            Title = "Tôi là Bê-Tô"
+                        },
+                        new
+                        {
+                            BookId = 11,
+                            Description = "Series truyện trinh thám nổi tiếng.",
+                            ISBN13 = "9786042079100",
+                            ImageUrl = "https://example.com/conan.jpg",
+                            PublicationYear = 2018,
+                            PublisherId = 1,
+                            Title = "Thám tử lừng danh Conan"
+                        },
+                        new
+                        {
+                            BookId = 12,
+                            Description = "Câu chuyện về luật nhân quả.",
+                            ISBN13 = "9786042079117",
+                            ImageUrl = "https://example.com/muon-kiep-nhan-sinh.jpg",
+                            PublicationYear = 2020,
+                            PublisherId = 2,
+                            Title = "Muôn kiếp nhân sinh"
+                        },
+                        new
+                        {
+                            BookId = 13,
+                            Description = "Truyện tranh hài hước về một cô bé tiểu học.",
+                            ISBN13 = "9786042079124",
+                            ImageUrl = "https://example.com/nhoc-miko.jpg",
+                            PublicationYear = 2019,
+                            PublisherId = 1,
+                            Title = "Nhóc Miko!"
+                        },
+                        new
+                        {
+                            BookId = 14,
+                            Description = "Tiểu thuyết trinh thám của Keigo Higashino.",
+                            ISBN13 = "9786049581938",
+                            ImageUrl = "https://example.com/phai-sau-nghi-can-x.jpg",
+                            PublicationYear = 2015,
+                            PublisherId = 3,
+                            Title = "Phía sau nghi can X"
+                        },
+                        new
+                        {
+                            BookId = 15,
+                            Description = "Cuốn sách về ý nghĩa của cuộc sống.",
+                            ISBN13 = "9786049581945",
+                            ImageUrl = "https://example.com/song.jpg",
+                            PublicationYear = 2011,
+                            PublisherId = 3,
+                            Title = "Sống"
+                        },
+                        new
+                        {
+                            BookId = 16,
+                            Description = "Sách về tâm lý học và cách hiểu người khác.",
+                            ISBN13 = "9786046473154",
+                            ImageUrl = "https://example.com/doc-vi.jpg",
+                            PublicationYear = 2016,
+                            PublisherId = 2,
+                            Title = "Đọc vị bất kỳ ai"
+                        },
+                        new
+                        {
+                            BookId = 17,
+                            Description = "Tập hợp các câu chuyện thần thoại Hy Lạp.",
+                            ISBN13 = "9780141380922",
+                            ImageUrl = "https://example.com/than-thoai-hy-lap.jpg",
+                            PublicationYear = 2007,
+                            PublisherId = 4,
+                            Title = "Thần thoại Hy Lạp"
+                        },
+                        new
+                        {
+                            BookId = 18,
+                            Description = "Tiểu thuyết châm biếm của Vũ Trọng Phụng.",
+                            ISBN13 = "9786049581952",
+                            ImageUrl = "https://example.com/so-do.jpg",
+                            PublicationYear = 2016,
+                            PublisherId = 3,
+                            Title = "Số đỏ"
+                        },
+                        new
+                        {
+                            BookId = 19,
+                            Description = "Tác phẩm của Brian Weiss về tiền kiếp.",
+                            ISBN13 = "9786046473161",
+                            ImageUrl = "https://example.com/kiep-nao.jpg",
+                            PublicationYear = 2019,
+                            PublisherId = 2,
+                            Title = "Kiếp nào ta cũng tìm thấy nhau"
+                        },
+                        new
+                        {
+                            BookId = 20,
+                            Description = "Câu chuyện triết lý về tình yêu và cuộc sống.",
+                            ISBN13 = "9786042079131",
+                            ImageUrl = "https://example.com/hoang-tu-be.jpg",
+                            PublicationYear = 2018,
+                            PublisherId = 1,
+                            Title = "Hoàng tử bé"
                         });
                 });
 
@@ -291,6 +482,91 @@ namespace WebApi.Migrations
                         {
                             BookId = 3,
                             AuthorId = 3
+                        },
+                        new
+                        {
+                            BookId = 4,
+                            AuthorId = 4
+                        },
+                        new
+                        {
+                            BookId = 5,
+                            AuthorId = 5
+                        },
+                        new
+                        {
+                            BookId = 6,
+                            AuthorId = 6
+                        },
+                        new
+                        {
+                            BookId = 7,
+                            AuthorId = 2
+                        },
+                        new
+                        {
+                            BookId = 8,
+                            AuthorId = 1
+                        },
+                        new
+                        {
+                            BookId = 9,
+                            AuthorId = 3
+                        },
+                        new
+                        {
+                            BookId = 10,
+                            AuthorId = 1
+                        },
+                        new
+                        {
+                            BookId = 11,
+                            AuthorId = 4
+                        },
+                        new
+                        {
+                            BookId = 12,
+                            AuthorId = 2
+                        },
+                        new
+                        {
+                            BookId = 13,
+                            AuthorId = 1
+                        },
+                        new
+                        {
+                            BookId = 14,
+                            AuthorId = 3
+                        },
+                        new
+                        {
+                            BookId = 15,
+                            AuthorId = 2
+                        },
+                        new
+                        {
+                            BookId = 16,
+                            AuthorId = 2
+                        },
+                        new
+                        {
+                            BookId = 17,
+                            AuthorId = 6
+                        },
+                        new
+                        {
+                            BookId = 18,
+                            AuthorId = 1
+                        },
+                        new
+                        {
+                            BookId = 19,
+                            AuthorId = 5
+                        },
+                        new
+                        {
+                            BookId = 20,
+                            AuthorId = 1
                         });
                 });
 
@@ -330,6 +606,91 @@ namespace WebApi.Migrations
                         {
                             BookId = 3,
                             CategoryId = 2
+                        },
+                        new
+                        {
+                            BookId = 4,
+                            CategoryId = 4
+                        },
+                        new
+                        {
+                            BookId = 5,
+                            CategoryId = 6
+                        },
+                        new
+                        {
+                            BookId = 6,
+                            CategoryId = 5
+                        },
+                        new
+                        {
+                            BookId = 7,
+                            CategoryId = 2
+                        },
+                        new
+                        {
+                            BookId = 8,
+                            CategoryId = 1
+                        },
+                        new
+                        {
+                            BookId = 9,
+                            CategoryId = 7
+                        },
+                        new
+                        {
+                            BookId = 10,
+                            CategoryId = 1
+                        },
+                        new
+                        {
+                            BookId = 11,
+                            CategoryId = 4
+                        },
+                        new
+                        {
+                            BookId = 12,
+                            CategoryId = 3
+                        },
+                        new
+                        {
+                            BookId = 13,
+                            CategoryId = 1
+                        },
+                        new
+                        {
+                            BookId = 14,
+                            CategoryId = 4
+                        },
+                        new
+                        {
+                            BookId = 15,
+                            CategoryId = 2
+                        },
+                        new
+                        {
+                            BookId = 16,
+                            CategoryId = 3
+                        },
+                        new
+                        {
+                            BookId = 17,
+                            CategoryId = 7
+                        },
+                        new
+                        {
+                            BookId = 18,
+                            CategoryId = 4
+                        },
+                        new
+                        {
+                            BookId = 19,
+                            CategoryId = 3
+                        },
+                        new
+                        {
+                            BookId = 20,
+                            CategoryId = 1
                         });
                 });
 
@@ -370,7 +731,7 @@ namespace WebApi.Migrations
                             ItemId = 1,
                             Barcode = "BK-0001-A",
                             BookId = 1,
-                            ShelfLocation = "A1-01",
+                            ShelfLocation = "Shelf-1-A",
                             Status = "Available"
                         },
                         new
@@ -378,7 +739,7 @@ namespace WebApi.Migrations
                             ItemId = 2,
                             Barcode = "BK-0001-B",
                             BookId = 1,
-                            ShelfLocation = "A1-01",
+                            ShelfLocation = "Shelf-1-B",
                             Status = "Available"
                         },
                         new
@@ -386,7 +747,7 @@ namespace WebApi.Migrations
                             ItemId = 3,
                             Barcode = "BK-0001-C",
                             BookId = 1,
-                            ShelfLocation = "A1-01",
+                            ShelfLocation = "Shelf-1-C",
                             Status = "Available"
                         },
                         new
@@ -394,7 +755,7 @@ namespace WebApi.Migrations
                             ItemId = 4,
                             Barcode = "BK-0002-A",
                             BookId = 2,
-                            ShelfLocation = "B2-02",
+                            ShelfLocation = "Shelf-2-A",
                             Status = "Available"
                         },
                         new
@@ -402,7 +763,7 @@ namespace WebApi.Migrations
                             ItemId = 5,
                             Barcode = "BK-0002-B",
                             BookId = 2,
-                            ShelfLocation = "B2-02",
+                            ShelfLocation = "Shelf-2-B",
                             Status = "Available"
                         },
                         new
@@ -410,7 +771,7 @@ namespace WebApi.Migrations
                             ItemId = 6,
                             Barcode = "BK-0002-C",
                             BookId = 2,
-                            ShelfLocation = "B2-02",
+                            ShelfLocation = "Shelf-2-C",
                             Status = "Available"
                         },
                         new
@@ -418,7 +779,7 @@ namespace WebApi.Migrations
                             ItemId = 7,
                             Barcode = "BK-0003-A",
                             BookId = 3,
-                            ShelfLocation = "C3-03",
+                            ShelfLocation = "Shelf-3-A",
                             Status = "Available"
                         },
                         new
@@ -426,7 +787,7 @@ namespace WebApi.Migrations
                             ItemId = 8,
                             Barcode = "BK-0003-B",
                             BookId = 3,
-                            ShelfLocation = "C3-03",
+                            ShelfLocation = "Shelf-3-B",
                             Status = "Available"
                         },
                         new
@@ -434,7 +795,415 @@ namespace WebApi.Migrations
                             ItemId = 9,
                             Barcode = "BK-0003-C",
                             BookId = 3,
-                            ShelfLocation = "C3-03",
+                            ShelfLocation = "Shelf-3-C",
+                            Status = "Available"
+                        },
+                        new
+                        {
+                            ItemId = 10,
+                            Barcode = "BK-0004-A",
+                            BookId = 4,
+                            ShelfLocation = "Shelf-4-A",
+                            Status = "Available"
+                        },
+                        new
+                        {
+                            ItemId = 11,
+                            Barcode = "BK-0004-B",
+                            BookId = 4,
+                            ShelfLocation = "Shelf-4-B",
+                            Status = "Available"
+                        },
+                        new
+                        {
+                            ItemId = 12,
+                            Barcode = "BK-0004-C",
+                            BookId = 4,
+                            ShelfLocation = "Shelf-4-C",
+                            Status = "Available"
+                        },
+                        new
+                        {
+                            ItemId = 13,
+                            Barcode = "BK-0005-A",
+                            BookId = 5,
+                            ShelfLocation = "Shelf-5-A",
+                            Status = "Available"
+                        },
+                        new
+                        {
+                            ItemId = 14,
+                            Barcode = "BK-0005-B",
+                            BookId = 5,
+                            ShelfLocation = "Shelf-5-B",
+                            Status = "Available"
+                        },
+                        new
+                        {
+                            ItemId = 15,
+                            Barcode = "BK-0005-C",
+                            BookId = 5,
+                            ShelfLocation = "Shelf-5-C",
+                            Status = "Available"
+                        },
+                        new
+                        {
+                            ItemId = 16,
+                            Barcode = "BK-0006-A",
+                            BookId = 6,
+                            ShelfLocation = "Shelf-6-A",
+                            Status = "Available"
+                        },
+                        new
+                        {
+                            ItemId = 17,
+                            Barcode = "BK-0006-B",
+                            BookId = 6,
+                            ShelfLocation = "Shelf-6-B",
+                            Status = "Available"
+                        },
+                        new
+                        {
+                            ItemId = 18,
+                            Barcode = "BK-0006-C",
+                            BookId = 6,
+                            ShelfLocation = "Shelf-6-C",
+                            Status = "Available"
+                        },
+                        new
+                        {
+                            ItemId = 19,
+                            Barcode = "BK-0007-A",
+                            BookId = 7,
+                            ShelfLocation = "Shelf-7-A",
+                            Status = "Available"
+                        },
+                        new
+                        {
+                            ItemId = 20,
+                            Barcode = "BK-0007-B",
+                            BookId = 7,
+                            ShelfLocation = "Shelf-7-B",
+                            Status = "Available"
+                        },
+                        new
+                        {
+                            ItemId = 21,
+                            Barcode = "BK-0007-C",
+                            BookId = 7,
+                            ShelfLocation = "Shelf-7-C",
+                            Status = "Available"
+                        },
+                        new
+                        {
+                            ItemId = 22,
+                            Barcode = "BK-0008-A",
+                            BookId = 8,
+                            ShelfLocation = "Shelf-8-A",
+                            Status = "Available"
+                        },
+                        new
+                        {
+                            ItemId = 23,
+                            Barcode = "BK-0008-B",
+                            BookId = 8,
+                            ShelfLocation = "Shelf-8-B",
+                            Status = "Available"
+                        },
+                        new
+                        {
+                            ItemId = 24,
+                            Barcode = "BK-0008-C",
+                            BookId = 8,
+                            ShelfLocation = "Shelf-8-C",
+                            Status = "Available"
+                        },
+                        new
+                        {
+                            ItemId = 25,
+                            Barcode = "BK-0009-A",
+                            BookId = 9,
+                            ShelfLocation = "Shelf-9-A",
+                            Status = "Available"
+                        },
+                        new
+                        {
+                            ItemId = 26,
+                            Barcode = "BK-0009-B",
+                            BookId = 9,
+                            ShelfLocation = "Shelf-9-B",
+                            Status = "Available"
+                        },
+                        new
+                        {
+                            ItemId = 27,
+                            Barcode = "BK-0009-C",
+                            BookId = 9,
+                            ShelfLocation = "Shelf-9-C",
+                            Status = "Available"
+                        },
+                        new
+                        {
+                            ItemId = 28,
+                            Barcode = "BK-0010-A",
+                            BookId = 10,
+                            ShelfLocation = "Shelf-10-A",
+                            Status = "Available"
+                        },
+                        new
+                        {
+                            ItemId = 29,
+                            Barcode = "BK-0010-B",
+                            BookId = 10,
+                            ShelfLocation = "Shelf-10-B",
+                            Status = "Available"
+                        },
+                        new
+                        {
+                            ItemId = 30,
+                            Barcode = "BK-0010-C",
+                            BookId = 10,
+                            ShelfLocation = "Shelf-10-C",
+                            Status = "Available"
+                        },
+                        new
+                        {
+                            ItemId = 31,
+                            Barcode = "BK-0011-A",
+                            BookId = 11,
+                            ShelfLocation = "Shelf-11-A",
+                            Status = "Available"
+                        },
+                        new
+                        {
+                            ItemId = 32,
+                            Barcode = "BK-0011-B",
+                            BookId = 11,
+                            ShelfLocation = "Shelf-11-B",
+                            Status = "Available"
+                        },
+                        new
+                        {
+                            ItemId = 33,
+                            Barcode = "BK-0011-C",
+                            BookId = 11,
+                            ShelfLocation = "Shelf-11-C",
+                            Status = "Available"
+                        },
+                        new
+                        {
+                            ItemId = 34,
+                            Barcode = "BK-0012-A",
+                            BookId = 12,
+                            ShelfLocation = "Shelf-12-A",
+                            Status = "Available"
+                        },
+                        new
+                        {
+                            ItemId = 35,
+                            Barcode = "BK-0012-B",
+                            BookId = 12,
+                            ShelfLocation = "Shelf-12-B",
+                            Status = "Available"
+                        },
+                        new
+                        {
+                            ItemId = 36,
+                            Barcode = "BK-0012-C",
+                            BookId = 12,
+                            ShelfLocation = "Shelf-12-C",
+                            Status = "Available"
+                        },
+                        new
+                        {
+                            ItemId = 37,
+                            Barcode = "BK-0013-A",
+                            BookId = 13,
+                            ShelfLocation = "Shelf-13-A",
+                            Status = "Available"
+                        },
+                        new
+                        {
+                            ItemId = 38,
+                            Barcode = "BK-0013-B",
+                            BookId = 13,
+                            ShelfLocation = "Shelf-13-B",
+                            Status = "Available"
+                        },
+                        new
+                        {
+                            ItemId = 39,
+                            Barcode = "BK-0013-C",
+                            BookId = 13,
+                            ShelfLocation = "Shelf-13-C",
+                            Status = "Available"
+                        },
+                        new
+                        {
+                            ItemId = 40,
+                            Barcode = "BK-0014-A",
+                            BookId = 14,
+                            ShelfLocation = "Shelf-14-A",
+                            Status = "Available"
+                        },
+                        new
+                        {
+                            ItemId = 41,
+                            Barcode = "BK-0014-B",
+                            BookId = 14,
+                            ShelfLocation = "Shelf-14-B",
+                            Status = "Available"
+                        },
+                        new
+                        {
+                            ItemId = 42,
+                            Barcode = "BK-0014-C",
+                            BookId = 14,
+                            ShelfLocation = "Shelf-14-C",
+                            Status = "Available"
+                        },
+                        new
+                        {
+                            ItemId = 43,
+                            Barcode = "BK-0015-A",
+                            BookId = 15,
+                            ShelfLocation = "Shelf-15-A",
+                            Status = "Available"
+                        },
+                        new
+                        {
+                            ItemId = 44,
+                            Barcode = "BK-0015-B",
+                            BookId = 15,
+                            ShelfLocation = "Shelf-15-B",
+                            Status = "Available"
+                        },
+                        new
+                        {
+                            ItemId = 45,
+                            Barcode = "BK-0015-C",
+                            BookId = 15,
+                            ShelfLocation = "Shelf-15-C",
+                            Status = "Available"
+                        },
+                        new
+                        {
+                            ItemId = 46,
+                            Barcode = "BK-0016-A",
+                            BookId = 16,
+                            ShelfLocation = "Shelf-16-A",
+                            Status = "Available"
+                        },
+                        new
+                        {
+                            ItemId = 47,
+                            Barcode = "BK-0016-B",
+                            BookId = 16,
+                            ShelfLocation = "Shelf-16-B",
+                            Status = "Available"
+                        },
+                        new
+                        {
+                            ItemId = 48,
+                            Barcode = "BK-0016-C",
+                            BookId = 16,
+                            ShelfLocation = "Shelf-16-C",
+                            Status = "Available"
+                        },
+                        new
+                        {
+                            ItemId = 49,
+                            Barcode = "BK-0017-A",
+                            BookId = 17,
+                            ShelfLocation = "Shelf-17-A",
+                            Status = "Available"
+                        },
+                        new
+                        {
+                            ItemId = 50,
+                            Barcode = "BK-0017-B",
+                            BookId = 17,
+                            ShelfLocation = "Shelf-17-B",
+                            Status = "Available"
+                        },
+                        new
+                        {
+                            ItemId = 51,
+                            Barcode = "BK-0017-C",
+                            BookId = 17,
+                            ShelfLocation = "Shelf-17-C",
+                            Status = "Available"
+                        },
+                        new
+                        {
+                            ItemId = 52,
+                            Barcode = "BK-0018-A",
+                            BookId = 18,
+                            ShelfLocation = "Shelf-18-A",
+                            Status = "Available"
+                        },
+                        new
+                        {
+                            ItemId = 53,
+                            Barcode = "BK-0018-B",
+                            BookId = 18,
+                            ShelfLocation = "Shelf-18-B",
+                            Status = "Available"
+                        },
+                        new
+                        {
+                            ItemId = 54,
+                            Barcode = "BK-0018-C",
+                            BookId = 18,
+                            ShelfLocation = "Shelf-18-C",
+                            Status = "Available"
+                        },
+                        new
+                        {
+                            ItemId = 55,
+                            Barcode = "BK-0019-A",
+                            BookId = 19,
+                            ShelfLocation = "Shelf-19-A",
+                            Status = "Available"
+                        },
+                        new
+                        {
+                            ItemId = 56,
+                            Barcode = "BK-0019-B",
+                            BookId = 19,
+                            ShelfLocation = "Shelf-19-B",
+                            Status = "Available"
+                        },
+                        new
+                        {
+                            ItemId = 57,
+                            Barcode = "BK-0019-C",
+                            BookId = 19,
+                            ShelfLocation = "Shelf-19-C",
+                            Status = "Available"
+                        },
+                        new
+                        {
+                            ItemId = 58,
+                            Barcode = "BK-0020-A",
+                            BookId = 20,
+                            ShelfLocation = "Shelf-20-A",
+                            Status = "Available"
+                        },
+                        new
+                        {
+                            ItemId = 59,
+                            Barcode = "BK-0020-B",
+                            BookId = 20,
+                            ShelfLocation = "Shelf-20-B",
+                            Status = "Available"
+                        },
+                        new
+                        {
+                            ItemId = 60,
+                            Barcode = "BK-0020-C",
+                            BookId = 20,
+                            ShelfLocation = "Shelf-20-C",
                             Status = "Available"
                         });
                 });
@@ -471,6 +1240,26 @@ namespace WebApi.Migrations
                         {
                             CategoryId = 3,
                             Name = "Tâm lý học"
+                        },
+                        new
+                        {
+                            CategoryId = 4,
+                            Name = "Tiểu thuyết"
+                        },
+                        new
+                        {
+                            CategoryId = 5,
+                            Name = "Kinh dị"
+                        },
+                        new
+                        {
+                            CategoryId = 6,
+                            Name = "Khoa học viễn tưởng"
+                        },
+                        new
+                        {
+                            CategoryId = 7,
+                            Name = "Lịch sử"
                         });
                 });
 
@@ -752,6 +1541,98 @@ namespace WebApi.Migrations
                             PublisherId = 2,
                             Address = "TP. Hồ Chí Minh",
                             Name = "Nhà xuất bản Trẻ"
+                        },
+                        new
+                        {
+                            PublisherId = 3,
+                            Address = "Hà Nội",
+                            Name = "Nhã Nam"
+                        },
+                        new
+                        {
+                            PublisherId = 4,
+                            Address = "New York, USA",
+                            Name = "Penguin Books"
+                        });
+                });
+
+            modelBuilder.Entity("WebApi.Models.BookingRoom", b =>
+                {
+                    b.Property<int>("BookingId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("BookingId"));
+
+                    b.Property<DateTime>("CheckInDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("CheckOutDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("RoomId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("BookingId");
+
+                    b.HasIndex("RoomId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("BookingRooms");
+
+                    b.HasData(
+                        new
+                        {
+                            BookingId = 1,
+                            CheckInDate = new DateTime(2025, 8, 25, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CheckOutDate = new DateTime(2025, 8, 26, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            RoomId = 1,
+                            Status = 0,
+                            UserId = "user-1"
+                        },
+                        new
+                        {
+                            BookingId = 2,
+                            CheckInDate = new DateTime(2025, 8, 25, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CheckOutDate = new DateTime(2025, 8, 26, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            RoomId = 2,
+                            Status = 1,
+                            UserId = "user-1"
+                        },
+                        new
+                        {
+                            BookingId = 3,
+                            CheckInDate = new DateTime(2025, 8, 26, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CheckOutDate = new DateTime(2025, 8, 27, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            RoomId = 3,
+                            Status = 0,
+                            UserId = "user-1"
+                        },
+                        new
+                        {
+                            BookingId = 4,
+                            CheckInDate = new DateTime(2025, 9, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CheckOutDate = new DateTime(2025, 9, 11, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            RoomId = 1,
+                            Status = 1,
+                            UserId = "user-1"
+                        },
+                        new
+                        {
+                            BookingId = 5,
+                            CheckInDate = new DateTime(2025, 9, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CheckOutDate = new DateTime(2025, 9, 16, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            RoomId = 4,
+                            Status = 2,
+                            UserId = "user-1"
                         });
                 });
 
@@ -820,6 +1701,77 @@ namespace WebApi.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Ratings");
+                });
+
+            modelBuilder.Entity("WebApi.Models.Room", b =>
+                {
+                    b.Property<int>("RoomId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("RoomId"));
+
+                    b.Property<bool>("IsAvailable")
+                        .HasColumnType("bit");
+
+                    b.Property<decimal>("PricePerNight")
+                        .HasColumnType("decimal(18, 2)");
+
+                    b.Property<string>("RoomDescription")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("RoomName")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.HasKey("RoomId");
+
+                    b.ToTable("Rooms");
+
+                    b.HasData(
+                        new
+                        {
+                            RoomId = 1,
+                            IsAvailable = true,
+                            PricePerNight = 50.00m,
+                            RoomDescription = "Phòng họp cho 4-6 người, có màn hình chiếu.",
+                            RoomName = "Phòng họp nhỏ"
+                        },
+                        new
+                        {
+                            RoomId = 2,
+                            IsAvailable = true,
+                            PricePerNight = 100.00m,
+                            RoomDescription = "Phòng họp cho 10-15 người, có bảng trắng.",
+                            RoomName = "Phòng họp lớn"
+                        },
+                        new
+                        {
+                            RoomId = 3,
+                            IsAvailable = true,
+                            PricePerNight = 30.00m,
+                            RoomDescription = "Phòng yên tĩnh, dành cho cá nhân nghiên cứu.",
+                            RoomName = "Phòng nghiên cứu 1"
+                        },
+                        new
+                        {
+                            RoomId = 4,
+                            IsAvailable = true,
+                            PricePerNight = 30.00m,
+                            RoomDescription = "Phòng yên tĩnh, dành cho cá nhân nghiên cứu.",
+                            RoomName = "Phòng nghiên cứu 2"
+                        },
+                        new
+                        {
+                            RoomId = 5,
+                            IsAvailable = true,
+                            PricePerNight = 80.00m,
+                            RoomDescription = "Không gian linh hoạt, có thể tổ chức workshop.",
+                            RoomName = "Phòng đa năng"
+                        });
                 });
 
             modelBuilder.Entity("Book", b =>
@@ -971,6 +1923,25 @@ namespace WebApi.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("WebApi.Models.BookingRoom", b =>
+                {
+                    b.HasOne("WebApi.Models.Room", "Room")
+                        .WithMany("Bookings")
+                        .HasForeignKey("RoomId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ApplicationUser", "User")
+                        .WithMany("BookingRooms")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Room");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("WebApi.Models.Comment", b =>
                 {
                     b.HasOne("Book", "Book")
@@ -1018,6 +1989,8 @@ namespace WebApi.Migrations
 
             modelBuilder.Entity("ApplicationUser", b =>
                 {
+                    b.Navigation("BookingRooms");
+
                     b.Navigation("Comments");
 
                     b.Navigation("LoansAsLibrarian");
@@ -1068,6 +2041,11 @@ namespace WebApi.Migrations
             modelBuilder.Entity("WebApi.Models.Comment", b =>
                 {
                     b.Navigation("Replies");
+                });
+
+            modelBuilder.Entity("WebApi.Models.Room", b =>
+                {
+                    b.Navigation("Bookings");
                 });
 #pragma warning restore 612, 618
         }

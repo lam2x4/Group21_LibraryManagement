@@ -3,9 +3,8 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Text.Json;
 using System.Text;
 using System.ComponentModel.DataAnnotations;
-using WebClient.Pages.Dto.ApplicationUser;
 using Microsoft.Extensions.Configuration;
-using WebClient.Pages.Dto.Auth; 
+using WebClient.Dto.ApplicationUser;
 
 namespace WebClient.Pages.Auth
 {
@@ -103,19 +102,17 @@ namespace WebClient.Pages.Auth
             }
         }
 
-        // Phương thức mới để xử lý đăng xuất
         public IActionResult OnPostLogout()
         {
-                    // Xóa cookie JWToken
-        HttpContext.Response.Cookies.Delete("JWToken");
+            // Xóa cookie JWToken
+            HttpContext.Response.Cookies.Delete("JWToken");
 
-        // Xóa cookie UserId
-        HttpContext.Response.Cookies.Delete("UserId");
+            // Xóa cookie UserId
+            HttpContext.Response.Cookies.Delete("UserId");
 
-        // Xóa cookie UserRoles (nếu có)
-        HttpContext.Response.Cookies.Delete("UserRoles");
+            // Xóa cookie UserRoles (nếu có)
+            HttpContext.Response.Cookies.Delete("UserRoles");
 
-            // Chuyển hướng người dùng về trang đăng nhập
             return RedirectToPage("/Auth/Login");
         }
     }

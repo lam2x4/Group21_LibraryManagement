@@ -1,4 +1,4 @@
-﻿namespace WebClient.Pages.Dto.ApplicationUser
+﻿namespace WebClient.Dto.ApplicationUser
 {
     public class AuthResponse
     {
