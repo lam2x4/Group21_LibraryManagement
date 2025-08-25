@@ -58,7 +58,7 @@ namespace WebClient.Pages.Auth
                     // Lưu token vào Cookie
                     HttpContext.Response.Cookies.Append("JWToken", result.Token, new CookieOptions
                     {
-                        HttpOnly = true,
+                        HttpOnly = false,
                         Secure = true,
                         SameSite = SameSiteMode.Strict,
                         Expires = DateTimeOffset.UtcNow.AddHours(1)
@@ -76,9 +76,26 @@ namespace WebClient.Pages.Auth
                                 Expires = DateTimeOffset.UtcNow.AddHours(1)
                             });
                     }
+
+                    // Kiểm tra role để redirect đến trang phù hợp
+                    if (result.Roles != null && result.Roles.Any())
+                    {
+                        if (result.Roles.Contains("Admin"))
+                        {
+                            return RedirectToPage("/Admin/Dashboard");
+                        }
+                        else if (result.Roles.Contains("Librarian"))
+                        {
+                            return RedirectToPage("/Admin/Dashboard"); // Librarian cũng có thể vào dashboard
+                        }
+                        else
+                        {
+                            return RedirectToPage("/Homepage/Index"); // User thường vào homepage
+                        }
+                    }
                 }
 
-                return RedirectToPage("/Index");
+                return RedirectToPage("/Homepage/Index");
             }
             else
             {
