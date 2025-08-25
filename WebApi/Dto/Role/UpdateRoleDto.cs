@@ -1,0 +1,13 @@
+using System.ComponentModel.DataAnnotations;
+
+namespace WebApi.Dto.Role
+{
+    public class UpdateRoleDto
+    {
+        public string Id { get; set; } = string.Empty;
+        
+        [Required(ErrorMessage = "Tên vai trò là bắt buộc")]
+        [StringLength(50, ErrorMessage = "Tên vai trò không được quá 50 ký tự")]
+        public string Name { get; set; } = string.Empty;
+    }
+}

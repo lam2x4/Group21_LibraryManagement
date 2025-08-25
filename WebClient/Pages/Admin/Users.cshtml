@@ -1,0 +1,423 @@
+@page
+@model WebClient.Pages.Admin.UsersModel
+@{
+    ViewData["Title"] = "Quản lý người dùng";
+    Layout = "~/Pages/Shared/_AdminLayout.cshtml";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Danh sách người dùng</h2>
+    <div>
+        <button type="button" class="btn btn-success me-2" onclick="showAddUserModal()">
+            <i class="fas fa-plus"></i> Thêm người dùng
+        </button>
+        <button type="button" class="btn btn-primary" onclick="refreshUsers()">
+            <i class="fas fa-sync-alt"></i> Làm mới
+        </button>
+    </div>
+</div>
+
+    @if (!string.IsNullOrEmpty(Model.Message))
+    {
+        <div class="alert @(Model.IsError ? "alert-danger" : "alert-success") alert-dismissible fade show" role="alert">
+            @Model.Message
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <!-- Users Table -->
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Danh sách người dùng</h6>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover" id="usersTable">
+                    <thead class="table-dark">
+                        <tr style="color: #ffffff;">
+                            <th>Tên đăng nhập</th>
+                            <th>Email</th>
+                            <th>Số điện thoại</th>
+                            <th>Vai trò</th>
+                            <th>Trạng thái</th>
+                            <th>Hành động</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.Users?.Any() == true)
+                        {
+                            @foreach (var user in Model.Users)
+                            {
+                                <tr>
+                                    <td>@user.UserName</td>
+                                    <td>
+                                        @user.Email
+                                        @if (user.EmailConfirmed)
+                                        {
+                                            <i class="fas fa-check-circle text-success" title="Email đã xác nhận"></i>
+                                        }
+                                        else
+                                        {
+                                            <i class="fas fa-times-circle text-danger" title="Email chưa xác nhận"></i>
+                                        }
+                                    </td>
+                                    <td>
+                                        @(!string.IsNullOrEmpty(user.PhoneNumber) ? user.PhoneNumber : "Chưa có")
+                                        @if (!string.IsNullOrEmpty(user.PhoneNumber) && user.PhoneNumberConfirmed)
+                                        {
+                                            <i class="fas fa-check-circle text-success" title="SĐT đã xác nhận"></i>
+                                        }
+                                    </td>
+                                    <td>
+                                        @foreach (var role in user.Roles)
+                                        {
+                                            <span class="badge bg-@(role == "Admin" ? "danger" : role == "Librarian" ? "warning" : "primary") me-1">@role</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (user.IsLocked)
+                                        {
+                                            <span class="badge bg-danger">Đã khóa</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-success">Hoạt động</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        <div class="btn-group" role="group">
+                                            <button type="button" class="btn btn-sm btn-outline-primary" onclick="editUser('@user.Id')">
+                                                <i class="fas fa-edit"></i> Sửa
+                                            </button>
+                                            @if (user.IsLocked)
+                                            {
+                                                <button type="button" class="btn btn-sm btn-outline-success" onclick="unlockUser('@user.Id', '@user.UserName')">
+                                                    <i class="fas fa-unlock"></i> Mở khóa
+                                                </button>
+                                            }
+                                            else
+                                            {
+                                                <button type="button" class="btn btn-sm btn-outline-warning" onclick="lockUser('@user.Id', '@user.UserName')">
+                                                    <i class="fas fa-lock"></i> Khóa
+                                                </button>
+                                            }
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="6" class="text-center">Không có dữ liệu</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+    </div>
+</div>
+
+<!-- Add User Modal -->
+<div class="modal fade" id="addUserModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Thêm người dùng mới</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form id="addUserForm">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="addUserName" class="form-label">Tên đăng nhập *</label>
+                        <input type="text" class="form-control" id="addUserName" name="UserName" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="addEmail" class="form-label">Email *</label>
+                        <input type="email" class="form-control" id="addEmail" name="Email" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="addPassword" class="form-label">Mật khẩu *</label>
+                        <input type="password" class="form-control" id="addPassword" name="Password" required minlength="6">
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="addConfirmPassword" class="form-label">Xác nhận mật khẩu *</label>
+                        <input type="password" class="form-control" id="addConfirmPassword" name="ConfirmPassword" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="addPhoneNumber" class="form-label">Số điện thoại</label>
+                        <input type="tel" class="form-control" id="addPhoneNumber" name="PhoneNumber">
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Vai trò *</label>
+                        <div id="addUserRoles">
+                            @if (Model.AvailableRoles?.Any() == true)
+                            {
+                                @foreach (var role in Model.AvailableRoles)
+                                {
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value="@role" id="add_role_@role" name="Roles">
+                                        <label class="form-check-label" for="add_role_@role">
+                                            @role
+                                        </label>
+                                    </div>
+                                }
+                            }
+                        </div>
+                        <div class="form-text">Nếu không chọn vai trò, tài khoản sẽ được gán vai trò User mặc định.</div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <button type="submit" class="btn btn-success">Tạo tài khoản</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="editUserModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Chỉnh sửa người dùng</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form id="editUserForm">
+                <div class="modal-body">
+                    <input type="hidden" id="editUserId" name="Id" />
+                    
+                    <div class="mb-3">
+                        <label for="editUserName" class="form-label">Tên đăng nhập</label>
+                        <input type="text" class="form-control" id="editUserName" name="UserName" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="editEmail" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="editEmail" name="Email" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="editPhoneNumber" class="form-label">Số điện thoại</label>
+                        <input type="tel" class="form-control" id="editPhoneNumber" name="PhoneNumber">
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Vai trò</label>
+                        <div id="editUserRoles">
+                            @if (Model.AvailableRoles?.Any() == true)
+                            {
+                                @foreach (var role in Model.AvailableRoles)
+                                {
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value="@role" id="role_@role" name="Roles">
+                                        <label class="form-check-label" for="role_@role">
+                                            @role
+                                        </label>
+                                    </div>
+                                }
+                            }
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function refreshUsers() {
+            location.reload();
+        }
+
+        function showAddUserModal() {
+            // Clear form
+            document.getElementById('addUserForm').reset();
+            document.querySelectorAll('#addUserRoles input[type="checkbox"]').forEach(cb => cb.checked = false);
+            
+            new bootstrap.Modal(document.getElementById('addUserModal')).show();
+        }
+
+        document.getElementById('addUserForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            
+            // Validate password confirmation
+            if (formData.get('Password') !== formData.get('ConfirmPassword')) {
+                alert('Xác nhận mật khẩu không khớp');
+                return;
+            }
+            
+            const userData = {
+                userName: formData.get('UserName'),
+                email: formData.get('Email'),
+                password: formData.get('Password'),
+                confirmPassword: formData.get('ConfirmPassword'),
+                phoneNumber: formData.get('PhoneNumber'),
+                roles: Array.from(document.querySelectorAll('#addUserRoles input[name="Roles"]:checked')).map(cb => cb.value)
+            };
+
+            fetch('https://localhost:7069/api/Users', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + getCookie('JWToken')
+                },
+                body: JSON.stringify(userData)
+            })
+            .then(response => {
+                if (response.ok) {
+                    alert('Tạo tài khoản thành công');
+                    location.reload();
+                } else {
+                    return response.text().then(text => {
+                        throw new Error(text);
+                    });
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Lỗi: ' + error.message);
+            });
+        });
+
+        function editUser(userId) {
+            fetch(`https://localhost:7069/api/Users/${userId}`, {
+                headers: {
+                    'Authorization': 'Bearer ' + getCookie('JWToken')
+                }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Lỗi khi tải dữ liệu: ' + response.statusText);
+                }
+                return response.json();
+            })
+            .then(user => {
+                document.getElementById('editUserId').value = user.id;
+                document.getElementById('editUserName').value = user.userName;
+                document.getElementById('editEmail').value = user.email;
+                document.getElementById('editPhoneNumber').value = user.phoneNumber || '';
+                
+                // Clear all role checkboxes
+                document.querySelectorAll('input[name="Roles"]').forEach(checkbox => {
+                    checkbox.checked = false;
+                });
+                
+                // Check user's roles
+                user.roles.forEach(role => {
+                    const checkbox = document.getElementById(`role_${role}`);
+                    if (checkbox) checkbox.checked = true;
+                });
+                
+                new bootstrap.Modal(document.getElementById('editUserModal')).show();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Lỗi khi tải thông tin người dùng: ' + error.message);
+            });
+        }
+
+        document.getElementById('editUserForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const userData = {
+                id: formData.get('Id'),
+                userName: formData.get('UserName'),
+                email: formData.get('Email'),
+                phoneNumber: formData.get('PhoneNumber'),
+                roles: Array.from(document.querySelectorAll('input[name="Roles"]:checked')).map(cb => cb.value)
+            };
+
+            fetch(`https://localhost:7069/api/Users/${userData.id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + getCookie('JWToken')
+                },
+                body: JSON.stringify(userData)
+            })
+            .then(response => {
+                if (response.ok) {
+                    alert('Cập nhật thành công');
+                    location.reload();
+                } else {
+                    return response.text().then(text => {
+                        throw new Error(text);
+                    });
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Lỗi: ' + error.message);
+            });
+        });
+
+        function lockUser(userId, userName) {
+            if (confirm(`Bạn có chắc chắn muốn khóa tài khoản "${userName}"?`)) {
+                fetch(`https://localhost:7069/api/Users/${userId}/lock`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': 'Bearer ' + getCookie('JWToken')
+                    }
+                })
+                .then(response => {
+                    if (response.ok) {
+                        alert('Khóa tài khoản thành công');
+                        location.reload();
+                    } else {
+                        return response.text().then(text => {
+                            throw new Error(text);
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Lỗi: ' + error.message);
+                });
+            }
+        }
+
+        function unlockUser(userId, userName) {
+            if (confirm(`Bạn có chắc chắn muốn mở khóa tài khoản "${userName}"?`)) {
+                fetch(`https://localhost:7069/api/Users/${userId}/unlock`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': 'Bearer ' + getCookie('JWToken')
+                    }
+                })
+                .then(response => {
+                    if (response.ok) {
+                        alert('Mở khóa tài khoản thành công');
+                        location.reload();
+                    } else {
+                        return response.text().then(text => {
+                            throw new Error(text);
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Lỗi: ' + error.message);
+                });
+            }
+        }
+
+        function getCookie(name) {
+            const value = `; ${document.cookie}`;
+            const parts = value.split(`; ${name}=`);
+            if (parts.length === 2) return parts.pop().split(';').shift();
+            return '';
+        }
+    </script>
+}
