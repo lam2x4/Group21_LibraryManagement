@@ -1,0 +1,407 @@
+﻿@page "{itemId:int}"
+@model WebClient.Pages.Book.OrderModel
+@{
+    Layout = "TemplateLayout";
+    ViewData["Title"] = "Đặt mượn sách";
+}
+
+<!-- Breadcrumb Section Begin -->
+<section class="breadcrumb-section set-bg" data-setbg="/template/images/breadcrumb.jpg">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <div class="breadcrumb__text">
+                    <h2>Đặt mượn sách</h2>
+                    <div class="breadcrumb__option">
+                        <a href="/">Trang chủ</a>
+                        <span>Đặt mượn sách</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Breadcrumb Section End -->
+
+<!-- Order Section Begin -->
+<section class="order-section spad">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="order-form">
+                    <h4>Thông tin đặt mượn</h4>
+                    
+                    @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+                    {
+                        <div class="alert alert-danger" role="alert">
+                            @Model.ErrorMessage
+                        </div>
+                    }
+                    
+                    @if (!string.IsNullOrEmpty(Model.SuccessMessage))
+                    {
+                        <div class="alert alert-success" role="alert">
+                            @Model.SuccessMessage
+                        </div>
+                    }
+
+                    <form method="post">
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label for="loanDate">Ngày mượn sách *</label>
+                                    <input type="date" 
+                                           class="form-control" 
+                                           id="loanDate" 
+                                           asp-for="CreateLoanRequest.LoanDate"
+                                           min="@DateTime.Now.ToString("yyyy-MM-dd")"
+                                           required />
+                                    <span asp-validation-for="CreateLoanRequest.LoanDate" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label for="dueDate">Ngày hẹn trả sách *</label>
+                                    <input type="date" 
+                                           class="form-control" 
+                                           id="dueDate" 
+                                           asp-for="CreateLoanRequest.DueDate"
+                                           min="@DateTime.Now.AddDays(1).ToString("yyyy-MM-dd")"
+                                           required />
+                                    <span asp-validation-for="CreateLoanRequest.DueDate" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mt-4">
+                            <div class="col-lg-12">
+                                <div class="button-container d-flex justify-content-center align-items-center gap-3">
+                                    @if (string.IsNullOrEmpty(Model.SuccessMessage))
+                                    {
+                                        <button type="submit" class="btn btn-primary btn-lg">
+                                            <i class="fa fa-check"></i> Xác nhận đặt mượn
+                                        </button>
+                                    }
+                                    else
+                                    {
+                                        <button type="button" class="btn btn-success btn-lg" disabled>
+                                            <i class="fa fa-check"></i> Đã đặt mượn thành công
+                                        </button>
+                                    }
+                                    <a href="/Book/List" class="btn btn-secondary btn-lg">
+                                        <i class="fa fa-arrow-left"></i> Quay lại
+                                    </a>
+                                    @if (!string.IsNullOrEmpty(Model.SuccessMessage))
+                                    {
+                                        <a href="/User/HistoryOrder" class="btn btn-info btn-lg">
+                                            <i class="fa fa-history"></i> Xem lịch sử mượn sách
+                                        </a>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="col-lg-4">
+                <div class="order-summary">
+                    <h4>Thông tin sách</h4>
+                    
+                    @if (Model.Book != null)
+                    {
+                        <div class="book-info">
+                            <div class="book-image">
+                                @if (!string.IsNullOrEmpty(Model.Book.ImageUrl))
+                                {
+                                    <img src="@Model.Book.ImageUrl" alt="@Model.Book.Title" class="img-fluid" />
+                                }
+                                else
+                                {
+                                    <img src="/template/images/default-book.jpg" alt="Default Book" class="img-fluid" />
+                                }
+                            </div>
+                            
+                            <div class="book-details mt-3">
+                                <h5>@Model.Book.Title</h5>
+                                <p><strong>ISBN:</strong> @Model.Book.ISBN13</p>
+                                <p><strong>Năm xuất bản:</strong> @Model.Book.PublicationYear</p>
+                                <p><strong>Nhà xuất bản:</strong> @Model.Book.Publisher?.Name</p>
+                                
+                                @if (!string.IsNullOrEmpty(Model.Book.Description))
+                                {
+                                    <p><strong>Mô tả:</strong></p>
+                                    <p class="text-muted">@Model.Book.Description</p>
+                                }
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="alert alert-warning">
+                            Không thể tải thông tin sách
+                        </div>
+                    }
+                </div>
+                
+                <div class="order-rules mt-4">
+                    <h5>Quy định mượn sách</h5>
+                    <ul class="list-unstyled">
+                        <li><i class="fa fa-check text-success"></i> Thời hạn mượn tối đa: 14 ngày</li>
+                        <li><i class="fa fa-check text-success"></i> Số sách mượn tối đa: 5 cuốn</li>
+                        <li><i class="fa fa-check text-success"></i> Phải trả sách đúng hạn</li>
+                        <li><i class="fa fa-check text-success"></i> Bảo quản sách cẩn thận</li>
+                        <li><i class="fa fa-exclamation-triangle text-warning"></i> Phạt tiền nếu trả muộn</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Order Section End -->
+
+@section Scripts {
+    <script>
+        // Set default dates and validation
+        document.addEventListener('DOMContentLoaded', function() {
+            const today = new Date();
+            const tomorrow = new Date();
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            
+            const loanDateInput = document.getElementById('loanDate');
+            const dueDateInput = document.getElementById('dueDate');
+            
+            if (loanDateInput) {
+                // Set loan date to today
+                const todayStr = today.toISOString().split('T')[0];
+                loanDateInput.value = todayStr;
+                loanDateInput.min = todayStr;
+            }
+            
+            if (dueDateInput) {
+                // Set minimum due date to tomorrow
+                const minDate = tomorrow.toISOString().split('T')[0];
+                dueDateInput.min = minDate;
+                
+                // Set default due date to 14 days from today
+                const defaultDate = new Date();
+                defaultDate.setDate(defaultDate.getDate() + 14);
+                const defaultDateStr = defaultDate.toISOString().split('T')[0];
+                dueDateInput.value = defaultDateStr;
+            }
+            
+            // Validation: Due date must be after loan date
+            function validateDates() {
+                const loanDate = new Date(loanDateInput.value);
+                const dueDate = new Date(dueDateInput.value);
+                
+                if (dueDate <= loanDate) {
+                    dueDateInput.setCustomValidity('Ngày trả sách phải sau ngày mượn sách');
+                } else {
+                    dueDateInput.setCustomValidity('');
+                }
+            }
+            
+            if (loanDateInput && dueDateInput) {
+                loanDateInput.addEventListener('change', function() {
+                    validateDates();
+                    checkAvailability();
+                });
+                dueDateInput.addEventListener('change', function() {
+                    validateDates();
+                    checkAvailability();
+                });
+                validateDates(); // Initial validation
+                checkAvailability(); // Initial availability check
+            }
+            
+            // Function to check availability
+            async function checkAvailability() {
+                const loanDate = loanDateInput.value;
+                const dueDate = dueDateInput.value;
+                const bookId = @Model.Book?.BookId ?? 0;
+                
+                if (!loanDate || !dueDate || bookId === 0) return;
+                
+                try {
+                    const response = await fetch(`/api/Loan/check-availability/${bookId}?loanDate=${loanDate}&dueDate=${dueDate}`);
+                    const result = await response.json();
+                    
+                    const availabilityDiv = document.getElementById('availability-status');
+                    if (!availabilityDiv) {
+                        const div = document.createElement('div');
+                        div.id = 'availability-status';
+                        div.className = 'mt-3';
+                        document.querySelector('.order-form').insertBefore(div, document.querySelector('.row.mt-4'));
+                    }
+                    
+                    const statusDiv = document.getElementById('availability-status');
+                    if (result.isAvailable) {
+                        statusDiv.innerHTML = `<div class="alert alert-success"><i class="fa fa-check"></i> ${result.message}</div>`;
+                    } else {
+                        statusDiv.innerHTML = `<div class="alert alert-warning"><i class="fa fa-exclamation-triangle"></i> ${result.message}</div>`;
+                    }
+                } catch (error) {
+                    console.error('Error checking availability:', error);
+                }
+            }
+        });
+    </script>
+    
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+}
+
+<style>
+    .order-section {
+        padding: 80px 0;
+        background-color: #f8f9fa;
+    }
+
+    .order-form {
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        padding: 30px;
+    }
+
+    .book-info-card {
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        padding: 30px;
+        height: 100%;
+    }
+
+    .book-image {
+        width: 100%;
+        max-width: 200px;
+        height: auto;
+        border-radius: 8px;
+        margin-bottom: 20px;
+    }
+
+    .book-details h5 {
+        color: #333;
+        margin-bottom: 15px;
+    }
+
+    .book-details p {
+        color: #666;
+        margin-bottom: 8px;
+    }
+
+    .rules-section {
+        margin-top: 30px;
+    }
+
+    .rules-section h5 {
+        color: #333;
+        margin-bottom: 15px;
+    }
+
+    .rule-item {
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px;
+        padding: 8px 0;
+    }
+
+    .rule-item i {
+        margin-right: 10px;
+        width: 20px;
+        text-align: center;
+    }
+
+    .rule-item .fa-check {
+        color: #28a745;
+    }
+
+    .rule-item .fa-exclamation-triangle {
+        color: #ffc107;
+    }
+
+    .button-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 15px;
+        flex-wrap: wrap;
+    }
+
+    .button-container .btn {
+        min-width: 200px;
+        height: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 500;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+    }
+
+    .button-container .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+
+    .button-container .btn:disabled {
+        transform: none;
+        box-shadow: none;
+    }
+
+    .form-group label {
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 8px;
+    }
+
+    .form-control {
+        border-radius: 8px;
+        border: 2px solid #e9ecef;
+        padding: 12px 15px;
+        transition: border-color 0.3s ease;
+    }
+
+    .form-control:focus {
+        border-color: #007bff;
+        box-shadow: 0 0 0 0.2rem rgba(0,123,255,0.25);
+    }
+
+    .alert {
+        border-radius: 8px;
+        border: none;
+        padding: 15px 20px;
+        margin-bottom: 20px;
+    }
+
+    .alert-success {
+        background-color: #d4edda;
+        color: #155724;
+        border-left: 4px solid #28a745;
+    }
+
+    .alert-danger {
+        background-color: #f8d7da;
+        color: #721c24;
+        border-left: 4px solid #dc3545;
+    }
+
+    .breadcrumb-section {
+        padding: 60px 0;
+    }
+
+    .breadcrumb__text h2 {
+        color: white;
+        font-size: 36px;
+        font-weight: 700;
+    }
+
+    .breadcrumb__option a {
+        color: white;
+        text-decoration: none;
+    }
+
+    .breadcrumb__option span {
+        color: #f8f9fa;
+    }
+</style>

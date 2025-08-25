@@ -1,0 +1,826 @@
+﻿@page
+@model WebClient.Pages.User.HistoryOrderModel
+@{
+    Layout = "TemplateLayout";
+    ViewData["Title"] = "Lịch sử mượn sách";
+}
+
+<!-- Breadcrumb Section Begin -->
+<section class="breadcrumb-section set-bg" data-setbg="/template/images/breadcrumb.jpg">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <div class="breadcrumb__text">
+                    <h2>Lịch sử mượn sách</h2>
+                    <div class="breadcrumb__option">
+                        <a href="/">Trang chủ</a>
+                        <span>Lịch sử mượn sách</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Breadcrumb Section End -->
+
+<!-- History Section Begin -->
+<section class="history-section spad">
+    <div class="container">
+        @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+        {
+            <div class="alert alert-danger" role="alert">
+                @Model.ErrorMessage
+            </div>
+        }
+        
+        @if (!string.IsNullOrEmpty(Model.SuccessMessage))
+        {
+            <div class="alert alert-success" role="alert">
+                @Model.SuccessMessage
+            </div>
+        }
+
+        @if (Model.Loans?.Any() == true)
+        {
+            <!-- Filter Section -->
+            <div class="row mb-4">
+                <div class="col-lg-12">
+                    <div class="filter-card">
+                        <h5><i class="fa fa-filter"></i> Bộ lọc</h5>
+                        <form method="get" class="filter-form">
+                            <div class="row">
+                                <div class="col-lg-2 col-md-6">
+                                    <div class="form-group">
+                                        <label for="startDate">Từ ngày:</label>
+                                        <input type="date" 
+                                               class="form-control" 
+                                               id="startDate" 
+                                               name="StartDate" 
+                                               value="@(Model.StartDate?.ToString("yyyy-MM-dd"))" />
+                                    </div>
+                                </div>
+                                <div class="col-lg-2 col-md-6">
+                                    <div class="form-group">
+                                        <label for="endDate">Đến ngày:</label>
+                                        <input type="date" 
+                                               class="form-control" 
+                                               id="endDate" 
+                                               name="EndDate" 
+                                               value="@(Model.EndDate?.ToString("yyyy-MM-dd"))" />
+                                    </div>
+                                </div>
+                                <div class="col-lg-3 col-md-6">
+                                    <div class="form-group">
+                                        <label for="statusFilter">Trạng thái:</label>
+                                        <select class="form-control" id="statusFilter" name="StatusFilter">
+                                            @if (Model.StatusFilter == "all")
+                                            {
+                                                <option value="all" selected>Tất cả</option>
+                                            }
+                                            else
+                                            {
+                                                <option value="all">Tất cả</option>
+                                            }
+                                            
+                                            @if (Model.StatusFilter == "active")
+                                            {
+                                                <option value="active" selected>Đang mượn</option>
+                                            }
+                                            else
+                                            {
+                                                <option value="active">Đang mượn</option>
+                                            }
+                                            
+                                            @if (Model.StatusFilter == "returned")
+                                            {
+                                                <option value="returned" selected>Đã trả</option>
+                                            }
+                                            else
+                                            {
+                                                <option value="returned">Đã trả</option>
+                                            }
+                                            
+                                            @if (Model.StatusFilter == "overdue")
+                                            {
+                                                <option value="overdue" selected>Quá hạn</option>
+                                            }
+                                            else
+                                            {
+                                                <option value="overdue">Quá hạn</option>
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-lg-5 col-md-12">
+                                    <div class="form-group">
+                                        <label>&nbsp;</label>
+                                        <div class="d-flex gap-2 flex-wrap">
+                                            <button type="submit" class="btn btn-primary">
+                                                <i class="fa fa-search"></i> Lọc
+                                            </button>
+                                            <a href="/User/HistoryOrder" class="btn btn-secondary">
+                                                <i class="fa fa-refresh"></i> Làm mới
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Export Section -->
+            <div class="row mb-4">
+                <div class="col-lg-12">
+                    <div class="export-section">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6>Kết quả: @(Model.FilteredLoans?.Count ?? 0) bản ghi</h6>
+                            </div>
+                            <div class="export-buttons">
+                                <button type="button" onclick="exportToCSV()" class="btn btn-success btn-sm">
+                                    <i class="fa fa-file-excel-o"></i> Xuất CSV
+                                </button>
+                                <button type="button" onclick="exportToPDF()" class="btn btn-danger btn-sm">
+                                    <i class="fa fa-file-pdf-o"></i> Xuất PDF
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="history-table">
+                        <div class="table-responsive">
+                            <table id="loanTable" class="table table-hover">
+                                <thead class="thead-dark">
+                                    <tr>
+                                        <th>STT</th>
+                                        <th>Sách</th>
+                                        <th>Mã vạch</th>
+                                        <th>Ngày mượn</th>
+                                        <th>Hạn trả</th>
+                                        <th>Ngày trả</th>
+                                        <th>Trạng thái</th>
+                                        <th>Thủ thư</th>
+                                        <th>Thao tác</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @for (int i = 0; i < (Model.FilteredLoans?.Count ?? 0); i++)
+                                    {
+                                        var loan = Model.FilteredLoans?[i];
+                                        if (loan != null)
+                                        {
+                                            var isOverdue = !loan.IsReturned && DateTime.Now > loan.DueDate;
+                                        var statusClass = loan.IsReturned ? "text-success" : 
+                                                        isOverdue ? "text-danger" : "text-warning";
+                                        var statusText = loan.IsReturned ? "Đã trả" : 
+                                                       isOverdue ? "Quá hạn" : "Đang mượn";
+                                        
+                                        <tr>
+                                            <td>@(i + 1)</td>
+                                            <td>
+                                                <div class="book-info">
+                                                    @if (!string.IsNullOrEmpty(loan.BookImageUrl))
+                                                    {
+                                                        <img src="@loan.BookImageUrl" alt="@loan.BookTitle" class="book-thumbnail" />
+                                                    }
+                                                    <div class="book-details">
+                                                        <h6>@loan.BookTitle</h6>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>@loan.Barcode</td>
+                                            <td>@loan.LoanDate.ToString("dd/MM/yyyy")</td>
+                                            <td class="@(isOverdue ? "text-danger font-weight-bold" : "")">
+                                                @loan.DueDate.ToString("dd/MM/yyyy")
+                                            </td>
+                                            <td>
+                                                @if (loan.ReturnDate.HasValue)
+                                                {
+                                                    @loan.ReturnDate.Value.ToString("dd/MM/yyyy")
+                                                }
+                                                else
+                                                {
+                                                    <span class="text-muted">-</span>
+                                                }
+                                            </td>
+                                            <td>
+                                                <span class="badge @(loan.IsReturned ? "badge-success" : isOverdue ? "badge-danger" : "badge-warning")">
+                                                    @statusText
+                                                </span>
+                                            </td>
+                                            <td>@loan.LibrarianName</td>
+                                            <td>
+                                                @if (!loan.IsReturned)
+                                                {
+                                                    <form method="post" asp-page-handler="ReturnBook" asp-route-loanId="@loan.LoanId" style="display: inline;">
+                                                        <button type="submit" class="btn btn-sm btn-info" 
+                                                                onclick="return confirm('Bạn có chắc chắn muốn trả sách này?')">
+                                                            <i class="fa fa-undo"></i> Trả sách
+                                                        </button>
+                                                    </form>
+                                                }
+                                                else
+                                                {
+                                                    <span class="text-muted">Đã trả</span>
+                                                }
+                                            </td>
+                                        </tr>
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Statistics -->
+            <div class="row mt-5">
+                <div class="col-lg-12">
+                    <div class="statistics-cards">
+                        <div class="row">
+                            <div class="col-lg-3 col-md-6">
+                                <div class="stat-card bg-primary text-white">
+                                    <div class="stat-icon">
+                                        <i class="fa fa-book"></i>
+                                    </div>
+                                    <div class="stat-content">
+                                        <h4>@(Model.FilteredLoans?.Count ?? 0)</h4>
+                                        <p>Tổng số lần mượn</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-md-6">
+                                <div class="stat-card bg-success text-white">
+                                    <div class="stat-icon">
+                                        <i class="fa fa-check"></i>
+                                    </div>
+                                    <div class="stat-content">
+                                        <h4>@(Model.FilteredLoans?.Count(l => l.IsReturned) ?? 0)</h4>
+                                        <p>Đã trả</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-md-6">
+                                <div class="stat-card bg-warning text-white">
+                                    <div class="stat-icon">
+                                        <i class="fa fa-clock"></i>
+                                    </div>
+                                    <div class="stat-content">
+                                        <h4>@(Model.FilteredLoans?.Count(l => !l.IsReturned && DateTime.Now <= l.DueDate) ?? 0)</h4>
+                                        <p>Đang mượn</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-md-6">
+                                <div class="stat-card bg-danger text-white">
+                                    <div class="stat-icon">
+                                        <i class="fa fa-exclamation-triangle"></i>
+                                    </div>
+                                    <div class="stat-content">
+                                        <h4>@(Model.FilteredLoans?.Count(l => !l.IsReturned && DateTime.Now > l.DueDate) ?? 0)</h4>
+                                        <p>Quá hạn</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="empty-state text-center">
+                <div class="empty-icon">
+                    <i class="fa fa-book-open fa-4x text-muted"></i>
+                </div>
+                <h3 class="mt-3">Chưa có lịch sử mượn sách</h3>
+                <p class="text-muted">Bạn chưa mượn sách nào. Hãy khám phá thư viện và mượn sách ngay!</p>
+                <a href="/Book/List" class="btn btn-primary">
+                    <i class="fa fa-search mr-2"></i>Khám phá sách
+                </a>
+            </div>
+        }
+    </div>
+</section>
+<!-- History Section End -->
+
+<style>
+.history-section {
+    padding: 80px 0;
+    background-color: #f8f9fa;
+}
+
+.filter-card {
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.1);
+    padding: 25px;
+    margin-bottom: 20px;
+}
+
+.filter-card h5 {
+    color: #333;
+    margin-bottom: 20px;
+    font-weight: 600;
+}
+
+.filter-form .form-group {
+    margin-bottom: 15px;
+}
+
+.filter-form label {
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 8px;
+    display: block;
+}
+
+.filter-form .form-control {
+    border-radius: 8px;
+    border: 2px solid #e9ecef;
+    padding: 10px 15px;
+    transition: border-color 0.3s ease;
+    width: 100%;
+}
+
+.filter-form .form-control:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 0.2rem rgba(0,123,255,0.25);
+}
+
+.filter-form .btn {
+    margin-right: 10px;
+    margin-bottom: 5px;
+    white-space: nowrap;
+}
+
+.export-section {
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.1);
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.export-buttons .btn {
+    margin-left: 10px;
+    border-radius: 8px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.export-buttons .btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.history-table {
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.1);
+    overflow: hidden;
+}
+
+.history-table .table {
+    margin-bottom: 0;
+}
+
+.history-table .table th {
+    background-color: #343a40;
+    color: white;
+    border: none;
+    padding: 15px 12px;
+    font-weight: 600;
+}
+
+.history-table .table td {
+    padding: 12px;
+    vertical-align: middle;
+    border-top: 1px solid #dee2e6;
+}
+
+.history-table .table tbody tr:hover {
+    background-color: #f8f9fa;
+}
+
+.book-info {
+    display: flex;
+    align-items: center;
+}
+
+.book-thumbnail {
+    width: 50px;
+    height: 70px;
+    object-fit: cover;
+    border-radius: 5px;
+    margin-right: 15px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.book-details h6 {
+    margin: 0;
+    font-weight: 600;
+    color: #333;
+    font-size: 14px;
+}
+
+.badge {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.badge-success {
+    background-color: #28a745;
+    color: white;
+}
+
+.badge-warning {
+    background-color: #ffc107;
+    color: #212529;
+}
+
+.badge-danger {
+    background-color: #dc3545;
+    color: white;
+}
+
+.statistics-cards {
+    margin-top: 30px;
+}
+
+.stat-card {
+    border-radius: 10px;
+    padding: 25px;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+}
+
+.stat-icon {
+    font-size: 2.5rem;
+    margin-bottom: 15px;
+    opacity: 0.8;
+}
+
+.stat-content h4 {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 5px;
+}
+
+.stat-content p {
+    margin: 0;
+    font-size: 14px;
+    opacity: 0.9;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.1);
+}
+
+.empty-icon {
+    margin-bottom: 20px;
+    opacity: 0.5;
+}
+
+.empty-state h3 {
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.empty-state p {
+    color: #666;
+    margin-bottom: 30px;
+}
+
+.breadcrumb-section {
+    padding: 60px 0;
+}
+
+.breadcrumb__text h2 {
+    color: white;
+    font-size: 36px;
+    font-weight: 700;
+}
+
+.breadcrumb__option a {
+    color: white;
+    text-decoration: none;
+}
+
+.breadcrumb__option span {
+    color: #f8f9fa;
+}
+
+.alert {
+    border-radius: 8px;
+    border: none;
+    padding: 15px 20px;
+    margin-bottom: 20px;
+}
+
+.alert-success {
+    background-color: #d4edda;
+    color: #155724;
+    border-left: 4px solid #28a745;
+}
+
+.alert-danger {
+    background-color: #f8d7da;
+    color: #721c24;
+    border-left: 4px solid #dc3545;
+}
+
+.btn {
+    border-radius: 8px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.btn:disabled {
+    transform: none;
+    box-shadow: none;
+}
+</style>
+
+<!-- jsPDF Library -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+
+<style>
+.notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 9999;
+    min-width: 300px;
+    padding: 15px 20px;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    transform: translateX(100%);
+    opacity: 0;
+    transition: all 0.3s ease-out;
+}
+
+.notification.show {
+    transform: translateX(0);
+    opacity: 1;
+}
+
+.notification.hide {
+    transform: translateX(100%);
+    opacity: 0;
+}
+</style>
+
+<script>
+// Hàm lấy dữ liệu từ bảng
+function getTableData() {
+    const tableData = [];
+    const rows = document.querySelectorAll('#loanTable tbody tr');
+    
+    rows.forEach((row, index) => {
+        const cells = row.querySelectorAll('td');
+        if (cells.length >= 8) {
+            const bookTitle = cells[1].querySelector('.book-details h6') ? 
+                             cells[1].querySelector('.book-details h6').textContent.trim() : '';
+            const status = cells[6].querySelector('.badge') ? 
+                          cells[6].querySelector('.badge').textContent.trim() : '';
+            
+            const rowData = {
+                stt: (index + 1).toString(),
+                book: bookTitle,
+                barcode: cells[2].textContent.trim(),
+                loanDate: cells[3].textContent.trim(),
+                dueDate: cells[4].textContent.trim(),
+                returnDate: cells[5].textContent.trim(),
+                status: status,
+                librarian: cells[7].textContent.trim()
+            };
+            tableData.push(rowData);
+        }
+    });
+    
+    return tableData;
+}
+
+// Hàm tạo timestamp
+function getTimestamp() {
+    const now = new Date();
+    return now.getFullYear() + 
+           String(now.getMonth() + 1).padStart(2, '0') + 
+           String(now.getDate()).padStart(2, '0') + '_' +
+           String(now.getHours()).padStart(2, '0') + 
+           String(now.getMinutes()).padStart(2, '0') + 
+           String(now.getSeconds()).padStart(2, '0');
+}
+
+// Hàm xuất CSV
+function exportToCSV() {
+    try {
+        const tableData = getTableData();
+        
+        if (tableData.length === 0) {
+            showNotification('Không có dữ liệu để xuất!', 'error');
+            return;
+        }
+        
+        // Tạo header CSV
+        const headers = ['STT', 'Sách', 'Mã vạch', 'Ngày mượn', 'Hạn trả', 'Ngày trả', 'Trạng thái', 'Thủ thư'];
+        
+        // Tạo nội dung CSV
+        let csvContent = '\uFEFF'; // BOM cho UTF-8
+        csvContent += headers.join(',') + '\n';
+        
+        tableData.forEach(row => {
+            const csvRow = [
+                row.stt,
+                `"${row.book}"`,
+                `"${row.barcode}"`,
+                `"${row.loanDate}"`,
+                `"${row.dueDate}"`,
+                `"${row.returnDate}"`,
+                `"${row.status}"`,
+                `"${row.librarian}"`
+            ];
+            csvContent += csvRow.join(',') + '\n';
+        });
+        
+        // Tạo blob và download
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement('a');
+        const url = URL.createObjectURL(blob);
+        link.setAttribute('href', url);
+        link.setAttribute('download', `lich_su_muon_sach_${getTimestamp()}.csv`);
+        link.style.visibility = 'hidden';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        
+        // Giải phóng URL
+        URL.revokeObjectURL(url);
+        
+        // Hiển thị thông báo thành công
+        showNotification('Xuất CSV thành công!', 'success');
+    } catch (error) {
+        console.error('Lỗi xuất CSV:', error);
+        showNotification('Lỗi xuất CSV: ' + error.message, 'error');
+    }
+}
+
+// Hàm xuất PDF
+function exportToPDF() {
+    try {
+        const tableData = getTableData();
+        
+        if (tableData.length === 0) {
+            showNotification('Không có dữ liệu để xuất!', 'error');
+            return;
+        }
+        
+        // Kiểm tra jsPDF đã load chưa
+        if (typeof window.jspdf === 'undefined') {
+            showNotification('Đang tải thư viện PDF...', 'error');
+            return;
+        }
+        
+        // Khởi tạo jsPDF
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+        
+        // Thiết lập font
+        doc.setFont("helvetica");
+        
+        // Thêm tiêu đề
+        doc.setFontSize(16);
+        doc.text("Lịch sử mượn sách", 20, 20);
+        
+        // Thêm ngày xuất
+        doc.setFontSize(12);
+        const now = new Date();
+        const dateStr = now.toLocaleDateString('vi-VN') + ' ' + now.toLocaleTimeString('vi-VN');
+        doc.text("Ngày xuất: " + dateStr, 20, 30);
+        
+        // Thêm số bản ghi
+        doc.text("Tổng số bản ghi: " + tableData.length, 20, 40);
+        
+        // Chuẩn bị dữ liệu cho bảng
+        const pdfTableData = tableData.map(row => [
+            row.stt,
+            row.book,
+            row.barcode,
+            row.loanDate,
+            row.dueDate,
+            row.returnDate,
+            row.status,
+            row.librarian
+        ]);
+        
+        // Tạo bảng
+        doc.autoTable({
+            head: [['STT', 'Sách', 'Mã vạch', 'Ngày mượn', 'Hạn trả', 'Ngày trả', 'Trạng thái', 'Thủ thư']],
+            body: pdfTableData,
+            startY: 50,
+            styles: {
+                fontSize: 8,
+                cellPadding: 2,
+                overflow: 'linebreak',
+                halign: 'left'
+            },
+            headStyles: {
+                fillColor: [52, 58, 64],
+                textColor: 255,
+                fontStyle: 'bold'
+            },
+            columnStyles: {
+                0: { cellWidth: 15 }, // STT
+                1: { cellWidth: 40 }, // Sách
+                2: { cellWidth: 25 }, // Mã vạch
+                3: { cellWidth: 25 }, // Ngày mượn
+                4: { cellWidth: 25 }, // Hạn trả
+                5: { cellWidth: 25 }, // Ngày trả
+                6: { cellWidth: 25 }, // Trạng thái
+                7: { cellWidth: 25 }  // Thủ thư
+            },
+            margin: { top: 50, left: 10, right: 10 },
+            didDrawPage: function (data) {
+                // Thêm số trang
+                doc.setFontSize(10);
+                doc.text('Trang ' + doc.internal.getNumberOfPages(), data.settings.margin.left, doc.internal.pageSize.height - 10);
+            }
+        });
+        
+        // Download PDF
+        doc.save(`lich_su_muon_sach_${getTimestamp()}.pdf`);
+        
+        // Hiển thị thông báo thành công
+        showNotification('Xuất PDF thành công!', 'success');
+    } catch (error) {
+        console.error('Lỗi xuất PDF:', error);
+        showNotification('Lỗi xuất PDF: ' + error.message, 'error');
+    }
+}
+
+// Hàm hiển thị thông báo
+function showNotification(message, type) {
+    // Xóa notification cũ nếu có
+    const existingNotifications = document.querySelectorAll('.notification');
+    existingNotifications.forEach(notification => {
+        if (notification.parentNode) {
+            notification.parentNode.removeChild(notification);
+        }
+    });
+    
+    // Tạo notification element
+    const notification = document.createElement('div');
+    notification.className = `alert alert-${type === 'success' ? 'success' : 'danger'} notification`;
+    notification.textContent = message;
+    
+    // Thêm vào body
+    document.body.appendChild(notification);
+    
+    // Hiển thị notification với animation
+    setTimeout(() => {
+        notification.classList.add('show');
+    }, 10);
+    
+    // Tự động ẩn sau 3 giây
+    setTimeout(() => {
+        if (notification.parentNode) {
+            notification.classList.add('hide');
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.parentNode.removeChild(notification);
+                }
+            }, 300);
+        }
+    }, 3000);
+}
+
+// Kiểm tra khi trang load xong
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('Trang đã load xong, sẵn sàng xuất dữ liệu');
+});
+</script>
