@@ -28,10 +28,10 @@ app.UseRouting();
 app.UseAuthentication();  
 
 app.UseAuthorization();
-// Đặt Homepage/Index làm trang mặc định
+// Đặt Index làm trang mặc định
 app.MapGet("/", context =>
 {
-	context.Response.Redirect("/homepage/index");
+	context.Response.Redirect("/Index");
 	return Task.CompletedTask;
 });
 app.MapRazorPages();

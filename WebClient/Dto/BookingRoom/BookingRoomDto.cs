@@ -1,29 +1,30 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+using WebClient.Dto.Room;
 
-namespace WebApi.Models
+namespace WebClient.Dto.BookingRoom
 {
-    public class BookingRoom
+    public class BookingRoomDto
     {
-        [Key]
         public int BookingId { get; set; }
-
-        [Required]
         public DateTime CheckInDate { get; set; }
-
-        [Required]
         public DateTime CheckOutDate { get; set; }
-
-        [Required]
         public BookingStatus Status { get; set; }
-
         public int RoomId { get; set; }
-
         public string UserId { get; set; }
+        public RoomDto Room { get; set; }
+        public string UserName { get; set; }
+    }
 
-        public Room Room { get; set; }
-        public ApplicationUser User { get; set; } // Liên kết với ApplicationUser
+    public class CreateBookingRoomDto
+    {
+        public DateTime CheckInDate { get; set; }
+        public DateTime CheckOutDate { get; set; }
+        public int RoomId { get; set; }
+        public string UserId { get; set; }
+    }
+
+    public class UpdateBookingRoomDto
+    {
+        public BookingStatus Status { get; set; }
     }
 
     public enum BookingStatus

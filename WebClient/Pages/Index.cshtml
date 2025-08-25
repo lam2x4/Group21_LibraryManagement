@@ -12,10 +12,13 @@
             <div class="col-lg-6">
                 <div class="hero-content">
                     <h1 class="hero-title">Chào mừng đến với Hệ thống Quản lý Thư viện</h1>
-                    <p class="hero-subtitle">Khám phá kho tàng sách phong phú và mượn sách trực tuyến một cách dễ dàng</p>
+                    <p class="hero-subtitle">Khám phá kho tàng sách phong phú, mượn sách và đặt phòng học trực tuyến một cách dễ dàng</p>
                     <div class="hero-buttons">
                         <a href="/Book/List" class="btn btn-primary btn-lg mr-3">
                             <i class="ti-book mr-2"></i>Xem danh sách sách
+                        </a>
+                        <a href="/Room/List" class="btn btn-success btn-lg mr-3">
+                            <i class="ti-home mr-2"></i>Đặt phòng học
                         </a>
                         @if (string.IsNullOrEmpty(HttpContext.Request.Cookies["JWToken"]))
                         {
@@ -47,7 +50,7 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-lg-4 col-md-6 mb-4">
+            <div class="col-lg-3 col-md-6 mb-4">
                 <div class="feature-card text-center p-4">
                     <div class="feature-icon mb-3">
                         <i class="ti-search" style="font-size: 3rem; color: #007bff;"></i>
@@ -56,7 +59,7 @@
                     <p>Tìm kiếm sách nhanh chóng với bộ lọc thông minh theo tên, tác giả, thể loại</p>
                 </div>
             </div>
-            <div class="col-lg-4 col-md-6 mb-4">
+            <div class="col-lg-3 col-md-6 mb-4">
                 <div class="feature-card text-center p-4">
                     <div class="feature-icon mb-3">
                         <i class="ti-shopping-cart" style="font-size: 3rem; color: #28a745;"></i>
@@ -65,13 +68,22 @@
                     <p>Mượn sách dễ dàng chỉ với vài cú click, không cần đến thư viện</p>
                 </div>
             </div>
-            <div class="col-lg-4 col-md-6 mb-4">
+            <div class="col-lg-3 col-md-6 mb-4">
                 <div class="feature-card text-center p-4">
                     <div class="feature-icon mb-3">
-                        <i class="ti-time" style="font-size: 3rem; color: #ffc107;"></i>
+                        <i class="ti-home" style="font-size: 3rem; color: #ffc107;"></i>
+                    </div>
+                    <h4>Đặt phòng học</h4>
+                    <p>Đặt phòng học tập và nghiên cứu với không gian yên tĩnh, tiện nghi</p>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="feature-card text-center p-4">
+                    <div class="feature-icon mb-3">
+                        <i class="ti-time" style="font-size: 3rem; color: #dc3545;"></i>
                     </div>
                     <h4>Quản lý lịch sử</h4>
-                    <p>Theo dõi lịch sử mượn sách và quản lý thời gian trả sách</p>
+                    <p>Theo dõi lịch sử mượn sách và đặt phòng, quản lý thời gian hiệu quả</p>
                 </div>
             </div>
         </div>
@@ -82,28 +94,93 @@
 <section class="stats-section section-padding">
     <div class="container">
         <div class="row">
-            <div class="col-lg-3 col-md-6 mb-4">
+            <div class="col-lg-2 col-md-4 col-6 mb-4">
                 <div class="stat-card text-center">
                     <div class="stat-number">1000+</div>
                     <div class="stat-label">Sách trong kho</div>
                 </div>
             </div>
-            <div class="col-lg-3 col-md-6 mb-4">
+            <div class="col-lg-2 col-md-4 col-6 mb-4">
                 <div class="stat-card text-center">
                     <div class="stat-number">500+</div>
                     <div class="stat-label">Độc giả</div>
                 </div>
             </div>
-            <div class="col-lg-3 col-md-6 mb-4">
+            <div class="col-lg-2 col-md-4 col-6 mb-4">
                 <div class="stat-card text-center">
                     <div class="stat-number">50+</div>
                     <div class="stat-label">Thể loại sách</div>
                 </div>
             </div>
-            <div class="col-lg-3 col-md-6 mb-4">
+            <div class="col-lg-2 col-md-4 col-6 mb-4">
+                <div class="stat-card text-center">
+                    <div class="stat-number">20+</div>
+                    <div class="stat-label">Phòng học</div>
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-4 col-6 mb-4">
+                <div class="stat-card text-center">
+                    <div class="stat-number">100+</div>
+                    <div class="stat-label">Đặt phòng/ngày</div>
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-4 col-6 mb-4">
                 <div class="stat-card text-center">
                     <div class="stat-number">24/7</div>
                     <div class="stat-label">Hỗ trợ trực tuyến</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Quick Actions Section -->
+<section class="quick-actions-section section-padding">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="section-title text-center mb-5">
+                    <h2>Thao tác nhanh</h2>
+                    <p>Truy cập nhanh các tính năng chính của hệ thống</p>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="quick-action-card text-center p-4">
+                    <div class="action-icon mb-3">
+                        <i class="ti-book" style="font-size: 4rem; color: #007bff;"></i>
+                    </div>
+                    <h4>Quản lý sách</h4>
+                    <p>Xem danh sách sách, tìm kiếm và mượn sách trực tuyến</p>
+                    <a href="/Book/List" class="btn btn-primary">Xem sách</a>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="quick-action-card text-center p-4">
+                    <div class="action-icon mb-3">
+                        <i class="ti-home" style="font-size: 4rem; color: #28a745;"></i>
+                    </div>
+                    <h4>Đặt phòng học</h4>
+                    <p>Đặt phòng học tập và nghiên cứu với không gian yên tĩnh</p>
+                    <a href="/Room/List" class="btn btn-success">Đặt phòng</a>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="quick-action-card text-center p-4">
+                    <div class="action-icon mb-3">
+                        <i class="ti-user" style="font-size: 4rem; color: #ffc107;"></i>
+                    </div>
+                    <h4>Quản lý cá nhân</h4>
+                    <p>Xem lịch sử mượn sách và đặt phòng của bạn</p>
+                    @if (!string.IsNullOrEmpty(HttpContext.Request.Cookies["JWToken"]))
+                    {
+                        <a href="/User/HistoryOrder" class="btn btn-warning">Lịch sử</a>
+                    }
+                    else
+                    {
+                        <a href="/Auth/Login" class="btn btn-warning">Đăng nhập</a>
+                    }
                 </div>
             </div>
         </div>
@@ -199,30 +276,50 @@
     }
     
     .stat-number {
-        font-size: 3rem;
+        font-size: 2.5rem;
         font-weight: 700;
         margin-bottom: 10px;
     }
     
     .stat-label {
-        font-size: 1.1rem;
+        font-size: 1rem;
         opacity: 0.9;
     }
     
-    /* Responsive */
-    .hero-title {
-        font-size: 2rem;
+    /* Quick Actions Section */
+    .quick-actions-section {
+        padding: 80px 0;
+        background: #f8f9fa;
     }
     
-    .hero-subtitle {
-        font-size: 1rem;
+    .quick-action-card {
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        height: 100%;
     }
     
-    .section-title h2 {
-        font-size: 2rem;
+    .quick-action-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 20px 40px rgba(0,0,0,0.15);
     }
     
-    .stat-number {
-        font-size: 2rem;
+    .quick-action-card h4 {
+        font-weight: 600;
+        margin-bottom: 15px;
+        color: #333;
+    }
+    
+    .quick-action-card p {
+        color: #666;
+        line-height: 1.6;
+        margin-bottom: 20px;
+    }
+    
+    .quick-action-card .btn {
+        padding: 10px 25px;
+        border-radius: 25px;
+        font-weight: 600;
     }
 </style>

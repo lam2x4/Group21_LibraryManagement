@@ -1,0 +1,170 @@
+@page
+@model WebClient.Pages.Room.ListModel
+@{
+    Layout = "TemplateLayout";
+    ViewData["Title"] = "Danh sách phòng";
+}
+
+<!-- Room List Section -->
+<section class="room-list-section section-padding">
+    <div class="container">
+        @if (!string.IsNullOrEmpty(Model.SuccessMessage))
+        {
+            <div class="row">
+                <div class="col-12">
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        <i class="ti-check mr-2"></i>@Model.SuccessMessage
+                        <button type="button" class="close" data-dismiss="alert">
+                            <span>&times;</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        }
+        
+        <div class="row">
+            <div class="col-12">
+                <div class="section-title text-center mb-5">
+                    <h2 class="title">Danh sách phòng thư viện</h2>
+                    <p class="subtitle">Khám phá các phòng học và họp nhóm hiện có</p>
+                </div>
+            </div>
+        </div>
+
+        @if (!Model.Rooms.Any())
+        {
+            <div class="row">
+                <div class="col-12">
+                    <div class="alert alert-info text-center">
+                        <i class="ti-info-circle mr-2"></i>
+                        Hiện tại chưa có phòng nào trong hệ thống.
+                    </div>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="row">
+                @foreach (var room in Model.Rooms)
+                {
+                    <div class="col-lg-4 col-md-6 mb-4">
+                        <div class="room-card">
+                            <div class="room-header">
+                                <div class="room-icon">
+                                    <i class="ti-home"></i>
+                                </div>
+                                <div class="room-status @(room.IsAvailable ? "available" : "unavailable")">
+                                    <span class="status-badge">
+                                        <i class="ti-@(room.IsAvailable ? "check" : "close") mr-1"></i>
+                                        @(room.IsAvailable ? "Có sẵn" : "Đã đặt")
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="room-content">
+                                <h4 class="room-title">@room.RoomName</h4>
+                                <p class="room-description">@room.RoomDescription</p>
+                                <div class="room-details">
+                                    <div class="price">
+                                        <i class="ti-money mr-2"></i>
+                                        <span class="price-amount">@room.PricePerNight.ToString("N0") VNĐ</span>
+                                        <span class="price-unit">/đêm</span>
+                                    </div>
+                                    <div class="room-features">
+                                        <span class="feature-item">
+                                            <i class="ti-users mr-1"></i>Nhóm học
+                                        </span>
+                                        <span class="feature-item">
+                                            <i class="ti-wifi mr-1"></i>WiFi
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="room-actions">
+                                    @if (Model.IsLoggedIn)
+                                    {
+                                        <a href="/Room/Booking?roomId=@room.RoomId" class="btn btn-primary btn-sm">
+                                            <i class="ti-calendar mr-1"></i>Đặt phòng
+                                        </a>
+                                    }
+                                    else
+                                    {
+                                        <a href="/Auth/Login" class="btn btn-warning btn-sm">
+                                            <i class="ti-sign-in mr-1"></i>Đăng nhập để đặt
+                                        </a>
+                                    }
+                                    <!-- Nút chi tiết đã được ẩn -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+</section>
+
+<!-- Room Details Modal -->
+<div class="modal fade" id="roomDetailsModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Chi tiết phòng</h5>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span>&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="roomDetailsContent">
+                <!-- Content will be loaded here -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function showRoomDetails(roomId) {
+        // Load room details via AJAX
+        fetch(`/api/Room/${roomId}`)
+            .then(response => response.json())
+            .then(room => {
+                const content = `
+                    <div class="room-details-modal">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="room-icon-large">
+                                    <i class="ti-home"></i>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <h4>${room.roomName}</h4>
+                                <p class="text-muted">${room.roomDescription}</p>
+                                <div class="detail-item">
+                                    <strong>Giá:</strong> ${room.pricePerNight.toLocaleString()} VNĐ/đêm
+                                </div>
+                                <div class="detail-item">
+                                    <strong>Trạng thái:</strong> 
+                                    <span class="badge ${room.isAvailable ? 'badge-success' : 'badge-danger'}">
+                                        ${room.isAvailable ? 'Có sẵn' : 'Đã đặt'}
+                                    </span>
+                                </div>
+                                <div class="detail-item">
+                                    <strong>Tính năng:</strong>
+                                    <ul class="feature-list">
+                                        <li><i class="ti-users mr-2"></i>Phù hợp cho nhóm học</li>
+                                        <li><i class="ti-wifi mr-2"></i>WiFi miễn phí</li>
+                                        <li><i class="ti-light-bulb mr-2"></i>Ánh sáng tốt</li>
+                                        <li><i class="ti-volume mr-2"></i>Yên tĩnh</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                document.getElementById('roomDetailsContent').innerHTML = content;
+                $('#roomDetailsModal').modal('show');
+            })
+            .catch(error => {
+                console.error('Error loading room details:', error);
+                alert('Không thể tải thông tin phòng');
+            });
+    }
+</script>
+

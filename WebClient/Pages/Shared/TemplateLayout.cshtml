@@ -22,6 +22,8 @@
     <link rel="stylesheet" href="~/template/css/style.css">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <!-- Room Styles -->
+    <link rel="stylesheet" href="~/css/room-styles.css">
 </head>
 <body>
     <!-- Header -->
@@ -52,18 +54,31 @@
                                 <li class="nav-item">
                                     <a class="nav-link" href="/Book/List">Danh sách sách</a>
                                 </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="/Room/List">Đặt phòng</a>
+                                </li>
                                 @if (!string.IsNullOrEmpty(Context.Request.Cookies["JWToken"]))
                                 {
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="/User/HistoryOrder">Lịch sử mượn sách</a>
+                                    <li class="nav-item dropdown">
+                                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <i class="ti-user mr-1"></i>Tài khoản
+                                        </a>
+                                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                            <a class="dropdown-item" href="/User/HistoryOrder">
+                                                <i class="ti-time mr-2"></i>Lịch sử mượn sách
+                                            </a>
+                                            <a class="dropdown-item" href="/User/HistoryBooking">
+                                                <i class="ti-home mr-2"></i>Lịch sử đặt phòng
+                                            </a>
+                                            <div class="dropdown-divider"></div>
+                                            <form asp-page="/Auth/Login" asp-page-handler="Logout" method="post" class="d-inline">
+                                                <button type="submit" class="dropdown-item text-danger">
+                                                    <i class="ti-power-off mr-2"></i>Đăng xuất
+                                                </button>
+                                            </form>
+                                        </div>
                                     </li>
                                 }
-                                <li class="nav-item">
-                                    <a class="nav-link" href="/About">Giới thiệu</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="/Contact">Liên hệ</a>
-                                </li>
                             </ul>
 
                             <ul class="list-inline mb-0 d-block d-lg-none">
@@ -97,6 +112,16 @@
                         {
                             <ul class="list-inline mb-0">
                                 <li class="list-inline-item">
+                                    <a href="/User/HistoryOrder" class="btn btn-outline-info btn-sm mr-2">
+                                        <i class="ti-time mr-1"></i>Lịch sử mượn
+                                    </a>
+                                </li>
+                                <li class="list-inline-item">
+                                    <a href="/User/HistoryBooking" class="btn btn-outline-success btn-sm mr-2">
+                                        <i class="ti-home mr-1"></i>Lịch sử đặt phòng
+                                    </a>
+                                </li>
+                                <li class="list-inline-item">
                                     <form asp-page="/Auth/Login" asp-page-handler="Logout" method="post" class="d-inline">
                                         <button type="submit" class="btn btn-outline-danger btn-sm">
                                             <i class="ti-power-off mr-1"></i>Đăng xuất
@@ -125,7 +150,7 @@
                         <div class="footer-logo">
                             <img src="~/template/images/logo.png" alt="Library Management" class="img-fluid">
                         </div>
-                        <p>Hệ thống quản lý thư viện hiện đại, cung cấp dịch vụ mượn sách trực tuyến tiện lợi.</p>
+                        <p>Hệ thống quản lý thư viện hiện đại, cung cấp dịch vụ mượn sách và đặt phòng học trực tuyến tiện lợi.</p>
                         <div class="footer-social">
                             <a href="#"><i class="ti-facebook"></i></a>
                             <a href="#"><i class="ti-twitter"></i></a>
@@ -140,8 +165,7 @@
                         <ul class="footer-links">
                             <li><a href="/">Trang chủ</a></li>
                             <li><a href="/Book/List">Danh sách sách</a></li>
-                            <li><a href="/About">Giới thiệu</a></li>
-                            <li><a href="/Contact">Liên hệ</a></li>
+                            <li><a href="/Room/List">Đặt phòng</a></li>
                         </ul>
                     </div>
                 </div>
@@ -150,9 +174,9 @@
                         <h4 class="widget-title">Dịch vụ</h4>
                         <ul class="footer-links">
                             <li><a href="/Book/List">Tìm kiếm sách</a></li>
+                            <li><a href="/Room/List">Đặt phòng học</a></li>
                             <li><a href="/User/HistoryOrder">Lịch sử mượn</a></li>
-                            <li><a href="/Auth/Login">Đăng nhập</a></li>
-                            <li><a href="/Auth/Register">Đăng ký</a></li>
+                            <li><a href="/User/HistoryBooking">Lịch sử đặt phòng</a></li>
                         </ul>
                     </div>
                 </div>

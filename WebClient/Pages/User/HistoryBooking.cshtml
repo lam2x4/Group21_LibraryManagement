@@ -1,0 +1,426 @@
+@page
+@model WebClient.Pages.User.HistoryBookingModel
+@using WebClient.Dto.BookingRoom
+@{
+    Layout = "TemplateLayout";
+    ViewData["Title"] = "Lịch sử đặt phòng";
+}
+
+<!-- Breadcrumb Section Begin -->
+<section class="breadcrumb-section set-bg" data-setbg="/template/images/breadcrumb.jpg">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <div class="breadcrumb__text">
+                    <h2>Lịch sử đặt phòng</h2>
+                    <div class="breadcrumb__option">
+                        <a href="/">Trang chủ</a>
+                        <span>Lịch sử đặt phòng</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Breadcrumb Section End -->
+
+<!-- History Section Begin -->
+<section class="history-section spad">
+    <div class="container">
+        @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+        {
+            <div class="alert alert-danger" role="alert">
+                @Model.ErrorMessage
+            </div>
+        }
+        
+        @if (!string.IsNullOrEmpty(Model.SuccessMessage))
+        {
+            <div class="alert alert-success" role="alert">
+                @Model.SuccessMessage
+            </div>
+        }
+
+        @if (Model.Bookings?.Any() == true)
+        {
+            <!-- Filter Section -->
+            <div class="row mb-4">
+                <div class="col-lg-12">
+                    <div class="filter-card">
+                        <h5><i class="fa fa-filter"></i> Bộ lọc</h5>
+                        <form method="get" class="filter-form">
+                            <div class="row">
+                                <div class="col-lg-2 col-md-6">
+                                    <div class="form-group">
+                                        <label for="startDate">Từ ngày:</label>
+                                        <input type="date" 
+                                               class="form-control" 
+                                               id="startDate" 
+                                               name="StartDate" 
+                                               value="@(Model.StartDate?.ToString("yyyy-MM-dd"))" />
+                                    </div>
+                                </div>
+                                <div class="col-lg-2 col-md-6">
+                                    <div class="form-group">
+                                        <label for="endDate">Đến ngày:</label>
+                                        <input type="date" 
+                                               class="form-control" 
+                                               id="endDate" 
+                                               name="EndDate" 
+                                               value="@(Model.EndDate?.ToString("yyyy-MM-dd"))" />
+                                    </div>
+                                </div>
+                                <div class="col-lg-3 col-md-6">
+                                    <div class="form-group">
+                                        <label for="statusFilter">Trạng thái:</label>
+                                        <select class="form-control" id="statusFilter" name="StatusFilter">
+                                            @if (Model.StatusFilter == "all")
+                                            {
+                                                <option value="all" selected>Tất cả</option>
+                                            }
+                                            else
+                                            {
+                                                <option value="all">Tất cả</option>
+                                            }
+                                            
+                                            @if (Model.StatusFilter == "active")
+                                            {
+                                                <option value="active" selected>Đã xác nhận</option>
+                                            }
+                                            else
+                                            {
+                                                <option value="active">Đã xác nhận</option>
+                                            }
+                                            
+                                            @if (Model.StatusFilter == "completed")
+                                            {
+                                                <option value="completed" selected>Đã trả phòng</option>
+                                            }
+                                            else
+                                            {
+                                                <option value="completed">Đã trả phòng</option>
+                                            }
+                                            
+                                            @if (Model.StatusFilter == "cancelled")
+                                            {
+                                                <option value="cancelled" selected>Đã hủy</option>
+                                            }
+                                            else
+                                            {
+                                                <option value="cancelled">Đã hủy</option>
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-lg-3 col-md-6">
+                                    <div class="form-group">
+                                        <label>&nbsp;</label>
+                                        <div>
+                                            <button type="submit" class="btn btn-primary">
+                                                <i class="fa fa-search"></i> Lọc
+                                            </button>
+                                            <a href="/User/HistoryBooking" class="btn btn-secondary">
+                                                <i class="fa fa-refresh"></i> Làm mới
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Statistics Cards -->
+            <div class="row mb-4">
+                <div class="col-lg-3 col-md-6 mb-3">
+                    <div class="stat-card bg-primary text-white">
+                        <div class="stat-card-body">
+                            <h5>Tổng số đặt phòng</h5>
+                            <h3>@Model.Bookings.Count</h3>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-3">
+                    <div class="stat-card bg-success text-white">
+                        <div class="stat-card-body">
+                            <h5>Đã xác nhận</h5>
+                            <h3>@Model.Bookings.Count(b => b.Status == BookingStatus.Confirmed)</h3>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-3">
+                    <div class="stat-card bg-info text-white">
+                        <div class="stat-card-body">
+                            <h5>Đã trả phòng</h5>
+                            <h3>@Model.Bookings.Count(b => b.Status == BookingStatus.CheckedOut)</h3>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-3">
+                    <div class="stat-card bg-warning text-white">
+                        <div class="stat-card-body">
+                            <h5>Đã hủy</h5>
+                            <h3>@Model.Bookings.Count(b => b.Status == BookingStatus.Cancelled)</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bookings List -->
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="history-table">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead class="thead-dark">
+                                    <tr>
+                                        <th>Mã đặt phòng</th>
+                                        <th>Tên phòng</th>
+                                        <th>Ngày đặt</th>
+                                        <th>Thời gian bắt đầu</th>
+                                        <th>Thời gian kết thúc</th>
+                                        <th>Trạng thái</th>
+                                        <th>Thao tác</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var booking in Model.FilteredBookings)
+                                    {
+                                        <tr>
+                                                                                <td>
+                                        <strong>#@booking.BookingId</strong>
+                                    </td>
+                                            <td>
+                                                <div>
+                                                    <strong>@booking.Room.RoomName</strong>
+                                                    <br>
+                                                    <small class="text-muted">@booking.Room.RoomDescription</small>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div>
+                                                    <strong>@booking.CheckInDate.ToString("dd/MM/yyyy")</strong>
+                                                    <br>
+                                                    <small class="text-muted">@booking.CheckInDate.ToString("HH:mm")</small>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <span class="badge badge-info">
+                                                    @booking.CheckInDate.ToString("dd/MM HH:mm")
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span class="badge badge-warning">
+                                                    @booking.CheckOutDate.ToString("dd/MM HH:mm")
+                                                </span>
+                                            </td>
+                                            <td>
+                                                                                                 @if (booking.Status == BookingStatus.Confirmed)
+                                                 {
+                                                     <span class="badge badge-success">Đã xác nhận</span>
+                                                 }
+                                                 else if (booking.Status == BookingStatus.CheckedIn)
+                                                 {
+                                                     <span class="badge badge-info">Đã nhận phòng</span>
+                                                 }
+                                                 else if (booking.Status == BookingStatus.CheckedOut)
+                                                 {
+                                                     <span class="badge badge-secondary">Đã trả phòng</span>
+                                                 }
+                                                 else if (booking.Status == BookingStatus.Cancelled)
+                                                 {
+                                                     <span class="badge badge-danger">Đã hủy</span>
+                                                 }
+                                                else
+                                                {
+                                                    <span class="badge badge-warning">Đang chờ</span>
+                                                }
+                                            </td>
+                                            <td>
+                                                <div class="btn-group" role="group">
+                                                    <button type="button" class="btn btn-sm btn-outline-primary" 
+                                                            data-toggle="modal" 
+                                                            data-target="#bookingDetailModal" 
+                                                            data-booking-id="@booking.BookingId">
+                                                        <i class="fa fa-eye"></i> Chi tiết
+                                                    </button>
+                                                                                                         @if (booking.Status == BookingStatus.Pending || booking.Status == BookingStatus.Confirmed)
+                                                    {
+                                                        <form method="post" asp-page-handler="CancelBooking" asp-route-id="@booking.BookingId" 
+                                                              style="display: inline;" 
+                                                              onsubmit="return confirm('Bạn có chắc chắn muốn hủy đặt phòng này?');">
+                                                            <button type="submit" class="btn btn-sm btn-outline-danger">
+                                                                <i class="fa fa-times"></i> Hủy
+                                                            </button>
+                                                        </form>
+                                                    }
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="empty-state text-center">
+                        <i class="fa fa-calendar-times-o fa-4x text-muted mb-3"></i>
+                        <h4>Chưa có lịch sử đặt phòng</h4>
+                        <p class="text-muted">Bạn chưa có lịch sử đặt phòng nào. Hãy thử đặt phòng để bắt đầu!</p>
+                        <a href="/Room/List" class="btn btn-primary">
+                            <i class="fa fa-plus"></i> Đặt phòng ngay
+                        </a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</section>
+<!-- History Section End -->
+
+<!-- Booking Detail Modal -->
+<div class="modal fade" id="bookingDetailModal" tabindex="-1" role="dialog" aria-labelledby="bookingDetailModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="bookingDetailModalLabel">Chi tiết đặt phòng</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="bookingDetailContent">
+                <!-- Content will be loaded here -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .breadcrumb-section {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        padding: 60px 0;
+        color: white;
+    }
+    
+    .breadcrumb__text h2 {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 10px;
+    }
+    
+    .breadcrumb__option a {
+        color: white;
+        text-decoration: none;
+    }
+    
+    .breadcrumb__option span {
+        color: rgba(255, 255, 255, 0.8);
+    }
+    
+    .history-section {
+        padding: 60px 0;
+        background: #f8f9fa;
+    }
+    
+    .filter-card {
+        background: white;
+        border-radius: 10px;
+        padding: 20px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        margin-bottom: 30px;
+    }
+    
+    .filter-card h5 {
+        margin-bottom: 20px;
+        color: #333;
+    }
+    
+    .stat-card {
+        border-radius: 10px;
+        padding: 20px;
+        text-align: center;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    
+    .stat-card h3 {
+        font-size: 2rem;
+        font-weight: 700;
+        margin: 0;
+    }
+    
+    .stat-card h5 {
+        font-size: 0.9rem;
+        margin-bottom: 10px;
+        opacity: 0.9;
+    }
+    
+    .history-table {
+        background: white;
+        border-radius: 10px;
+        padding: 20px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    
+    .table th {
+        border-top: none;
+        font-weight: 600;
+        color: #333;
+    }
+    
+    .table td {
+        vertical-align: middle;
+    }
+    
+    .badge {
+        padding: 8px 12px;
+        font-size: 0.8rem;
+    }
+    
+    .empty-state {
+        background: white;
+        border-radius: 10px;
+        padding: 60px 20px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    
+    .empty-state h4 {
+        color: #333;
+        margin-bottom: 15px;
+    }
+    
+    .btn-group .btn {
+        margin-right: 5px;
+    }
+    
+    .btn-group .btn:last-child {
+        margin-right: 0;
+    }
+</style>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            // Handle booking detail modal
+            $('#bookingDetailModal').on('show.bs.modal', function (event) {
+                var button = $(event.relatedTarget);
+                var bookingId = button.data('booking-id');
+                var modal = $(this);
+                
+                // Load booking details via AJAX
+                $.get('/User/HistoryBooking?handler=GetBookingDetail&id=' + bookingId, function(data) {
+                    modal.find('#bookingDetailContent').html(data);
+                });
+            });
+        });
+    </script>
+}

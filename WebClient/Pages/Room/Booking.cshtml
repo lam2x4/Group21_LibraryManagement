@@ -1,0 +1,560 @@
+﻿@page "{roomId:int?}"
+@model WebClient.Pages.Room.BookingModel
+@{
+    Layout = "TemplateLayout";
+    ViewData["Title"] = "Đặt phòng";
+}
+
+<!-- Booking Section -->
+<section class="booking-section section-padding">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="booking-card">
+                    <div class="booking-header text-center mb-4">
+                        <h2 class="booking-title">Đặt phòng thư viện</h2>
+                        <p class="booking-subtitle">Xác nhận thông tin đặt phòng của bạn</p>
+                    </div>
+
+                    @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+                    {
+                        <div class="alert alert-danger" role="alert">
+                            <i class="ti-alert mr-2"></i>@Model.ErrorMessage
+                        </div>
+                    }
+
+                    @if (!string.IsNullOrEmpty(Model.SuccessMessage))
+                    {
+                        <div class="alert alert-success" role="alert">
+                            <i class="ti-check mr-2"></i>@Model.SuccessMessage
+                        </div>
+                    }
+
+                    @if (Model.SelectedRoom != null)
+                    {
+                        <!-- Room Information -->
+                        <div class="room-info mb-4">
+                            <div class="room-card-info">
+                                <div class="row align-items-center">
+                                    <div class="col-md-3">
+                                        <div class="room-icon-large">
+                                            <i class="ti-home"></i>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <h4 class="room-name">@Model.SelectedRoom.RoomName</h4>
+                                        <p class="room-description">@Model.SelectedRoom.RoomDescription</p>
+                                        <div class="room-details">
+                                            <div class="price-info">
+                                                <i class="ti-money mr-2"></i>
+                                                <span class="price">@Model.SelectedRoom.PricePerNight.ToString("N0") VNĐ</span>
+                                                <span class="price-unit">/đêm</span>
+                                            </div>
+                                            <div class="status-info">
+                                                <span class="status-badge @(Model.SelectedRoom.IsAvailable ? "available" : "unavailable")">
+                                                    <i class="ti-@(Model.SelectedRoom.IsAvailable ? "check" : "close") mr-1"></i>
+                                                    @(Model.SelectedRoom.IsAvailable ? "Có sẵn" : "Đã đặt")
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="room-features mt-3">
+                                            <span class="feature-item">
+                                                <i class="ti-users mr-1"></i>Phù hợp cho nhóm học
+                                            </span>
+                                            <span class="feature-item">
+                                                <i class="ti-wifi mr-1"></i>WiFi miễn phí
+                                            </span>
+                                            <span class="feature-item">
+                                                <i class="ti-light-bulb mr-1"></i>Ánh sáng tốt
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Booking Form -->
+                        <form method="post" class="booking-form">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group mb-4">
+                                        <label asp-for="BookingRequest.CheckInDate" class="form-label">
+                                            <i class="ti-calendar mr-2"></i>Ngày check-in
+                                        </label>
+                                        <input asp-for="BookingRequest.CheckInDate" type="date" 
+                                               class="form-control form-control-lg" 
+                                               min="@DateTime.Today.AddDays(1).ToString("yyyy-MM-dd")" />
+                                        <span asp-validation-for="BookingRequest.CheckInDate" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group mb-4">
+                                        <label asp-for="BookingRequest.CheckOutDate" class="form-label">
+                                            <i class="ti-calendar mr-2"></i>Ngày check-out
+                                        </label>
+                                        <input asp-for="BookingRequest.CheckOutDate" type="date" 
+                                               class="form-control form-control-lg" 
+                                               min="@DateTime.Today.AddDays(2).ToString("yyyy-MM-dd")" />
+                                        <span asp-validation-for="BookingRequest.CheckOutDate" class="text-danger"></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Availability Check -->
+                            <div class="availability-check mb-4" id="availabilityCheck" style="display: none;">
+                                <div class="alert" id="availabilityAlert" role="alert">
+                                    <i class="ti-info-circle mr-2"></i><span id="availabilityMessage"></span>
+                                </div>
+                            </div>
+
+                            <!-- Price Calculation -->
+                            <div class="price-calculation mb-4">
+                                <div class="calculation-card">
+                                    <h5 class="calculation-title">
+                                        <i class="ti-calculator mr-2"></i>Chi phí dự kiến
+                                    </h5>
+                                    <div class="calculation-details">
+                                        <div class="calculation-row">
+                                            <span>Giá phòng/đêm:</span>
+                                            <span>@Model.SelectedRoom.PricePerNight.ToString("N0") VNĐ</span>
+                                        </div>
+                                        <div class="calculation-row">
+                                            <span>Số đêm:</span>
+                                            <span id="nightsCount">1</span>
+                                        </div>
+                                        <div class="calculation-row total">
+                                            <span><strong>Tổng cộng:</strong></span>
+                                            <span id="totalPrice"><strong>@Model.SelectedRoom.PricePerNight.ToString("N0") VNĐ</strong></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Terms and Conditions -->
+                            <div class="form-group mb-4">
+                                <div class="form-check">
+                                    <input type="checkbox" class="form-check-input" id="agreeTerms" required>
+                                    <label class="form-check-label" for="agreeTerms">
+                                        <i class="ti-check mr-2"></i>Tôi đồng ý với <a href="#" class="text-primary">điều khoản đặt phòng</a>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-- Action Buttons -->
+                            <div class="booking-actions">
+                                <a href="/Room/List" class="btn btn-outline-secondary btn-lg">
+                                    <i class="ti-arrow-left mr-2"></i>Quay lại
+                                </a>
+                                <button type="submit" class="btn btn-primary btn-lg">
+                                    <i class="ti-check mr-2"></i>Xác nhận đặt phòng
+                                </button>
+                            </div>
+                        </form>
+                    }
+                    else
+                    {
+                        <div class="alert alert-warning text-center">
+                            <i class="ti-alert mr-2"></i>
+                            Không tìm thấy thông tin phòng. Vui lòng <a href="/Room/List">quay lại danh sách phòng</a>.
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+    .booking-section {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        padding: 80px 0;
+    }
+
+    .booking-card {
+        background: white;
+        border-radius: 20px;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+        padding: 40px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .booking-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, #667eea, #764ba2);
+    }
+
+    .booking-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: #333;
+        margin-bottom: 10px;
+    }
+
+    .booking-subtitle {
+        color: #666;
+        font-size: 1.1rem;
+    }
+
+    .room-card-info {
+        background: white;
+        border-radius: 20px;
+        padding: 30px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        border: 2px solid #e9ecef;
+    }
+
+    .room-icon-large {
+        width: 80px;
+        height: 80px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 32px;
+        margin: 0 auto;
+    }
+
+    .room-features {
+        display: flex;
+        gap: 15px;
+        flex-wrap: wrap;
+    }
+
+    .feature-item {
+        background: #f8f9fa;
+        padding: 8px 15px;
+        border-radius: 20px;
+        font-size: 0.9rem;
+        color: #666;
+        display: flex;
+        align-items: center;
+        border: 1px solid #e9ecef;
+    }
+
+    .room-name {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 10px;
+    }
+
+    .room-description {
+        color: #666;
+        margin-bottom: 15px;
+        line-height: 1.5;
+    }
+
+    .room-details {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 15px;
+    }
+
+    .price-info {
+        display: flex;
+        align-items: center;
+        color: #28a745;
+        font-weight: 600;
+    }
+
+    .price {
+        font-size: 1.3rem;
+        margin: 0 5px;
+    }
+
+    .price-unit {
+        font-size: 0.9rem;
+        color: #666;
+    }
+
+    .status-badge {
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: white;
+    }
+
+    .status-badge.available {
+        background: #28a745;
+    }
+
+    .status-badge.unavailable {
+        background: #dc3545;
+    }
+
+    .form-control {
+        border: 2px solid #e9ecef;
+        border-radius: 10px;
+        padding: 15px 20px;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+    }
+
+    .form-control:focus {
+        border-color: #667eea;
+        box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+    }
+
+    .form-label {
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 8px;
+    }
+
+    .calculation-card {
+        background: #f8f9fa;
+        border-radius: 15px;
+        padding: 20px;
+        border: 2px solid #e9ecef;
+    }
+
+    .calculation-title {
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 15px;
+    }
+
+    .calculation-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 8px 0;
+        border-bottom: 1px solid #e9ecef;
+    }
+
+    .calculation-row:last-child {
+        border-bottom: none;
+    }
+
+    .calculation-row.total {
+        font-size: 1.1rem;
+        color: #28a745;
+        border-top: 2px solid #28a745;
+        margin-top: 10px;
+        padding-top: 15px;
+    }
+
+    .booking-actions {
+        display: flex;
+        gap: 15px;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .btn {
+        border-radius: 10px;
+        padding: 15px 30px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+    .btn:hover {
+        transform: translateY(-2px);
+    }
+
+    .btn-primary {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border: none;
+    }
+
+    .btn-outline-secondary {
+        border: 2px solid #6c757d;
+        color: #6c757d;
+    }
+
+    .btn-outline-secondary:hover {
+        background: #6c757d;
+        border-color: #6c757d;
+        color: white;
+    }
+
+    .form-check-input:checked {
+        background-color: #667eea;
+        border-color: #667eea;
+    }
+
+    .availability-check {
+        transition: all 0.3s ease;
+    }
+
+    .availability-check .alert {
+        border-radius: 10px;
+        border: none;
+        padding: 15px 20px;
+    }
+
+    .btn:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        transform: none !important;
+    }
+
+    .btn:disabled:hover {
+        transform: none !important;
+    }
+</style>
+
+<script>
+    let isAvailable = true;
+
+    // Calculate price based on selected dates
+    function calculatePrice() {
+        // Get input elements by their actual IDs (ASP.NET Core generates these)
+        const checkInInput = document.querySelector('input[asp-for="BookingRequest.CheckInDate"]') || 
+                            document.querySelector('input[name="BookingRequest.CheckInDate"]') ||
+                            document.querySelector('input[type="date"]:first-of-type');
+        
+        const checkOutInput = document.querySelector('input[asp-for="BookingRequest.CheckOutDate"]') || 
+                             document.querySelector('input[name="BookingRequest.CheckOutDate"]') ||
+                             document.querySelector('input[type="date"]:last-of-type');
+        
+        const pricePerNight = @(Model.SelectedRoom?.PricePerNight ?? 0);
+
+        if (!checkInInput || !checkOutInput) {
+            console.error('Could not find date input elements');
+            return;
+        }
+
+        const checkInDate = new Date(checkInInput.value);
+        const checkOutDate = new Date(checkOutInput.value);
+
+        if (checkInDate && checkOutDate && checkInDate < checkOutDate) {
+            const nights = Math.ceil((checkOutDate - checkInDate) / (1000 * 60 * 60 * 24));
+            const totalPrice = nights * pricePerNight;
+
+            const nightsCountElement = document.getElementById('nightsCount');
+            const totalPriceElement = document.getElementById('totalPrice');
+            
+            if (nightsCountElement && totalPriceElement) {
+                nightsCountElement.textContent = nights;
+                totalPriceElement.innerHTML = `<strong>${totalPrice.toLocaleString()} VNĐ</strong>`;
+            }
+            
+            // Check availability after calculating price
+            checkAvailability();
+        }
+    }
+
+    // Check room availability
+    async function checkAvailability() {
+        // Check if SelectedRoom exists
+        const roomId = @(Model.SelectedRoom?.RoomId ?? 0);
+        
+        if (roomId === 0) {
+            console.log('No room selected, skipping availability check');
+            return;
+        }
+
+        // Get input elements by their actual IDs (ASP.NET Core generates these)
+        const checkInInput = document.querySelector('input[asp-for="BookingRequest.CheckInDate"]') || 
+                            document.querySelector('input[name="BookingRequest.CheckInDate"]') ||
+                            document.querySelector('input[type="date"]:first-of-type');
+        
+        const checkOutInput = document.querySelector('input[asp-for="BookingRequest.CheckOutDate"]') || 
+                             document.querySelector('input[name="BookingRequest.CheckOutDate"]') ||
+                             document.querySelector('input[type="date"]:last-of-type');
+
+        if (!checkInInput || !checkOutInput) {
+            console.error('Could not find date input elements - form may not be rendered');
+            return;
+        }
+
+        const checkInDate = checkInInput.value;
+        const checkOutDate = checkOutInput.value;
+
+        console.log('Checking availability for roomId:', roomId, 'checkInDate:', checkInDate, 'checkOutDate:', checkOutDate);
+
+        if (!checkInDate || !checkOutDate) {
+            console.log('Missing required data for availability check');
+            return;
+        }
+
+        try {
+            const response = await fetch(`https://localhost:7069/api/BookingRoom/check-availability?roomId=${roomId}&checkInDate=${checkInDate}&checkOutDate=${checkOutDate}`);
+            
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            
+            const result = await response.json();
+            console.log('Availability check result:', result);
+
+            const availabilityCheck = document.getElementById('availabilityCheck');
+            const availabilityAlert = document.getElementById('availabilityAlert');
+            const availabilityMessage = document.getElementById('availabilityMessage');
+            const submitButton = document.querySelector('button[type="submit"]');
+
+            if (availabilityCheck && availabilityAlert && availabilityMessage && submitButton) {
+                availabilityCheck.style.display = 'block';
+
+                if (result.isAvailable) {
+                    availabilityAlert.className = 'alert alert-success';
+                    availabilityMessage.textContent = result.message;
+                    isAvailable = true;
+                    submitButton.disabled = false;
+                    submitButton.innerHTML = '<i class="ti-check mr-2"></i>Xác nhận đặt phòng';
+                } else {
+                    availabilityAlert.className = 'alert alert-danger';
+                    availabilityMessage.textContent = result.message;
+                    isAvailable = false;
+                    submitButton.disabled = true;
+                    submitButton.innerHTML = '<i class="ti-close mr-2"></i>Không thể đặt phòng';
+                }
+            }
+        } catch (error) {
+            console.error('Error checking availability:', error);
+            const availabilityCheck = document.getElementById('availabilityCheck');
+            const availabilityAlert = document.getElementById('availabilityAlert');
+            const availabilityMessage = document.getElementById('availabilityMessage');
+            
+            if (availabilityCheck && availabilityAlert && availabilityMessage) {
+                availabilityCheck.style.display = 'block';
+                availabilityAlert.className = 'alert alert-warning';
+                availabilityMessage.textContent = 'Không thể kiểm tra tính khả dụng. Vui lòng thử lại.';
+            }
+        }
+    }
+
+    // Add event listeners
+    document.addEventListener('DOMContentLoaded', function() {
+        // Check if SelectedRoom exists
+        const roomId = @(Model.SelectedRoom?.RoomId ?? 0);
+        
+        if (roomId === 0) {
+            console.log('No room selected, skipping form setup');
+            return;
+        }
+
+        // Get input elements by their actual IDs (ASP.NET Core generates these)
+        const checkInInput = document.querySelector('input[asp-for="BookingRequest.CheckInDate"]') || 
+                            document.querySelector('input[name="BookingRequest.CheckInDate"]') ||
+                            document.querySelector('input[type="date"]:first-of-type');
+        
+        const checkOutInput = document.querySelector('input[asp-for="BookingRequest.CheckOutDate"]') || 
+                             document.querySelector('input[name="BookingRequest.CheckOutDate"]') ||
+                             document.querySelector('input[type="date"]:last-of-type');
+
+        if (checkInInput && checkOutInput) {
+            checkInInput.addEventListener('change', calculatePrice);
+            checkOutInput.addEventListener('change', calculatePrice);
+            
+            // Initial availability check
+            setTimeout(checkAvailability, 500);
+        } else {
+            console.log('Form not rendered, skipping event listeners');
+        }
+    });
+</script>
