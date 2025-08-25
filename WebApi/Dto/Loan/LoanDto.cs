@@ -23,5 +23,7 @@ namespace WebApi.Dto.Loan
         // User information
         public string UserName { get; set; }
         public string LibrarianName { get; set; }
+        public decimal FineAmount { get; set; }
+        public string? FineStatus { get; set; }
     }
 }

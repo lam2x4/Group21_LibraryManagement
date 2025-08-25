@@ -8,10 +8,10 @@ namespace WebApi.Dto.Loan
         public int ItemId { get; set; }
 
         [Required]
-        public string UserId { get; set; }
+        public string UserName { get; set; }
 
         [Required]
-        public string LibrarianId { get; set; }
+        public string LibrarianName { get; set; }
 
         [Required]
         public DateTime LoanDate { get; set; }

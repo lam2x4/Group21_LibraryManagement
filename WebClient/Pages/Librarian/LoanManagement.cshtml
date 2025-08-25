@@ -1,0 +1,439 @@
+﻿@page "/Librarian/LoanManagement"
+
+@model WebClient.Pages.Librarian.LoanManagementModel
+@{
+    ViewData["Title"] = "Quản Lý Giao Dịch Mượn/Trả Sách";
+    Layout = "_LayoutLibrarian";
+}
+
+<h1>Quản Lý Giao Dịch Mượn/Trả Sách</h1>
+
+<div class="dashboard">
+    <!-- Section 1: Xác nhận mượn và kiểm tra khả dụng -->
+    <div class="panel">
+        <h2>Xác Nhận Mượn Sách</h2>
+        <div id="createMessage" class="message"></div>
+        <form id="createLoanForm" class="form-compact">
+            <div class="form-group">
+                <label for="itemId">Item ID:</label>
+                <input type="text" id="itemId" required />
+            </div>
+            <div class="form-group">
+                <label for="userId">User ID:</label>
+                <input type="text" id="userId" required />
+            </div>
+            <div class="form-group">
+                <label for="librarianId">Librarian ID:</label>
+                <input type="text" id="librarianId" required />
+            </div>
+            <div class="form-group">
+                <label for="loanDate">Ngày Mượn:</label>
+                <input type="date" id="loanDate" required />
+            </div>
+            <div class="form-group">
+                <label for="dueDate">Ngày Hạn:</label>
+                <input type="date" id="dueDate" required />
+            </div>
+            <button type="submit">Xác Nhận</button>
+        </form>
+
+        <h3>Kiểm Tra Sách</h3>
+        <div id="availabilityMessage" class="message"></div>
+        <form id="checkAvailabilityForm" class="form-compact">
+            <div class="form-group">
+                <label for="bookId">Book ID:</label>
+                <input type="text" id="bookId" required />
+            </div>
+            <div class="form-group">
+                <label for="checkLoanDate">Ngày Mượn:</label>
+                <input type="date" id="checkLoanDate" required />
+            </div>
+            <div class="form-group">
+                <label for="checkDueDate">Ngày Hạn:</label>
+                <input type="date" id="checkDueDate" required />
+            </div>
+            <button type="submit">Kiểm Tra</button>
+        </form>
+    </div>
+
+    <!-- Section 2 & 3: Danh sách giao dịch và xử lý trả/hủy -->
+    <div class="panel">
+        <h2>Danh Sách Giao Dịch</h2>
+        <div id="userLoansMessage" class="message"></div>
+        <form id="getUserLoansForm" class="form-compact">
+            <div class="form-group">
+                <label for="searchUserId">Tìm User ID:</label>
+                <input type="text" id="searchUserId" required />
+            </div>
+            <button type="submit">Tìm</button>
+        </form>
+        <div class="table-container">
+            <table id="loanList">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Tiêu Đề</th>
+                        <th>Người Mượn</th>
+                        <th>Ngày Mượn</th>
+                        <th>Hạn Trả</th>
+                        <th>Ngày Trả</th>
+                        <th>Trạng Thái</th>
+                        <th>Phạt</th>
+                        <th>TT Phạt</th>
+                        <th>Hành Động</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+
+        <h3>Trả / Hủy</h3>
+        <div id="actionMessage" class="message"></div>
+        <form id="actionForm" class="form-compact">
+            <div class="form-group">
+                <label for="actionLoanId">Loan ID:</label>
+                <input type="text" id="actionLoanId" required />
+            </div>
+            <div class="button-group">
+                <button type="button" id="returnBookBtn">Trả Sách</button>
+                <button type="button" id="cancelLoanBtn" class="danger">Hủy</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Confirmation Modal -->
+<div id="confirmLoanModal" class="modal">
+    <div class="modal-content">
+        <h3>Xác Nhận Yêu Cầu Mượn Sách</h3>
+        <div id="modalDetails">
+            <p><strong>Item ID:</strong> <span id="modalItemId"></span></p>
+            <p><strong>User ID:</strong> <span id="modalUserId"></span></p>
+            <p><strong>Librarian ID:</strong> <span id="modalLibrarianId"></span></p>
+            <p><strong>Ngày Mượn:</strong> <span id="modalLoanDate"></span></p>
+            <p><strong>Ngày Hạn:</strong> <span id="modalDueDate"></span></p>
+        </div>
+        <div class="modal-actions">
+            <button id="modalConfirmBtn">Xác Nhận Mượn</button>
+            <button id="modalCancelBtn" class="danger">Hủy</button>
+        </div>
+    </div>
+</div>
+
+<style>
+    .dashboard {
+        display: flex;
+        gap: 20px;
+        flex-wrap: wrap;
+    }
+    .panel {
+        flex: 1;
+        min-width: 300px;
+        max-width: 600px;
+        background: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        transition: transform 0.2s;
+    }
+    .panel:hover {
+        transform: translateY(-2px);
+    }
+    h2 {
+        font-size: 20px;
+        color: #1a73e8;
+        margin-bottom: 15px;
+    }
+    h3 {
+        font-size: 16px;
+        color: #555;
+        margin: 15px 0 10px;
+    }
+    .form-compact {
+        display: grid;
+        gap: 10px;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        align-items: end;
+    }
+    .form-group {
+        margin-bottom: 10px;
+    }
+    label {
+        font-size: 14px;
+        font-weight: 500;
+        color: #444;
+    }
+    input {
+        padding: 8px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 14px;
+        transition: border-color 0.2s;
+    }
+    input:focus {
+        border-color: #1a73e8;
+        outline: none;
+    }
+    button {
+        background-color: #1a73e8;
+        color: white;
+        padding: 8px 12px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 14px;
+        transition: background-color 0.2s;
+    }
+    button:hover {
+        background-color: #1557b0;
+    }
+    button.danger {
+        background-color: #d32f2f;
+    }
+    button.danger:hover {
+        background-color: #b71c1c;
+    }
+    .button-group {
+        display: flex;
+        gap: 10px;
+    }
+    .table-container {
+        max-height: 300px;
+        overflow-y: auto;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 13px;
+    }
+    th, td {
+        padding: 8px;
+        text-align: left;
+        border-bottom: 1px solid #eee;
+    }
+    th {
+        background-color: #f8f9fa;
+        font-weight: 600;
+        position: sticky;
+        top: 0;
+        z-index: 10;
+    }
+    td {
+        color: #333;
+    }
+    .status-available {
+        color: #2e7d32;
+        font-weight: 500;
+    }
+    .status-loaned {
+        color: #d32f2f;
+        font-weight: 500;
+    }
+    tr:hover {
+        background-color: #f5f5f5;
+    }
+    .message {
+        font-size: 13px;
+        padding: 8px;
+        border-radius: 4px;
+        margin-bottom: 10px;
+    }
+    .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.5);
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+    }
+    .modal-content {
+        background: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        max-width: 400px;
+        width: 90%;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+    .modal-content h3 {
+        margin-top: 0;
+        color: #1a73e8;
+    }
+    .modal-content p {
+        margin: 10px 0;
+        font-size: 14px;
+    }
+    .modal-actions {
+        display: flex;
+        gap: 10px;
+        justify-content: flex-end;
+        margin-top: 20px;
+    }
+</style>
+
+@section Scripts {
+    <script>
+        const API_BASE_URL = 'https://localhost:7069/api/Loan';
+
+        // Helper function to display messages
+        function showMessage(elementId, message, type = 'success') {
+            const msgEl = document.getElementById(elementId);
+            msgEl.textContent = message;
+            msgEl.className = `message ${type}`;
+            msgEl.style.display = 'block';
+            setTimeout(() => { msgEl.style.display = 'none'; }, 5000);
+        }
+
+        // Helper function to format date (dd/MM/yyyy)
+        function formatDate(date) {
+            if (!date) return 'N/A';
+            const d = new Date(date);
+            return `${d.getDate().toString().padStart(2, '0')}/${(d.getMonth() + 1).toString().padStart(2, '0')}/${d.getFullYear()}`;
+        }
+
+        // Function to call API with fetch
+        async function callApi(method, endpoint, body = null) {
+            const options = {
+                method,
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include'
+            };
+            if (body) options.body = JSON.stringify(body);
+            const response = await fetch(`${API_BASE_URL}${endpoint}`, options);
+            if (!response.ok) {
+                const error = await response.text();
+                throw new Error(error || response.statusText);
+            }
+            return response.json();
+        }
+
+        // Handle loan confirmation modal
+        let loanData = null;
+        const modal = document.getElementById('confirmLoanModal');
+        document.getElementById('createLoanForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            loanData = {
+                ItemId: document.getElementById('itemId').value,
+                UserId: document.getElementById('userId').value,
+                LibrarianId: document.getElementById('librarianId').value,
+                LoanDate: new Date(document.getElementById('loanDate').value).toISOString(),
+                DueDate: new Date(document.getElementById('dueDate').value).toISOString()
+            };
+            document.getElementById('modalItemId').textContent = loanData.ItemId;
+            document.getElementById('modalUserId').textContent = loanData.UserId;
+            document.getElementById('modalLibrarianId').textContent = loanData.LibrarianId;
+            document.getElementById('modalLoanDate').textContent = formatDate(loanData.LoanDate);
+            document.getElementById('modalDueDate').textContent = formatDate(loanData.DueDate);
+            modal.style.display = 'flex';
+        });
+
+        // Modal confirm button
+        document.getElementById('modalConfirmBtn').addEventListener('click', async () => {
+            try {
+                const result = await callApi('POST', '', loanData);
+                showMessage('createMessage', 'Mượn sách thành công! Loan ID: ' + result.loanId);
+                modal.style.display = 'none';
+                document.getElementById('createLoanForm').reset();
+            } catch (err) {
+                showMessage('createMessage', 'Lỗi: ' + err.message, 'error');
+                modal.style.display = 'none';
+            }
+        });
+
+        // Modal cancel button
+        document.getElementById('modalCancelBtn').addEventListener('click', () => {
+            modal.style.display = 'none';
+            loanData = null;
+        });
+
+        // Kiểm tra tính khả dụng sách
+        document.getElementById('checkAvailabilityForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const bookId = document.getElementById('bookId').value;
+            const loanDate = document.getElementById('checkLoanDate').value;
+            const dueDate = document.getElementById('checkDueDate').value;
+            try {
+                const result = await callApi('GET', `/check-availability/${bookId}?loanDate=${loanDate}&dueDate=${dueDate}`);
+                if (result.isAvailable) {
+                    showMessage('availabilityMessage', result.message + '. Sẵn có: ' + result.bookInfo.availableItems + '/' + result.bookInfo.totalItems);
+                } else {
+                    showMessage('availabilityMessage', result.message, 'warning');
+                }
+            } catch (err) {
+                showMessage('availabilityMessage', 'Lỗi: ' + err.message, 'error');
+            }
+        });
+
+        // Lấy danh sách loans của user
+        document.getElementById('getUserLoansForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const userId = document.getElementById('searchUserId').value;
+            try {
+                const loans = await callApi('GET', `/user/${userId}`);
+                const tbody = document.querySelector('#loanList tbody');
+                tbody.innerHTML = '';
+                loans.forEach(loan => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${loan.loanId}</td>
+                        <td>${loan.bookTitle}</td>
+                        <td>${loan.userName}</td>
+                        <td>${formatDate(loan.loanDate)}</td>
+                        <td>${formatDate(loan.dueDate)}</td>
+                        <td>${formatDate(loan.returnDate)}</td>
+                        <td class="${loan.isReturned ? 'status-available' : 'status-loaned'}">${loan.isReturned ? 'Đã Trả' : 'Đang Mượn'}</td>
+                        <td>${loan.fineAmount}</td>
+                        <td>${loan.fineStatus || 'N/A'}</td>
+                        <td>
+                            ${!loan.isReturned ? '<button onclick="returnBook(' + loan.loanId + ')">Trả</button>' : ''}
+                            ${!loan.isReturned ? '<button class="danger" onclick="cancelLoan(' + loan.loanId + ')">Hủy</button>' : ''}
+                        </td>
+                    `;
+                    tbody.appendChild(row);
+                });
+                showMessage('userLoansMessage', 'Tìm thấy ' + loans.length + ' giao dịch.');
+            } catch (err) {
+                showMessage('userLoansMessage', 'Lỗi: ' + err.message, 'error');
+            }
+        });
+
+        // Ghi nhận trả sách
+        async function returnBook(loanId) {
+            try {
+                const result = await callApi('POST', `/return/${loanId}`);
+                showMessage('actionMessage', 'Trả sách thành công! Phạt: ' + result.fineAmount);
+                document.getElementById('getUserLoansForm').dispatchEvent(new Event('submit'));
+            } catch (err) {
+                showMessage('actionMessage', 'Lỗi: ' + err.message, 'error');
+            }
+        }
+
+        // Hủy yêu cầu mượn
+        async function cancelLoan(loanId) {
+            if (!confirm('Bạn chắc chắn muốn hủy?')) return;
+            try {
+                await callApi('DELETE', `/cancel/${loanId}`);
+                showMessage('actionMessage', 'Hủy thành công!');
+                document.getElementById('getUserLoansForm').dispatchEvent(new Event('submit'));
+            } catch (err) {
+                showMessage('actionMessage', 'Lỗi: ' + err.message, 'error');
+            }
+        }
+
+        // Bind buttons in action form
+        document.getElementById('returnBookBtn').addEventListener('click', () => {
+            const loanId = document.getElementById('actionLoanId').value;
+            if (loanId) returnBook(loanId);
+        });
+
+        document.getElementById('cancelLoanBtn').addEventListener('click', () => {
+            const loanId = document.getElementById('actionLoanId').value;
+            if (loanId) cancelLoan(loanId);
+        });
+    </script>
+}

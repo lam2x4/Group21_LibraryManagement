@@ -69,7 +69,10 @@
                                         <a class="dropdown-item" href="post-image.html">Image Format</a>
                                     </div>
                                 </li>
-                                <li class="nav-item"><a href="contact.html" class="nav-link">Contact</a></li>
+                                @if (_httpContextAccessor.HttpContext.Request.Cookies["UserRoles"] == "Librarian")
+                                {
+                                    <li class="nav-item"><a href="Librarian/LoanManagement" class="nav-link">Librarian Management</a></li>
+                                }
                             </ul>
 
                             <!-- Đăng nhập / Đăng ký / Logout bên phải -->
@@ -90,7 +93,6 @@
                             </ul>
                         </div>
                     </nav>
->>>>>>> 551b0aa6073b933b930e7396c98c04585a4b68d0
                 </div>
             </div>
         </div>

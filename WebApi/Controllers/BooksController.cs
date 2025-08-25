@@ -8,7 +8,7 @@ using WebApi.Models;
 
 [ApiController]
 [Route("api/[controller]")]
-[Authorize]
+//[Authorize]
 public class BooksController : ODataController
 {
     private readonly LibraryDbContext _context;

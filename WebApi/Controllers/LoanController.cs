@@ -2,6 +2,10 @@
 using Microsoft.EntityFrameworkCore;
 using WebApi.Dto.Loan;
 using WebApi.Models;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace WebApi.Controllers
 {
@@ -16,15 +20,22 @@ namespace WebApi.Controllers
             _context = context;
         }
 
+        // Confirm loan request
         [HttpPost]
         public async Task<ActionResult<LoanDto>> CreateLoan(CreateLoanDto createLoanDto)
         {
+            // Check if user has Librarian role
+            if (Request.Cookies["UserRoles"] != "Librarian")
+            {
+                Console.WriteLine("Unauthorized: Only Librarians can create loans");
+                return Unauthorized("Only Librarians can create loans");
+            }
+
             try
             {
-                Console.WriteLine($"CreateLoan called with ItemId: {createLoanDto.ItemId}, UserId: {createLoanDto.UserId}, LibrarianId: {createLoanDto.LibrarianId}");
+                Console.WriteLine($"CreateLoan called with ItemId: {createLoanDto.ItemId}, UserName: {createLoanDto.UserName}, LibrarianName: {createLoanDto.LibrarianName}");
                 Console.WriteLine($"LoanDate: {createLoanDto.LoanDate}, DueDate: {createLoanDto.DueDate}");
 
-                // Kiểm tra BookItem có tồn tại và available không
                 var bookItem = await _context.BookItems
                     .Include(bi => bi.Book)
                     .FirstOrDefaultAsync(bi => bi.ItemId == createLoanDto.ItemId);
@@ -43,67 +54,59 @@ namespace WebApi.Controllers
                     return BadRequest("Book item is not available for loan");
                 }
 
-                // Kiểm tra User có tồn tại không
-                var user = await _context.Users.FindAsync(createLoanDto.UserId);
+                var user = await _context.Users.FindAsync(createLoanDto.UserName);
                 if (user == null)
                 {
-                    Console.WriteLine($"User not found for UserId: {createLoanDto.UserId}");
+                    Console.WriteLine($"User not found for UserId: {createLoanDto.UserName}");
                     return NotFound("User not found");
                 }
 
                 Console.WriteLine($"User found: {user.UserName}");
 
-                // Kiểm tra Librarian có tồn tại không
-                var librarian = await _context.Users.FindAsync(createLoanDto.LibrarianId);
+                var librarian = await _context.Users.FindAsync(createLoanDto.LibrarianName);
                 if (librarian == null)
                 {
-                    Console.WriteLine($"Librarian not found for LibrarianId: {createLoanDto.LibrarianId}");
+                    Console.WriteLine($"Librarian not found for LibrarianId: {createLoanDto.UserName}");
                     return NotFound("Librarian not found");
                 }
 
                 Console.WriteLine($"Librarian found: {librarian.UserName}");
 
-                // Kiểm tra trùng lịch mượn sách
                 var existingLoans = await _context.Loans
                     .Where(l => l.ItemId == createLoanDto.ItemId && !l.IsReturned)
                     .ToListAsync();
 
                 Console.WriteLine($"Found {existingLoans.Count} existing loans for ItemId: {createLoanDto.ItemId}");
 
-                // Kiểm tra xem có loan nào trùng thời gian không
-                var hasConflict = existingLoans.Any(existingLoan => 
+                var hasConflict = existingLoans.Any(existingLoan =>
                     (createLoanDto.LoanDate <= existingLoan.DueDate && createLoanDto.DueDate >= existingLoan.LoanDate));
 
                 if (hasConflict)
                 {
-                    var conflictingLoan = existingLoans.First(l => 
+                    var conflictingLoan = existingLoans.First(l =>
                         (createLoanDto.LoanDate <= l.DueDate && createLoanDto.DueDate >= l.LoanDate));
-                    
+
                     Console.WriteLine($"Time conflict detected with loan: {conflictingLoan.LoanId}");
                     return BadRequest($"Sách này đã được mượn từ {conflictingLoan.LoanDate:dd/MM/yyyy} đến {conflictingLoan.DueDate:dd/MM/yyyy}. Vui lòng chọn thời gian khác.");
                 }
 
-                // Tạo loan mới
                 var loan = new Loan
                 {
                     ItemId = createLoanDto.ItemId,
-                    UserId = createLoanDto.UserId,
-                    LibrarianId = createLoanDto.LibrarianId,
-                    LoanDate = createLoanDto.LoanDate, // Sử dụng ngày mượn từ request
+                    UserId = createLoanDto.UserName,
+                    LibrarianId = createLoanDto.LibrarianName,
+                    LoanDate = createLoanDto.LoanDate,
                     DueDate = createLoanDto.DueDate,
                     IsReturned = false
                 };
 
                 _context.Loans.Add(loan);
-
-                // Cập nhật status của BookItem thành "Loaned"
                 bookItem.Status = "Loaned";
 
                 await _context.SaveChangesAsync();
 
                 Console.WriteLine($"Loan created successfully with LoanId: {loan.LoanId}");
 
-                // Tạo response DTO
                 var loanDto = new LoanDto
                 {
                     LoanId = loan.LoanId,
@@ -120,7 +123,9 @@ namespace WebApi.Controllers
                     Barcode = bookItem.Barcode,
                     Status = bookItem.Status,
                     UserName = user.UserName,
-                    LibrarianName = librarian.UserName
+                    LibrarianName = librarian.UserName,
+                    FineAmount = 0,
+                    FineStatus = null
                 };
 
                 return CreatedAtAction(nameof(GetLoan), new { id = loan.LoanId }, loanDto);
@@ -132,6 +137,7 @@ namespace WebApi.Controllers
             }
         }
 
+        // Get loan by ID
         [HttpGet("{id}")]
         public async Task<ActionResult<LoanDto>> GetLoan(int id)
         {
@@ -140,6 +146,7 @@ namespace WebApi.Controllers
                 .ThenInclude(bi => bi.Book)
                 .Include(l => l.User)
                 .Include(l => l.Librarian)
+                .Include(l => l.Fine)
                 .FirstOrDefaultAsync(l => l.LoanId == id);
 
             if (loan == null)
@@ -163,12 +170,15 @@ namespace WebApi.Controllers
                 Barcode = loan.BookItem.Barcode,
                 Status = loan.BookItem.Status,
                 UserName = loan.User.UserName,
-                LibrarianName = loan.Librarian.UserName
+                LibrarianName = loan.Librarian.UserName,
+                FineAmount = loan.Fine?.Amount ?? 0,
+                FineStatus = loan.Fine?.PaymentStatus
             };
 
             return Ok(loanDto);
         }
 
+        // Get loans by user ID
         [HttpGet("user/{userId}")]
         public async Task<ActionResult<List<LoanDto>>> GetUserLoans(string userId)
         {
@@ -181,6 +191,7 @@ namespace WebApi.Controllers
                     .ThenInclude(bi => bi.Book)
                     .Include(l => l.User)
                     .Include(l => l.Librarian)
+                    .Include(l => l.Fine)
                     .Where(l => l.UserId == userId)
                     .OrderByDescending(l => l.LoanDate)
                     .ToListAsync();
@@ -203,7 +214,9 @@ namespace WebApi.Controllers
                     Barcode = loan.BookItem.Barcode,
                     Status = loan.BookItem.Status,
                     UserName = loan.User.UserName,
-                    LibrarianName = loan.Librarian.UserName
+                    LibrarianName = loan.Librarian.UserName,
+                    FineAmount = loan.Fine?.Amount ?? 0,
+                    FineStatus = loan.Fine?.PaymentStatus
                 }).ToList();
 
                 Console.WriteLine($"Returning {loanDtos.Count} loan DTOs");
@@ -217,12 +230,12 @@ namespace WebApi.Controllers
             }
         }
 
+        // Check book availability
         [HttpGet("check-availability/{bookId}")]
         public async Task<ActionResult<object>> CheckAvailability(int bookId, [FromQuery] DateTime loanDate, [FromQuery] DateTime dueDate)
         {
             try
             {
-                // Kiểm tra Book có tồn tại không
                 var book = await _context.Books
                     .FirstOrDefaultAsync(b => b.BookId == bookId);
 
@@ -231,7 +244,6 @@ namespace WebApi.Controllers
                     return NotFound("Book not found");
                 }
 
-                // Lấy tất cả BookItems của cuốn sách này
                 var bookItems = await _context.BookItems
                     .Where(bi => bi.BookId == bookId)
                     .ToListAsync();
@@ -245,9 +257,8 @@ namespace WebApi.Controllers
                     });
                 }
 
-                // Kiểm tra xem có item nào available không
                 var availableItems = bookItems.Where(bi => bi.Status == "Available").ToList();
-                
+
                 if (!availableItems.Any())
                 {
                     return Ok(new
@@ -257,20 +268,19 @@ namespace WebApi.Controllers
                     });
                 }
 
-                // Kiểm tra trùng lịch cho tất cả các items
                 var allItemIds = bookItems.Select(bi => bi.ItemId).ToList();
                 var existingLoans = await _context.Loans
                     .Where(l => allItemIds.Contains(l.ItemId) && !l.IsReturned)
                     .ToListAsync();
 
-                var hasConflict = existingLoans.Any(existingLoan => 
+                var hasConflict = existingLoans.Any(existingLoan =>
                     (loanDate <= existingLoan.DueDate && dueDate >= existingLoan.LoanDate));
 
                 if (hasConflict)
                 {
-                    var conflictingLoan = existingLoans.First(l => 
+                    var conflictingLoan = existingLoans.First(l =>
                         (loanDate <= l.DueDate && dueDate >= l.LoanDate));
-                    
+
                     return Ok(new
                     {
                         IsAvailable = false,
@@ -301,9 +311,17 @@ namespace WebApi.Controllers
             }
         }
 
+        // Record book return and calculate late fees
         [HttpPost("return/{loanId}")]
         public async Task<ActionResult<LoanDto>> ReturnBook(int loanId)
         {
+            // Check if user has Librarian role
+            if (Request.Cookies["UserRoles"] != "Librarian")
+            {
+                Console.WriteLine("Unauthorized: Only Librarians can process book returns");
+                return Unauthorized("Only Librarians can process book returns");
+            }
+
             try
             {
                 Console.WriteLine($"ReturnBook called for LoanId: {loanId}");
@@ -313,6 +331,7 @@ namespace WebApi.Controllers
                     .ThenInclude(bi => bi.Book)
                     .Include(l => l.User)
                     .Include(l => l.Librarian)
+                    .Include(l => l.Fine)
                     .FirstOrDefaultAsync(l => l.LoanId == loanId);
 
                 if (loan == null)
@@ -327,18 +346,52 @@ namespace WebApi.Controllers
                     return BadRequest("Sách đã được trả trước đó");
                 }
 
-                // Cập nhật loan
+                // Update loan
                 loan.IsReturned = true;
                 loan.ReturnDate = DateTime.Now;
 
-                // Cập nhật BookItem status
+                // Calculate late fee if applicable
+                decimal lateFee = 0;
+                const decimal dailyFine = 5.0m; // $5 per day late
+                if (loan.ReturnDate > loan.DueDate)
+                {
+                    var daysLate = (loan.ReturnDate.Value - loan.DueDate).Days;
+                    if (daysLate > 0)
+                    {
+                        lateFee = daysLate * dailyFine;
+                        Console.WriteLine($"Late return detected. Days late: {daysLate}, Fine: {lateFee}");
+
+                        // Create or update fine record
+                        if (loan.Fine == null)
+                        {
+                            var fine = new Fine
+                            {
+                                LoanId = loan.LoanId,
+                                Amount = lateFee,
+                                Reason = $"Late return by {daysLate} days",
+                                PaymentStatus = "Unpaid",
+                                PaidDate = null
+                            };
+                            _context.Fines.Add(fine);
+                            loan.Fine = fine;
+                        }
+                        else
+                        {
+                            loan.Fine.Amount = lateFee;
+                            loan.Fine.Reason = $"Late return by {daysLate} days";
+                            loan.Fine.PaymentStatus = "Unpaid";
+                            loan.Fine.PaidDate = null;
+                        }
+                    }
+                }
+
+                // Update BookItem status
                 loan.BookItem.Status = "Available";
 
                 await _context.SaveChangesAsync();
 
-                Console.WriteLine($"Book returned successfully for LoanId: {loanId}");
+                Console.WriteLine($"Book returned successfully for LoanId: {loanId}. Late fee: {lateFee}");
 
-                // Trả về thông tin loan đã cập nhật
                 var loanDto = new LoanDto
                 {
                     LoanId = loan.LoanId,
@@ -355,7 +408,9 @@ namespace WebApi.Controllers
                     Barcode = loan.BookItem.Barcode,
                     Status = loan.BookItem.Status,
                     UserName = loan.User.UserName,
-                    LibrarianName = loan.Librarian.UserName
+                    LibrarianName = loan.Librarian.UserName,
+                    FineAmount = loan.Fine?.Amount ?? 0,
+                    FineStatus = loan.Fine?.PaymentStatus
                 };
 
                 return Ok(loanDto);
@@ -363,6 +418,63 @@ namespace WebApi.Controllers
             catch (Exception ex)
             {
                 Console.WriteLine($"Exception in ReturnBook: {ex.Message}");
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+        // Cancel loan/reservation
+        [HttpDelete("cancel/{loanId}")]
+        public async Task<ActionResult> CancelLoan(int loanId)
+        {
+            // Check if user has Librarian role
+            if (Request.Cookies["UserRoles"] != "Librarian")
+            {
+                Console.WriteLine("Unauthorized: Only Librarians can cancel loans");
+                return Unauthorized("Only Librarians can cancel loans");
+            }
+
+            try
+            {
+                Console.WriteLine($"CancelLoan called for LoanId: {loanId}");
+
+                var loan = await _context.Loans
+                    .Include(l => l.BookItem)
+                    .Include(l => l.Fine)
+                    .FirstOrDefaultAsync(l => l.LoanId == loanId);
+
+                if (loan == null)
+                {
+                    Console.WriteLine($"Loan not found for LoanId: {loanId}");
+                    return NotFound("Loan not found");
+                }
+
+                if (loan.IsReturned)
+                {
+                    Console.WriteLine($"Loan {loanId} is already returned and cannot be canceled");
+                    return BadRequest("Cannot cancel a returned loan");
+                }
+
+                // Remove associated fine if exists
+                if (loan.Fine != null)
+                {
+                    _context.Fines.Remove(loan.Fine);
+                }
+
+                // Update BookItem status to Available
+                loan.BookItem.Status = "Available";
+
+                // Remove the loan record
+                _context.Loans.Remove(loan);
+
+                await _context.SaveChangesAsync();
+
+                Console.WriteLine($"Loan canceled successfully for LoanId: {loanId}");
+
+                return Ok(new { Message = $"Loan {loanId} has been canceled successfully" });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Exception in CancelLoan: {ex.Message}");
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
